@@ -1,5 +1,10 @@
-import { Meteor } from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor'
 
-Meteor.startup(() => {
-  // code to run on server at startup
-});
+if (Meteor.isDevelopment) {
+  Meteor.startup(() => {
+    if (Meteor.users.find().count() === 0) {
+      const userId = Accounts.createUser({ username: 'admin', password: 'password' })
+      console.info(`Devmode: user created with id ${userId} - login via admin / password`)
+    }
+  })
+}
