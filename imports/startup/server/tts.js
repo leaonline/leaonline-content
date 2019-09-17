@@ -7,6 +7,8 @@ const TTSFilesCollection = createFilesCollection(TTSFiles)
 
 WebApp.connectHandlers.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+
   try {
     const { text } = req.body
     console.log(req.method, req.body, req.query)
@@ -15,7 +17,6 @@ WebApp.connectHandlers.use('/tts', Meteor.bindEnvironment(function (req, res, ne
       return res.end()
     }
     const filesDoc = TTSBackend.get({ text })
-    console.log(filesDoc)
     const url = TTSFilesCollection.link(filesDoc)
     res.setHeader('Content-Type', 'application/json')
     res.end(JSON.stringify({ url }))

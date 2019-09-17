@@ -66,6 +66,8 @@ TTSBackend.get = ({ text }) => {
     fileId: fileId
   }))
 
+  // TODO MOVE FILE TO GRIDFS AND REMOVE FILE
+
   return TTSFilesCollection.collection.findOne(writtenId)
 }
 
