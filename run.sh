@@ -1,2 +1,2 @@
 #!/bin/sh
-meteor --port=3030
+meteor --port=3030 --settings=settings.json
