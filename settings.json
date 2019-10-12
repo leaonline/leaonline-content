@@ -1,8 +1,11 @@
 {
-  "accounts": {
-    "login": {
-      "username": "admin",
-      "password": "password"
-    }
+  "oauth": {
+    "clientId": "9876543210",
+    "secret": "98765432109876543210",
+    "dialogUrl": "http://localhost:8080/oauth/authorize",
+    "accessTokenUrl": "http://localhost:8080/oauth/token",
+    "authorizeUrl": "http://localhost:8080/oauth/authorize",
+    "identityUrl": "http://localhost:8080/oauth/ident",
+    "redirectUrl": "http://localhost:3030/_oauth/lea"
   }
 }
