@@ -22,6 +22,7 @@ shell-server@0.4.0            # Server-side component of the `meteor shell` comm
 alanning:roles
 accounts-base
 leaonline:accounts-lea
+leaonline:ddp-login-handler
 service-configuration
 
 ostrio:files

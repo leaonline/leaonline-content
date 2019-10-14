@@ -43,6 +43,7 @@ jquery@1.11.11
 lai:collection-extensions@0.2.1_1
 launch-screen@1.1.1
 leaonline:accounts-lea@0.0.1
+leaonline:ddp-login-handler@1.0.0
 leaonline:oauth-lea@1.0.0
 livedata@1.0.18
 localstorage@1.2.0
