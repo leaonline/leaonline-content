@@ -1,7 +1,7 @@
 import { WebApp } from 'meteor/webapp'
 import { TTSFiles } from '../../api/tts/TTSFiles'
 import { TTSBackend } from '../../api/tts/TTSEngine'
-import { createFilesCollection } from '../../utils/collection'
+import { createFilesCollection } from '../../api/factories/createFilesCollection'
 import { Log } from '../../utils/log'
 
 const TTSFilesCollection = createFilesCollection(TTSFiles)

@@ -7,5 +7,10 @@
     "authorizeUrl": "http://localhost:8080/oauth/authorize",
     "identityUrl": "http://localhost:8080/oauth/ident",
     "redirectUrl": "http://localhost:3030/_oauth/lea"
+  },
+  "hosts": {
+    "backend": {
+      "urlRegEx": "^http:\/\/.*$"
+    }
   }
 }
