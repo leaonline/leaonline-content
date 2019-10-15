@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-METEOR_PACKAGE_DIRS=../lib meteor update --all-packages
+PACKAGE_DIRS="../lib:../liboauth"
+METEOR_PACKAGE_DIRS=${PACKAGE_DIRS} meteor update --all-packages
