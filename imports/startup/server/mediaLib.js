@@ -15,9 +15,10 @@ createFilesCollection({ name: MediaLib.name, allowedOrigins, debug: true, onAfte
 const publications = Object.values(MediaLib.publications)
 createPublications(publications)
 
-WebApp.connectHandlers.use('/media', Meteor.bindEnvironment(function (req, res, next) {
+// TODO put in WebAppFactory method
+WebApp.connectHandlers.use(MediaLib.routes.mediaUrl.path, Meteor.bindEnvironment(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+  res.setHeader('Access-Control-Allow-Methods', MediaLib.routes.mediaUrl.methods.join(', '))
 
   try {
     const { _id } = req.query
@@ -30,7 +31,7 @@ WebApp.connectHandlers.use('/media', Meteor.bindEnvironment(function (req, res, 
     const filesDoc = MediaLib.collection().findOne(_id)
     const url = MediaLib.filesCollection().link(filesDoc)
     Log.debug(url)
-    res.setHeader('Content-Type', 'application/json;UTF-8')
+    res.setHeader('Content-Type', MediaLib.routes.mediaUrl.returns.contentType)
     res.end(JSON.stringify({ url }))
   } catch (error) {
     Log.error(error)
