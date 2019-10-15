@@ -2,8 +2,23 @@ import { MediaLib } from '../../api/mediaLib/MediaLib'
 import { createFilesCollection } from '../../api/factories/createFilesCollection'
 import { createPublications } from '../../api/factories/createPublication'
 import { Log } from '../../utils/log'
+import { BackendConfig } from '../../api/config/BackendConfig'
 
 const allowedOrigins = new RegExp(Meteor.settings.hosts.backend.urlRegEx)
+
+// { type, name, label, description, schema, content }
+BackendConfig.add({
+  name: MediaLib.name,
+  label: MediaLib.label,
+  type: 'list',
+  actions: 'CRUD',
+  roles: ['CRUDMediaLib'], // TODO put in Roles
+  group: 'editors', // TODO put in Groups,
+  publication: {
+    name: MediaLib.publications.all.name,
+    schema: MediaLib.publications.all.schema
+  }
+})
 
 const onAfterUpload = function (file) {
   // TODO move to gridFs
