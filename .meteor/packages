@@ -32,3 +32,6 @@ ostrio:files
 ostrio:i18n
 aldeed:collection2
 dburles:mongo-collection-instances
+mdg:validated-method
+leaonline:errors
+sha
