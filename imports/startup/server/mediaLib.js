@@ -10,6 +10,7 @@ const allowedOrigins = new RegExp(Meteor.settings.hosts.backend.urlRegEx)
 BackendConfig.add({
   name: MediaLib.name,
   label: MediaLib.label,
+  icon: MediaLib.icon,
   type: 'list',
   actions: 'CRUD',
   roles: ['CRUDMediaLib'], // TODO put in Roles
