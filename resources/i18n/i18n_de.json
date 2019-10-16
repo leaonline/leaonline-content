@@ -1,0 +1,11 @@
+{
+  "apps": {
+    "content": {
+      "title": "Content-Server",
+      "description": "Stellt statische Inhalte über HTTP Routen zur Verfügung"
+    }
+  },
+  "mediaLib": {
+    "title": "Medien-Bibliothek"
+  }
+}
