@@ -15,10 +15,15 @@ BackendConfig.add({
   actions: 'CRUD',
   roles: ['CRUDMediaLib'], // TODO put in Roles
   group: 'editors', // TODO put in Groups,
-  publication: {
+  isFilesCollection: MediaLib.isFilesCollection,
+  mainCollection: MediaLib.name,
+  collections: [
+    MediaLib.name
+  ],
+  publications: [{
     name: MediaLib.publications.all.name,
     schema: MediaLib.publications.all.schema
-  }
+  }]
 })
 
 const onAfterUpload = function (file) {
