@@ -13,7 +13,7 @@ BackendConfig.add({
   name: MediaLib.name,
   label: MediaLib.label,
   icon: MediaLib.icon,
-  type: 'list',
+  type: 'gallery',
   fields: {
     name: 1,
     size: 1
