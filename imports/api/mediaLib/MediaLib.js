@@ -1,5 +1,12 @@
-import { MediaLib } from 'meteor/leaonline:interfaces/MediaLib'
 import { getCollection } from '../../utils/collection'
+
+export const MediaLib = {
+  name: 'mediaLib',
+  label: 'mediaLib.title',
+  icon: 'images',
+  appId: 'content',
+  isFilesCollection: true
+}
 
 let _collection
 let _filesCollection
@@ -18,9 +25,35 @@ MediaLib.filesCollection = function () {
   return _filesCollection
 }
 
-MediaLib.publications.all.run = function () {
-  console.log("media lib pub")
-  return MediaLib.collection().find()
+MediaLib.routes = {}
+
+MediaLib.routes.mediaUrl = {
+  path: '/media/url',
+  methods: [ 'GET', 'OPTIONS' ],
+  schema: {
+    _id: String
+  },
+  isPublic: true,
+  returns: {
+    contentType: 'application/json;UTF-8',
+    schema: {
+      url: String
+    }
+  }
 }
 
-export { MediaLib }
+MediaLib.publications = {}
+
+MediaLib.publications.all = {
+  name: 'mediaLib.publications.all',
+  schema: {},
+  projection: {},
+  numRequests: 1,
+  timeInterval: 500,
+  isPublic: true,
+  roles: [ 'readMediaContent' ],
+  group: 'content',
+  run: function () {
+    return MediaLib.collection().find()
+  }
+}

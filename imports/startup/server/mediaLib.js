@@ -12,7 +12,21 @@ BackendConfig.add({
   label: MediaLib.label,
   icon: MediaLib.icon,
   type: 'list',
-  actions: 'CRUD',
+  actions: {
+    upload: {
+      schema: {
+        fileId: {
+          type: 'String',
+          autoform: {
+            type: 'fileUpload',
+            collection: MediaLib.name,
+            accept: 'image/*'
+          }
+        }
+      },
+      accept: 'image/*'
+    }
+  },
   roles: ['CRUDMediaLib'], // TODO put in Roles
   group: 'editors', // TODO put in Groups,
   isFilesCollection: MediaLib.isFilesCollection,
