@@ -57,3 +57,18 @@ MediaLib.publications.all = {
     return MediaLib.collection().find()
   }
 }
+
+MediaLib.methods = {}
+
+MediaLib.methods.remove = {
+  name: 'mediaLib.methods.remove',
+  schema: {
+    _id: String
+  },
+  numRequests: 1,
+  timeInterval: 250,
+  isPublic: true,
+  run: function ({ _id }) {
+    return MediaLib.collection().remove(_id)
+  }
+}

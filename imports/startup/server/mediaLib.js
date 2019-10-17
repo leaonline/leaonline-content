@@ -1,6 +1,8 @@
 import { MediaLib } from '../../api/mediaLib/MediaLib'
 import { createFilesCollection } from '../../api/factories/createFilesCollection'
 import { createPublications } from '../../api/factories/createPublication'
+import { createMethods } from '../../api/factories/createMethods'
+import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { Log } from '../../utils/log'
 import { BackendConfig } from '../../api/config/BackendConfig'
 
@@ -12,6 +14,10 @@ BackendConfig.add({
   label: MediaLib.label,
   icon: MediaLib.icon,
   type: 'list',
+  fields: {
+    name: 1,
+    size: 1
+  },
   actions: {
     upload: {
       schema: {
@@ -25,6 +31,10 @@ BackendConfig.add({
         }
       },
       accept: 'image/*'
+    },
+    remove: {
+      method: MediaLib.methods.remove.name,
+      schema: { _id: 'String' }
     }
   },
   roles: ['CRUDMediaLib'], // TODO put in Roles
@@ -49,6 +59,11 @@ createFilesCollection({ name: MediaLib.name, allowedOrigins, debug: true, onAfte
 
 const publications = Object.values(MediaLib.publications)
 createPublications(publications)
+rateLimitPublications(publications)
+
+const methods = Object.values(MediaLib.methods)
+createMethods(methods)
+rateLimitMethods(methods)
 
 // TODO put in WebAppFactory method
 WebApp.connectHandlers.use(MediaLib.routes.mediaUrl.path, Meteor.bindEnvironment(function (req, res, next) {
