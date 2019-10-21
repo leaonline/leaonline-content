@@ -7,5 +7,43 @@
   },
   "mediaLib": {
     "title": "Medien-Bibliothek"
+  },
+  "task": {
+    "title": "Aufgabe",
+    "taskId": "Aufgaben-ID",
+    "story": "Story",
+    "stimuli": "Stimulus",
+    "instructions": "Arbeitsanweisung",
+    "pages": "Aufgabenseiten"
+  },
+  "status": {
+    "title": "Bearbeitungsstatus",
+    "inProgress": "In Bearbeitung",
+    "inReview": "In Revision",
+    "deprecated": "Veraltet / Überholt",
+    "published": "Veröffentlicht"
+  },
+  "dimensions": {
+    "title": "Dimensionen",
+    "dimension": "Dimension",
+    "understand": {
+      "title": "Sprache"
+    },
+    "reading": {
+      "title": "Lesen"
+    },
+    "writing": {
+      "title": "Schreiben"
+    },
+    "math": {
+      "title": "Rechnen"
+    }
+  },
+  "levels": {
+    "title": "Schwierigkeiten",
+    "level": "Schwierigkeitsgrad",
+    "easy": "Einfach",
+    "medium": "Mittel",
+    "hard": "Schwer"
   }
 }
