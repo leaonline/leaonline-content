@@ -1,5 +1,20 @@
 import { Task } from 'meteor/leaonline:interfaces/Task'
+import { MediaLib } from '../mediaLib/MediaLib'
 import { onServer } from '../../utils/arch'
+
+// decorate schema with custom AutoForm
+
+const taskContent = {
+  type: 'leaTaskContent',
+  imagesCollection: MediaLib.name,
+  imagesUriBase: Meteor.absoluteUrl(),
+  imagesVersion: 'original' // TODO change to thumbnail when implemented
+}
+
+Task.schema.story.autoform = taskContent
+Task.schema.stimuli.autoform = taskContent
+Task.schema.instructions.autoform = taskContent
+Task.schema['pages.$'].autoform = taskContent
 
 Task.methods.update = {
   name: 'task.methods.update',
@@ -9,17 +24,17 @@ Task.methods.update = {
       optional: true
     }
   }),
-  isPublic: true,
+  isPublic: true, // FIXME
   numRequests: 1,
   timeInterval: 250,
-  run: onServer(function ({ _id, taskId, dimension, level, story, stimuli, instructions, pages }) {
+  run: onServer(function ({ _id, taskId, dimension, level, description, story, stimuli, instructions, pages }) {
     const TaskCollection = Task.collection()
     const taskDoc = TaskCollection.findOne(_id)
     if (!taskDoc) {
-      return TaskCollection.insert({ taskId, dimension, level, story, stimuli, instructions, pages })
+      return TaskCollection.insert({ taskId, dimension, level, description, story, stimuli, instructions, pages })
     } else {
       return TaskCollection.update(_id, {
-        $set: { taskId, dimension, level, story, stimuli, instructions, pages }
+        $set: { taskId, dimension, level, description, story, stimuli, instructions, pages }
       })
     }
   })
@@ -52,7 +67,7 @@ Task.publications.byDimension = {
   isPublic: true, // FIXME
   run: onServer(function ({ dimension } = {}) {
     if (!dimension) {
-      return
+      return Task.collection().find()
     }
     return Task.collection().find({ dimension }, { sort: { level: 1, taskId: 1 } })
   })

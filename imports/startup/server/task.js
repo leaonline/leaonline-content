@@ -20,24 +20,25 @@ const publications = Object.values(Task.publications)
 createPublications(publications)
 rateLimitPublications(publications)
 
+const insertUpdate = {
+  method: Task.methods.update.name,
+  schema: JSON.stringify(Task.schema, BackendConfig.replacer)
+}
+
 BackendConfig.add({
   name: Task.name,
   label: Task.label,
   icon: Task.icon,
   type: BackendConfig.types.list,
   fields: {
+    taskId: 1,
+    dimension: 1,
     level: 1,
-    taskId: 1
+    description: 1
   },
   actions: {
-    insert: {
-      method: Task.methods.update.name,
-      schema: JSON.stringify(Task.schema, BackendConfig.replacer)
-    },
-    update: {
-      method: Task.methods.update.name,
-      schema: {}
-    },
+    insert: insertUpdate,
+    update: insertUpdate,
     remove: {
       method: Task.methods.remove.name,
       schema: { _id: String }
@@ -54,7 +55,7 @@ BackendConfig.add({
   mainCollection: Task.name,
   collections: [
     Task.name,
-    MediaLib.name
+    { name: MediaLib.name, isFilesCollection: true }
   ],
   publications: [ {
     name: MediaLib.publications.all.name,
