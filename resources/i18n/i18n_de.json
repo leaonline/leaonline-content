@@ -16,6 +16,9 @@
     "instructions": "Arbeitsanweisung",
     "pages": "Aufgabenseiten"
   },
+  "taskSet": {
+    "title": "Aufgaben-Set"
+  },
   "status": {
     "title": "Bearbeitungsstatus",
     "inProgress": "In Bearbeitung",
