@@ -33,16 +33,22 @@ BackendConfig.add({
   icon: Task.icon,
   type: BackendConfig.types.list,
   fields: {
-    taskId: 1,
+    taskId: {
+      label: Task.schema.taskId.label
+    },
     dimension: {
+      label: Dimensions.label,
       type: BackendConfig.fieldTypes.context,
       context: Dimensions.name
     },
     level: {
+      label: Levels.label,
       type: BackendConfig.fieldTypes.context,
       context: Levels.name
     },
-    description: 1
+    description: {
+      label: Task.schema.description.label
+    }
   },
   actions: {
     insert: insertUpdate,
