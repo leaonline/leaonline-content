@@ -7,6 +7,7 @@ import { createPublications } from '../../api/factories/createPublication'
 import { BackendConfig } from '../../api/config/BackendConfig'
 import { Dimensions } from '../../api/dimensions/Dimensions'
 import { Levels } from '../../api/levels/Levels'
+import { createRoutes } from '../../api/factories/createRoute'
 
 const TaskSetCollection = createCollection(TaskSet)
 
@@ -21,6 +22,9 @@ rateLimitMethods(methods)
 const publications = Object.values(TaskSet.publications)
 createPublications(publications)
 rateLimitPublications(publications)
+
+const routes = Object.values(TaskSet.httpRoutes)
+createRoutes(routes)
 
 const insertUpdate = {
   method: TaskSet.methods.update.name,

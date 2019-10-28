@@ -14,7 +14,7 @@ const taskContent = {
 Task.schema.story.autoform = taskContent
 Task.schema.stimuli.autoform = taskContent
 Task.schema.instructions.autoform = taskContent
-Task.schema['pages.$'].autoform = taskContent
+Task.schema[ 'pages.$' ].autoform = taskContent
 
 Task.methods.update = {
   name: 'task.methods.update',
@@ -72,5 +72,9 @@ Task.publications.byDimension = {
     return Task.collection().find({ dimension }, { sort: { level: 1, taskId: 1 } })
   })
 }
+
+Task.httpRoutes.byTaskId.run = onServer(function ({ taskId }) {
+  return Task.collection().findOne(taskId)
+})
 
 export { Task }

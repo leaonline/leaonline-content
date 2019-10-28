@@ -7,6 +7,7 @@ import { BackendConfig } from '../../api/config/BackendConfig'
 import { MediaLib } from '../../api/mediaLib/MediaLib'
 import { Dimensions } from '../../api/dimensions/Dimensions'
 import { Levels } from '../../api/levels/Levels'
+import { createRoutes } from '../../api/factories/createRoute'
 
 const TaskCollection = createCollection(Task)
 
@@ -21,6 +22,9 @@ rateLimitMethods(methods)
 const publications = Object.values(Task.publications)
 createPublications(publications)
 rateLimitPublications(publications)
+
+const routes = Object.values(Task.httpRoutes)
+createRoutes(routes)
 
 const insertUpdate = {
   method: Task.methods.update.name,

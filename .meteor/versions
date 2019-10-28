@@ -45,10 +45,11 @@ launch-screen@1.1.1
 leaonline:accounts-lea@0.0.1
 leaonline:ddp-login-handler@1.0.1
 leaonline:errors@1.0.0
-leaonline:factories@1.0.1
+leaonline:factories@1.1.0
 leaonline:interfaces@1.0.0
 leaonline:oauth-lea@1.0.0
 leaonline:utils@1.0.0
+leaonline:webapp@1.0.0
 livedata@1.0.18
 localstorage@1.2.0
 logging@1.1.20
