@@ -5,6 +5,8 @@ import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rat
 import { createPublications } from '../../api/factories/createPublication'
 import { BackendConfig } from '../../api/config/BackendConfig'
 import { MediaLib } from '../../api/mediaLib/MediaLib'
+import { Dimensions } from '../../api/dimensions/Dimensions'
+import { Levels } from '../../api/levels/Levels'
 
 const TaskCollection = createCollection(Task)
 
@@ -32,8 +34,14 @@ BackendConfig.add({
   type: BackendConfig.types.list,
   fields: {
     taskId: 1,
-    dimension: 1,
-    level: 1,
+    dimension: {
+      type: BackendConfig.fieldTypes.context,
+      context: Dimensions.name
+    },
+    level: {
+      type: BackendConfig.fieldTypes.context,
+      context: Levels.name
+    },
     description: 1
   },
   actions: {

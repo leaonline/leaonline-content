@@ -13,7 +13,7 @@
     "taskId": "Aufgaben-ID",
     "story": "Story",
     "stimuli": "Stimulus",
-    "instructions": "Arbeitsanweisung",
+    "instructions": "Bearbeitungshinweis",
     "pages": "Aufgabenseiten"
   },
   "taskSet": {
