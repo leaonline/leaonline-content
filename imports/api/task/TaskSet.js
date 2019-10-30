@@ -74,7 +74,7 @@ TaskSet.publications.byDimension = {
 
 TaskSet.httpRoutes.all.run = onServer(function () {
   if (!_cachedTaskSet) {
-    _cachedTaskSet = TaskSet.find().fetch()
+    _cachedTaskSet = TaskSet.collection().find().fetch()
   }
   return _cachedTaskSet
 })
