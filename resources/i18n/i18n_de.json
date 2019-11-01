@@ -20,7 +20,8 @@
     "story": "Story",
     "stimuli": "Stimulus",
     "instructions": "Bearbeitungshinweis",
-    "pages": "Aufgabenseiten"
+    "pages": "Aufgabenseiten",
+    "legacyId": "Alt-otu.lea-ID"
   },
   "taskSet": {
     "title": "Aufgaben-Set"

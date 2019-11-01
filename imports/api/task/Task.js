@@ -1,6 +1,7 @@
 import { Task } from 'meteor/leaonline:interfaces/Task'
 import { MediaLib } from '../mediaLib/MediaLib'
 import { onServer } from '../../utils/arch'
+import { defineRemoveMethod, defineUpdateMethod } from '../factories/defineCRUDMethods'
 
 // decorate schema with custom AutoForm
 
@@ -16,42 +17,8 @@ Task.schema.stimuli.autoform = taskContent
 Task.schema.instructions.autoform = taskContent
 Task.schema[ 'pages.$' ].autoform = taskContent
 
-Task.methods.update = {
-  name: 'task.methods.update',
-  schema: Object.assign({}, Task.schema, {
-    _id: {
-      type: String,
-      optional: true
-    }
-  }),
-  isPublic: true, // FIXME
-  numRequests: 1,
-  timeInterval: 250,
-  run: onServer(function ({ _id, taskId, dimension, level, description, story, stimuli, instructions, pages }) {
-    const TaskCollection = Task.collection()
-    const taskDoc = TaskCollection.findOne(_id)
-    if (!taskDoc) {
-      return TaskCollection.insert({ taskId, dimension, level, description, story, stimuli, instructions, pages })
-    } else {
-      return TaskCollection.update(_id, {
-        $set: { taskId, dimension, level, description, story, stimuli, instructions, pages }
-      })
-    }
-  })
-}
-
-Task.methods.remove = {
-  name: 'task.methods.remove',
-  schema: {
-    _id: String
-  },
-  isPublic: true, // FIXME
-  numRequests: 1,
-  timeInterval: 1000,
-  run: onServer(function ({ _id }) {
-    return Task.collection().remove(_id)
-  })
-}
+Task.methods.update = defineUpdateMethod({ name: Task.name, schema: Task.schema })
+Task.methods.remove = defineRemoveMethod({ name: Task.name })
 
 Task.publications.byDimension = {
   name: 'task.publications.byDimension',
