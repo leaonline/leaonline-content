@@ -13,5 +13,6 @@
       "urlRegEx": "^http:\/\/.*$"
     },
     "allowedOrigins": ["http://localhost:3000"]
-  }
+  },
+  "bucketName": "contentFiles"
 }
