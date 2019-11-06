@@ -11,8 +11,8 @@ export const defineUpdateMethod = ({ name, schema, roles, group, isPublic, timeI
     if (!document) {
       return Collection.insert(updateDoc)
     } else {
-      delete document._id
-      return Collection.update(_id, { $set: document })
+      delete updateDoc._id
+      return Collection.update(_id, { $set: updateDoc })
     }
   })
 
