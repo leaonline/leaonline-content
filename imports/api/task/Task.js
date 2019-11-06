@@ -1,15 +1,27 @@
+import { Meteor } from 'meteor/meteor'
 import { Task } from 'meteor/leaonline:interfaces/Task'
 import { MediaLib } from '../mediaLib/MediaLib'
 import { onServer } from '../../utils/arch'
 import { defineRemoveMethod, defineUpdateMethod } from '../factories/defineCRUDMethods'
 
 // decorate schema with custom AutoForm
+const settings = Meteor.settings.hosts.items
+const h5pCreateUrl = `${settings.url}${settings.create}`
+const h5pEditUrl = `${settings.url}${settings.edit}`
+const h5pPlayUrl = `${settings.url}${settings.play}`
+const h5pListUrl = `${settings.url}${settings.list}`
 
 const taskContent = {
   type: 'leaTaskContent',
   imagesCollection: MediaLib.name,
   imagesUriBase: Meteor.absoluteUrl(),
-  imagesVersion: 'original' // TODO change to thumbnail when implemented
+  imagesVersion: 'original', // TODO change to thumbnail when implemented,
+  h5p: {
+    createUrl: h5pCreateUrl,
+    editUrl: h5pEditUrl,
+    listUrl: h5pListUrl,
+    playUrl: h5pPlayUrl
+  }
 }
 
 Task.schema.story.autoform = taskContent
