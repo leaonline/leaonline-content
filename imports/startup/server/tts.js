@@ -1,20 +1,36 @@
+import { Meteor } from 'meteor/meteor'
 import { WebApp } from 'meteor/webapp'
 import { TTSFiles } from '../../api/tts/TTSFiles'
 import { TTSBackend } from '../../api/tts/TTSEngine'
 import { createFilesCollection } from '../../api/factories/createFilesCollection'
 import { Log } from '../../utils/log'
 
+const app = WebApp.connectHandlers
+
 const TTSFilesCollection = createFilesCollection(TTSFiles)
 
 const { allowedOrigins } = Meteor.settings.hosts
+const { maxChars } = Meteor.settings.tts
 
-WebApp.connectHandlers.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
+app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
   const { origin } = req.headers
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin)
   }
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+  next()
+}))
 
+app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
+  if (req.body.text && req.body.text.length > maxChars) {
+    res.writeHead(400)
+    res.end('Bad request. Max size exceeded.')
+  } else {
+    next()
+  }
+}))
+
+app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
   try {
     const { text } = req.body
     Log.debug(req.method, req.body, req.query)
