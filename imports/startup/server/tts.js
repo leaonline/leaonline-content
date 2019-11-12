@@ -6,8 +6,13 @@ import { Log } from '../../utils/log'
 
 const TTSFilesCollection = createFilesCollection(TTSFiles)
 
+const { allowedOrigins } = Meteor.settings.hosts
+
 WebApp.connectHandlers.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+  const { origin } = req.headers
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
 
   try {
