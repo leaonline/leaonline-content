@@ -11,7 +11,7 @@ TEMP_WAV="/tmp/$TTS_HASH.wav"
 
 # OUTPUT
 AUDIO_ROOT="$PROJECT_ROOT/assets/app/uploads/ttsfiles"
-AUDIO_TARGET="$AUDIO_ROOT/$TTS_HASH.wav"
+AUDIO_TARGET="$AUDIO_ROOT/$TTS_HASH.mp3"
 
 # create target folder if it does not exists
 [ ! -d ${AUDIO_ROOT} ] && mkdir -p ${AUDIO_ROOT}
@@ -28,12 +28,14 @@ echo ${PROJECT_ARCH}
 # 1. generate phonems list in temp dir
 # 2. use mbrola to generate a .wav file from it
 ttsLinux () {
-	TTS_VOICE=${3:-"de5"}
-    espeak -v "mb-$TTS_VOICE" "$TTS_TEXT" --pho > ${TEMP_PHO}
-    mbrola "/usr/share/mbrola/$TTS_VOICE/$TTS_VOICE" ${TEMP_PHO} ${TEMP_WAV}
-    echo ${TEMP_WAV}
-    mv ${TEMP_WAV} ${AUDIO_TARGET}
-	rm ${TEMP_PHO}
+	TEMP_AUDIO="/tmp/${TTS_HASH}.mp3"
+	TTS_VOICE=${3:-"de6"}
+	espeak-ng -b=1 -s 120 -v "mb-$TTS_VOICE" "$TTS_TEXT" --stdout | ffmpeg -i - -ar 44100 -ac 2 -ab 192k -f mp3 ${TEMP_AUDIO}
+#    espeak -b=1 -s 80 -v "mb-$TTS_VOICE" "$TTS_TEXT" --pho > ${TEMP_PHO}
+#    mbrola "/usr/share/mbrola/$TTS_VOICE/$TTS_VOICE" ${TEMP_PHO} ${TEMP_WAV}
+#    echo ${TEMP_WAV}
+#	rm ${TEMP_PHO}
+	mv ${TEMP_AUDIO} ${AUDIO_ROOT}
 }
 
 # on OSX we use the internal "say" command
