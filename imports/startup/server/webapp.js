@@ -1,9 +1,11 @@
 import { WebApp } from 'meteor/webapp'
 
 const bodyParser = Npm.require('body-parser')
-const _app = WebApp.connectHandlers
+const _app = WebApp.rawConnectHandlers
 
-_app.use(bodyParser.urlencoded({ extended: false }))
+_app.use(bodyParser.urlencoded({ limit: '100kb', extended: false }))
+
+_app.use(bodyParser.json({ limit: '100kb' }))
 
 _app.use(function (req, res, next) {
   if (req.method.toLowerCase() === 'post') {
