@@ -9,7 +9,7 @@ const app = WebApp.connectHandlers
 
 const TTSFilesCollection = createFilesCollection(TTSFiles)
 
-const { allowedOrigins } = Meteor.settings.hosts
+const { allowedOrigins } = Meteor.settings.tts
 const { maxChars } = Meteor.settings.tts
 
 app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
