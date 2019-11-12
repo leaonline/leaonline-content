@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # INPUT PARAMS
-TTS_TEXT=$1
-TTS_HASH=$2
+TTS_TEXT="$1"
+TTS_HASH="$2"
 
 # PATH VARIABLES
 PROJECT_ROOT=$(pwd)
@@ -10,10 +10,15 @@ TEMP_PHO="/tmp/$TTS_HASH.pho"
 TEMP_WAV="/tmp/$TTS_HASH.wav"
 
 # OUTPUT
-AUDIO_TARGET="$PROJECT_ROOT/assets/app/ttsfiles/$TTS_HASH.wav"
+AUDIO_ROOT="$PROJECT_ROOT/assets/app/uploads/ttsfiles"
+AUDIO_TARGET="$AUDIO_ROOT/$TTS_HASH.wav"
+
+# create target folder if it does not exists
+[ ! -d ${AUDIO_ROOT} ] && mkdir -p ${AUDIO_ROOT}
 
 # ARCH
 PROJECT_ARCH=$(uname -s)
+echo ${PROJECT_ARCH}
 
 # On the Linux arch we use the espeak and
 # mbrola packages for synthesizing the voices
@@ -22,21 +27,30 @@ PROJECT_ARCH=$(uname -s)
 #
 # 1. generate phonems list in temp dir
 # 2. use mbrola to generate a .wav file from it
-if [ "$PROJECT_ARCH" == "Linux" ]; then
-    TTS_VOICE=${3:-"de5"}
+ttsLinux () {
+	TTS_VOICE=${3:-"de5"}
     espeak -v "mb-$TTS_VOICE" "$TTS_TEXT" --pho > ${TEMP_PHO}
     mbrola "/usr/share/mbrola/$TTS_VOICE/$TTS_VOICE" ${TEMP_PHO} ${TEMP_WAV}
-fi
+    echo ${TEMP_WAV}
+    mv ${TEMP_WAV} ${AUDIO_TARGET}
+	rm ${TEMP_PHO}
+}
 
 # on OSX we use the internal "say" command
 # and write the output directly to the tempdir
-if [ "$PROJECT_ARCH" == "Darwin" ]; then
+ttsOsx () {
     TTS_VOICE=${3:-"Anna"}
     say -v ${TTS_VOICE} -o ${TEMP_WAV} --quality=127
+}
+
+if [ "$PROJECT_ARCH" = "Linux" ]; then
+    ttsLinux
 fi
 
-mv ${TEMP_WAV} ${AUDIO_TARGET}
-rm ${TEMP_PHO}
+if [ "$PROJECT_ARCH" = "Darwin" ]; then
+	ttsOsx
+fi
+
 
 if [ -f "${AUDIO_TARGET}" ]; then
     echo ${AUDIO_TARGET}
