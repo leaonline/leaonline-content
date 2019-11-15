@@ -42,12 +42,12 @@ inter-process-messaging@0.1.0
 jquery@1.11.11
 lai:collection-extensions@0.2.1_1
 launch-screen@1.1.1
-leaonline:accounts-lea@0.0.1
-leaonline:ddp-login-handler@1.0.2
+leaonline:accounts-lea@1.0.1
+leaonline:ddp-login-handler@1.0.3
 leaonline:errors@1.0.0
 leaonline:factories@1.1.0
 leaonline:interfaces@1.0.0
-leaonline:oauth-lea@1.0.0
+leaonline:oauth-lea@1.0.2
 leaonline:utils@1.0.0
 leaonline:webapp@1.0.0
 livedata@1.0.18
