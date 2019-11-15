@@ -1,4 +1,5 @@
-import {check} from 'meteor/check'
+/* global Roles */
+import { check } from 'meteor/check'
 
 function loggedIn () {
   if (!this.userId) return false
@@ -7,7 +8,7 @@ function loggedIn () {
 }
 
 export const getUserCheck = function ({ roles, group }) {
-  check(roles, [ String ])
+  check(roles, [String])
   check(group, String)
 
   return function checkUser (uploadedFile) {

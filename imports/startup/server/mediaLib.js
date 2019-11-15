@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor'
+import { WebApp } from 'meteor/webapp'
 import { MediaLib } from '../../api/mediaLib/MediaLib'
 import { createFilesCollection } from '../../api/factories/createFilesCollection'
 import { createPublications } from '../../api/factories/createPublication'
@@ -73,7 +75,7 @@ WebApp.connectHandlers.use(MediaLib.routes.mediaUrl.path, Meteor.bindEnvironment
   try {
     const { _id } = req.query
     Log.debug(req.method, req.query)
-    if (!_id|| _id.length === 0) {
+    if (!_id || _id.length === 0) {
       res.writeHead(404)
       return res.end()
     }

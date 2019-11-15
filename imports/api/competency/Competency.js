@@ -1,5 +1,4 @@
 import { Competency } from 'meteor/leaonline:interfaces/Competency'
-import { onServer } from '../../utils/arch'
 import { defineRemoveMethod, defineUpdateMethod } from '../factories/defineCRUDMethods'
 import { defineAllPublication } from '../factories/definePublication'
 

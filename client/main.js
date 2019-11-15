@@ -1,1 +1,1 @@
-import './main.html';
+import './main.html'

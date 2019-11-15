@@ -5,7 +5,6 @@ import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rat
 import { createPublications } from '../../api/factories/createPublication'
 import { BackendConfig } from '../../api/config/BackendConfig'
 import { Dimensions } from '../../api/dimensions/Dimensions'
-import { Levels } from '../../api/levels/Levels'
 
 const CompetencyCollection = createCollection(Competency)
 
@@ -55,14 +54,14 @@ BackendConfig.add({
       schema: { _id: String }
     }
   },
-  roles: [ 'editCompetency' ], // TODO put in Roles
+  roles: ['editCompetency'], // TODO put in Roles
   group: 'editors', // TODO put in Groups,
   isFilesCollection: false,
   mainCollection: Competency.name,
   collections: [
     Competency.name
   ],
-  publications: [ {
+  publications: [{
     name: Competency.publications.all.name,
     schema: Competency.publications.all.schema
   }]

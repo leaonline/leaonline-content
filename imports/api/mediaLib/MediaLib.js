@@ -29,7 +29,7 @@ MediaLib.routes = {}
 
 MediaLib.routes.mediaUrl = {
   path: '/media/url',
-  methods: [ 'GET', 'OPTIONS' ],
+  methods: ['GET', 'OPTIONS'],
   schema: {
     _id: String
   },
@@ -51,7 +51,7 @@ MediaLib.publications.all = {
   numRequests: 1,
   timeInterval: 500,
   isPublic: true,
-  roles: [ 'readMediaContent' ],
+  roles: ['readMediaContent'],
   group: 'content',
   run: function () {
     return MediaLib.collection().find()

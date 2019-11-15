@@ -27,7 +27,7 @@ const taskContent = {
 Task.schema.story.autoform = taskContent
 Task.schema.stimuli.autoform = taskContent
 Task.schema.instructions.autoform = taskContent
-Task.schema[ 'pages.$' ].autoform = taskContent
+Task.schema['pages.$'].autoform = taskContent
 
 Task.methods.update = defineUpdateMethod({ name: Task.name, schema: Task.schema })
 Task.methods.remove = defineRemoveMethod({ name: Task.name })

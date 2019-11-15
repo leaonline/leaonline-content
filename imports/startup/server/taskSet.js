@@ -62,12 +62,12 @@ BackendConfig.add({
       schema: { _id: String }
     }
   },
-  filter: [ {
+  filter: [{
     type: 'publication',
     options: [],
     target: TaskSet.publications.byDimension.name
-  } ],
-  roles: [ 'editTaskSet' ], // TODO put in Roles
+  }],
+  roles: ['editTaskSet'], // TODO put in Roles
   group: 'editors', // TODO put in Groups,
   isFilesCollection: false,
   mainCollection: TaskSet.name,
@@ -75,11 +75,11 @@ BackendConfig.add({
     TaskSet.name,
     Task.name
   ],
-  publications: [ {
+  publications: [{
     name: Task.publications.byDimension.name,
     schema: Task.publications.byDimension.schema
   }, {
     name: TaskSet.publications.byDimension.name,
     schema: Task.publications.byDimension.schema
-  } ]
+  }]
 })

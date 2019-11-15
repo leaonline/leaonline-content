@@ -5,8 +5,6 @@ import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rat
 import { createPublications } from '../../api/factories/createPublication'
 import { BackendConfig } from '../../api/config/BackendConfig'
 import { MediaLib } from '../../api/mediaLib/MediaLib'
-import { Dimensions } from '../../api/dimensions/Dimensions'
-import { Levels } from '../../api/levels/Levels'
 import { createRoutes } from '../../api/factories/createRoute'
 
 const TaskCollection = createCollection(Task)
@@ -52,12 +50,12 @@ BackendConfig.add({
       schema: { _id: String }
     }
   },
-  filter: [ {
+  filter: [{
     type: 'publication',
     options: [],
     target: Task.publications.byDimension.name
-  } ],
-  roles: [ 'editTask' ], // TODO put in Roles
+  }],
+  roles: ['editTask'], // TODO put in Roles
   group: 'editors', // TODO put in Groups,
   isFilesCollection: false,
   mainCollection: Task.name,
@@ -65,11 +63,11 @@ BackendConfig.add({
     Task.name,
     { name: MediaLib.name, isFilesCollection: true }
   ],
-  publications: [ {
+  publications: [{
     name: MediaLib.publications.all.name,
     schema: MediaLib.publications.all.schema
   }, {
     name: Task.publications.byDimension.name,
     schema: Task.publications.byDimension.schema
-  } ]
+  }]
 })

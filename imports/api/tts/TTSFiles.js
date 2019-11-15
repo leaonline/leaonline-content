@@ -1,3 +1,3 @@
 export const TTSFiles = {
-  name: 'ttsFiles',
+  name: 'ttsFiles'
 }

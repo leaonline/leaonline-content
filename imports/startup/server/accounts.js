@@ -1,3 +1,4 @@
+/* global ServiceConfiguration */
 import { Meteor } from 'meteor/meteor'
 import { registerOAuthDDPLoginHandler } from 'meteor/leaonline:ddp-login-handler'
 

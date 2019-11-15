@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor'
+
 export const Log = {}
 
 Log.debug = function (...args) {
