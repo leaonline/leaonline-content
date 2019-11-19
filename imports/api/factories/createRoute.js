@@ -4,4 +4,8 @@ import { getCreateRoutes } from 'meteor/leaonline:factories/routes/createRoute'
 
 const allowedOrigins = Meteor.settings.hosts.allowedOrigins
 
-export const createRoutes = getCreateRoutes(Schema.create, allowedOrigins)
+export const createRoutes = getCreateRoutes({
+  allowedOrigins: allowedOrigins,
+  schemaResolver: Schema.create,
+  debug: false
+})
