@@ -57,7 +57,9 @@ const onAfterUpload = function (file) {
   // TODO use leaonline:gridfs
 }
 
-createFilesCollection({ name: MediaLib.name, allowedOrigins, debug: true, onAfterUpload })
+const FilesCollection = createFilesCollection({ name: MediaLib.name, allowedOrigins, debug: true, onAfterUpload })
+MediaLib.filesCollection = () => FilesCollection
+MediaLib.collection = () => FilesCollection.collection
 
 const publications = Object.values(MediaLib.publications)
 createPublications(publications)
