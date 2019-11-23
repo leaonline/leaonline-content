@@ -5,6 +5,7 @@ import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rat
 import { createPublications } from '../../api/factories/createPublication'
 import { BackendConfig } from '../../api/config/BackendConfig'
 import { Dimensions } from '../../api/dimensions/Dimensions'
+import { createRoutes } from '../../api/factories/createRoute'
 
 const CompetencyCollection = createCollection(Competency)
 
@@ -19,6 +20,9 @@ rateLimitMethods(methods)
 const publications = Object.values(Competency.publications)
 createPublications(publications)
 rateLimitPublications(publications)
+
+const routes = Object.values(Competency.httpRoutes)
+createRoutes(routes)
 
 const insertUpdate = {
   method: Competency.methods.update.name,
