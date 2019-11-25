@@ -3,15 +3,18 @@ import { defineRemoveMethod, defineUpdateMethod } from '../factories/defineCRUDM
 import { defineAllPublication } from '../factories/definePublication'
 import { onServer } from '../../utils/arch'
 
+const settings = Meteor.settings.competencies
+const competenciesUrl = settings.url
+
 Competency.methods.update = defineUpdateMethod({ name: Competency.name, schema: Competency.schema })
 Competency.methods.remove = defineRemoveMethod({ name: Competency.name })
 Competency.publications.all = defineAllPublication({ name: Competency.name })
 
 Competency.httpRoutes = Competency.httpRoutes || {}
 Competency.httpRoutes.byId = {
-  path: '/competency', // TODO from settings
+  path: competenciesUrl, // TODO from settings
   name: 'competency.httpRoutes.byTaskId',
-  method: 'get',
+  method: 'post',
   schema: {
     ids: Array,
     'ids.$': String
@@ -21,7 +24,7 @@ Competency.httpRoutes.byId = {
   timeInterval: 1000,
   run: onServer(function ({ ids }) {
     const CompetencyCollection = Competency.collection()
-    return CompetencyCollection.find({ _id: { $in: ids }}).fetch()
+    return CompetencyCollection.find({ competencyId: { $in: ids }}).fetch()
   })
 }
 

@@ -29,5 +29,8 @@
       "http://localhost:3000", "http://localhost:5050"
     ]
   },
+  "competencies": {
+    "url": "/competencies"
+  },
   "bucketName": "contentFiles"
 }
