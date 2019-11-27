@@ -32,7 +32,7 @@ BackendConfig.add({
           }
         }
       },
-      accept: 'image/*'
+      accept: 'image/*,.svg'
     },
     remove: {
       method: MediaLib.methods.remove.name,
