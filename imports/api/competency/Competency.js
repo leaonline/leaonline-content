@@ -16,15 +16,23 @@ Competency.httpRoutes.byId = {
   name: 'competency.httpRoutes.byTaskId',
   method: 'post',
   schema: {
-    ids: Array,
-    'ids.$': String
+    ids: {
+      type: Array,
+      min: 0,
+      max: 100
+    },
+    'ids.$': {
+      type: String,
+      optional: true
+    }
   },
   projection: {},
   numRequests: 10,
   timeInterval: 1000,
   run: onServer(function ({ ids }) {
+    const cleanedIds = ids.filter(entry => typeof entry === 'string')
     const CompetencyCollection = Competency.collection()
-    return CompetencyCollection.find({ competencyId: { $in: ids }}).fetch()
+    return CompetencyCollection.find({ competencyId: { $in: cleanedIds } }).fetch()
   })
 }
 
