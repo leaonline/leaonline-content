@@ -36,3 +36,9 @@ dburles:mongo-collection-instances
 mdg:validated-method
 leaonline:errors
 sha
+
+#========================================
+# SECURITY
+#========================================
+audit-argument-checks
+force-ssl
