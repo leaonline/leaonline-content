@@ -43,6 +43,12 @@ BackendConfig.add({
     }
   },
   actions: {
+    preview: {
+      type: 'renderers',
+      name: 'page',
+      template: 'taskPageRenderer',
+      titleField: 'title'
+    },
     insert: insertUpdate,
     update: insertUpdate,
     remove: {
