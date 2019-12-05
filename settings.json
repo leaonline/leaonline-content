@@ -20,13 +20,13 @@
       "play": "/play?contentId="
     },
     "allowedOrigins": [
-      "http://localhost:3000", "http://localhost:5050"
+      ".*localhost.*"
     ]
   },
   "tts": {
     "maxChars": 15000,
     "allowedOrigins": [
-      "http://localhost:3000", "http://localhost:5050"
+      ".*localhost.*"
     ]
   },
   "competencies": {
