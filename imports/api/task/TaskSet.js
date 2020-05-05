@@ -18,7 +18,6 @@ TaskSet.methods.update = {
       optional: true
     }
   }),
-  isPublic: true, // FIXME
   numRequests: 1,
   timeInterval: 250,
   run: onServer(function ({ _id, dimension, level, tasks }) {
@@ -40,7 +39,6 @@ TaskSet.methods.remove = {
   schema: {
     _id: String
   },
-  isPublic: true, // FIXME
   numRequests: 1,
   timeInterval: 1000,
   run: onServer(function ({ _id }) {
@@ -66,7 +64,6 @@ TaskSet.publications.byDimension = {
   projection: {},
   numRequests: 1,
   timeInterval: 250,
-  isPublic: true, // FIXME
   run: onServer(function ({ dimension, level } = {}) {
     return TaskSet.collection().find()
   })

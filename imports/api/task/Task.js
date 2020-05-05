@@ -43,7 +43,6 @@ Task.publications.byDimension = {
   projection: {},
   numRequests: 1,
   timeInterval: 250,
-  isPublic: true, // FIXME
   run: onServer(function ({ dimension } = {}) {
     if (!dimension) {
       return Task.collection().find()

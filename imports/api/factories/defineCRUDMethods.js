@@ -24,7 +24,6 @@ export const defineUpdateMethod = ({ name, schema, roles, group, isPublic, timeI
         optional: true
       }
     }),
-    isPublic: isPublic || true, // FIXME
     numRequests: numRequests || 1,
     timeInterval: timeInterval || 250,
     run: onServer(runFct)
@@ -42,7 +41,6 @@ export const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval,
     schema: {
       _id: String
     },
-    isPublic: isPublic || true, // FIXME
     numRequests: numRequests || 1,
     timeInterval: timeInterval || 1000,
     run: onServer(runFct)

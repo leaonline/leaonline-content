@@ -16,7 +16,6 @@ export const defineAllPublication = ({ name, schema, projection, query, numReque
     schema: schema || {},
     numRequests: numRequests || 1,
     timeInterval: timeInterval || 250,
-    isPublic: isPublic || true, // FIXME
     run: onServer(runFct)
   }
 }
