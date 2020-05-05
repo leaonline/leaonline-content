@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import { Magic, MAGIC_MIME_TYPE } from 'mmmagic'
 import mime from 'mime-types'
 
-export const getCheckMime = i18n => (uploadedFile) => {
+export const getCheckMime = i18nFactory => (uploadedFile) => {
   const magic = new Magic(MAGIC_MIME_TYPE)
   return new Promise((resolve, reject) => {
     magic.detectFile(uploadedFile.path, Meteor.bindEnvironment((err, mimeType) => {
@@ -10,7 +10,7 @@ export const getCheckMime = i18n => (uploadedFile) => {
       if (err) {
         reject(err)
       } else if (!lookup || lookup.indexOf(mimeType) === -1) {
-        const errorMessage = i18n.get('filesCollection.mimeError', { expected: lookup, got: mimeType })
+        const errorMessage = i18nFactory('filesCollection.mimeError', { expected: lookup, got: mimeType })
         reject(new Error(errorMessage))
       } else {
         resolve(true)

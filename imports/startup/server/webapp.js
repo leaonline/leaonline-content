@@ -1,4 +1,5 @@
 import { WebApp } from 'meteor/webapp'
+import bodyParser from 'body-parser'
 
-WebApp.urlEncoded()
-WebApp.json()
+WebApp.connectHandlers.urlEncoded(bodyParser)
+WebApp.connectHandlers.json(bodyParser)

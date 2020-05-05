@@ -18,9 +18,16 @@ ecmascript@0.14.2              # Enable ECMAScript2015+ syntax in app code
 shell-server@0.5.0            # Server-side component of the `meteor shell` command
 
 leaonline:interfaces
-leaonline:factories
 leaonline:utils
 leaonline:webapp
+
+# factories
+leaonline:collection-factory
+leaonline:ratelimit-factory
+leaonline:publication-factory
+leaonline:method-factory
+leaonline:files-collection-factory
+leaonline:http-factory
 
 # accounts
 alanning:roles

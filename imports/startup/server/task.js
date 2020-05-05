@@ -7,6 +7,7 @@ import { BackendConfig } from '../../api/config/BackendConfig'
 import { MediaLib } from '../../api/mediaLib/MediaLib'
 import { createRoutes } from '../../api/factories/createRoute'
 
+delete Task.collection
 const TaskCollection = createCollection(Task)
 
 Task.collection = function () {
@@ -22,6 +23,7 @@ createPublications(publications)
 rateLimitPublications(publications)
 
 const routes = Object.values(Task.httpRoutes)
+console.log(routes)
 createRoutes(routes)
 
 const insertUpdate = {

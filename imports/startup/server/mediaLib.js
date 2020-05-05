@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { WebApp } from 'meteor/webapp'
 import { MediaLib } from '../../api/mediaLib/MediaLib'
+
 import { createFilesCollection } from '../../api/factories/createFilesCollection'
 import { createPublications } from '../../api/factories/createPublication'
 import { createMethods } from '../../api/factories/createMethods'
@@ -8,6 +9,13 @@ import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rat
 import { Log } from '../../utils/log'
 import { BackendConfig } from '../../api/config/BackendConfig'
 
+// after upload validation
+import  { getUserCheck } from '../../api/grid/checkuser'
+import  { getCheckMime } from '../../api/grid/checkMime'
+
+const i18nFactory = x => x
+const validateUser = getUserCheck()
+const validateMime = getCheckMime(i18nFactory)
 const allowedOrigins = new RegExp(Meteor.settings.hosts.backend.urlRegEx)
 
 // { type, name, label, description, schema, content }
@@ -52,12 +60,7 @@ BackendConfig.add({
   }]
 })
 
-const onAfterUpload = function (file) {
-  // TODO move to gridFs
-  // TODO use leaonline:gridfs
-}
-
-const FilesCollection = createFilesCollection({ name: MediaLib.name, allowedOrigins, debug: true, onAfterUpload })
+const FilesCollection = createFilesCollection({ collectionName: MediaLib.name, allowedOrigins, debug: true, validateUser, validateMime })
 MediaLib.filesCollection = () => FilesCollection
 MediaLib.collection = () => FilesCollection.collection
 

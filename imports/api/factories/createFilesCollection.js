@@ -1,11 +1,17 @@
 import { Meteor } from 'meteor/meteor'
-import { MongoInternals } from 'meteor/mongo'
-import { getCreateFilesCollection } from 'meteor/leaonline:factories/collection/createFilesCollection'
+import { createFilesCollectionFactory } from 'meteor/leaonline:files-collection-factory'
+import { createBucket } from '../grid/createBucket'
+import { createObjectId } from '../grid/createObjectId'
 import fs from 'fs'
 
-const i18n = { get (x) { return x } }
-const { bucketName } = Meteor.settings
-const bucket = new MongoInternals.NpmModule.GridFSBucket(MongoInternals.defaultRemoteCollectionDriver().mongo.db, { bucketName })
-const createObjectId = ({ gridFsFileId }) => new MongoInternals.NpmModule.ObjectID(gridFsFileId)
+const i18nFactory = x => x // TODO
+const bucketFactory = createBucket
+const defaultBucket = Meteor.settings.files.bucketName
 
-export const createFilesCollection = getCreateFilesCollection({ i18n, fs, bucket, createObjectId })
+export const createFilesCollection = createFilesCollectionFactory({
+  i18nFactory,
+  bucketFactory,
+  defaultBucket,
+  createObjectId,
+  fs
+})

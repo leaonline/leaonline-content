@@ -23,6 +23,9 @@
       ".*localhost.*"
     ]
   },
+  "files": {
+    "bucketName": "contentFiles"
+  },
   "tts": {
     "maxChars": 15000,
     "allowedOrigins": [
@@ -31,6 +34,5 @@
   },
   "competencies": {
     "url": "/competencies"
-  },
-  "bucketName": "contentFiles"
+  }
 }

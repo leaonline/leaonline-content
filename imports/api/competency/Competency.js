@@ -13,7 +13,6 @@ Competency.publications.all = defineAllPublication({ name: Competency.name })
 Competency.httpRoutes = Competency.httpRoutes || {}
 Competency.httpRoutes.byId = {
   path: competenciesUrl, // TODO from settings
-  name: 'competency.httpRoutes.byTaskId',
   method: 'post',
   schema: {
     ids: {
@@ -26,9 +25,6 @@ Competency.httpRoutes.byId = {
       optional: true
     }
   },
-  projection: {},
-  numRequests: 10,
-  timeInterval: 1000,
   run: onServer(function ({ ids }) {
     const cleanedIds = ids.filter(entry => typeof entry === 'string')
     const CompetencyCollection = Competency.collection()

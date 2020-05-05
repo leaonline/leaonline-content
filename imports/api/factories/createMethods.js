@@ -1,4 +1,8 @@
-import { getCreateMethods } from 'meteor/leaonline:factories/method/createMethods'
+import { createMethodFactory } from 'meteor/leaonline:method-factory'
 import { Schema } from '../schema/Schema'
 
-export const createMethods = getCreateMethods(Schema.create)
+export const createMethod = createMethodFactory({
+  schemaFactory: Schema.create
+})
+
+export const createMethods = methods => methods.forEach(createMethod)

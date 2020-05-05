@@ -1,19 +1,11 @@
-/* global Roles */
-import { check } from 'meteor/check'
+import { Meteor } from 'meteor/meteor'
 
-function loggedIn () {
-  if (!this.userId) return false
-  const user = this.user()
-  return user && user._id
+function userExists (userId) {
+  return !!(userId && Meteor.users.findOne(userId))
 }
 
-export const getUserCheck = function ({ roles, group }) {
-  check(roles, [String])
-  check(group, String)
-
-  return function checkUser (uploadedFile) {
-    const self = this
-    const userId = loggedIn.call(self)
-    return userId && Roles.userIsInRole(userId, roles, group)
+export const getUserCheck = function () {
+  return function validateUser (user) {
+    return userExists(user && user._id)
   }
 }
