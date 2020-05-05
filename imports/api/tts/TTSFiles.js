@@ -1,3 +1,5 @@
 export const TTSFiles = {
-  name: 'ttsFiles'
+  name: 'ttsFiles',
+  collectionName: 'ttsFiles',
+  isFilesCollection: true
 }

@@ -23,7 +23,6 @@ createPublications(publications)
 rateLimitPublications(publications)
 
 const routes = Object.values(Task.httpRoutes)
-console.log(routes)
 createRoutes(routes)
 
 const insertUpdate = {
