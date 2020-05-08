@@ -1,12 +1,11 @@
-import { TaskSet } from '../../api/task/TaskSet'
-import { Task } from '../../api/task/Task'
+import { TaskSet } from '../../contexts/TaskSet'
+import { Task } from '../../contexts/Task'
 import { createCollection } from '../../api/factories/createCollection'
 import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { createPublications } from '../../api/factories/createPublication'
 import { BackendConfig } from '../../api/config/BackendConfig'
-import { Dimensions } from '../../api/dimensions/Dimensions'
-import { Levels } from '../../api/levels/Levels'
+import { Dimensions } from '../../contexts/Dimensions'
 import { createRoutes } from '../../api/factories/createRoute'
 
 const TaskSetCollection = createCollection(TaskSet)
@@ -43,9 +42,7 @@ BackendConfig.add({
       context: Dimensions.name
     },
     level: {
-      label: Levels.label,
-      type: BackendConfig.fieldTypes.context,
-      context: Levels.name
+      label: Task.label,
     },
     tasks: {
       label: Task.label,

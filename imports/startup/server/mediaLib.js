@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { WebApp } from 'meteor/webapp'
-import { MediaLib } from '../../api/mediaLib/MediaLib'
+import { MediaLib } from '../../contexts/MediaLib'
 
 import { createFilesCollection } from '../../api/factories/createFilesCollection'
 import { createPublications } from '../../api/factories/createPublication'

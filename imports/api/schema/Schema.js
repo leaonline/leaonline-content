@@ -1,8 +1,10 @@
 import { Tracker } from 'meteor/tracker'
 import SimpleSchema from 'simpl-schema'
 import { onClient } from '../../utils/arch'
+import { SchemaOptions } from 'meteor/leaonline:interfaces/SchemaOptions'
 
-SimpleSchema.extendOptions(['autoform', 'name'])
+const schemaOptions = Object.keys(SchemaOptions)
+SimpleSchema.extendOptions(schemaOptions)
 
 export const Schema = {}
 

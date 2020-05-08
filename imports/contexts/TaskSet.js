@@ -1,5 +1,5 @@
 import { TaskSet } from 'meteor/leaonline:interfaces/TaskSet'
-import { onServer } from '../../utils/arch'
+import { onServer } from '../utils/arch'
 
 /**
  * This is an in-memory cache for al task sets to reduce DB access.

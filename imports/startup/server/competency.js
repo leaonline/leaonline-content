@@ -1,10 +1,10 @@
-import { Competency } from '../../api/competency/Competency'
+import { Competency } from '../../contexts/Competency'
 import { createCollection } from '../../api/factories/createCollection'
 import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { createPublications } from '../../api/factories/createPublication'
 import { BackendConfig } from '../../api/config/BackendConfig'
-import { Dimensions } from '../../api/dimensions/Dimensions'
+import { Dimensions } from '../../contexts/Dimensions'
 import { createRoutes } from '../../api/factories/createRoute'
 
 const CompetencyCollection = createCollection(Competency)
@@ -58,8 +58,6 @@ BackendConfig.add({
       schema: { _id: String }
     }
   },
-  roles: ['editCompetency'], // TODO put in Roles
-  group: 'editors', // TODO put in Groups,
   isFilesCollection: false,
   mainCollection: Competency.name,
   collections: [

@@ -1,10 +1,10 @@
-import { Task } from '../../api/task/Task'
+import { Task } from '../../contexts/Task'
 import { createCollection } from '../../api/factories/createCollection'
 import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { createPublications } from '../../api/factories/createPublication'
 import { BackendConfig } from '../../api/config/BackendConfig'
-import { MediaLib } from '../../api/mediaLib/MediaLib'
+import { MediaLib } from '../../contexts/MediaLib'
 import { createRoutes } from '../../api/factories/createRoute'
 
 delete Task.collection

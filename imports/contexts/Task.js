@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor'
 import { Task } from 'meteor/leaonline:interfaces/Task'
-import { MediaLib } from '../mediaLib/MediaLib'
-import { onServer } from '../../utils/arch'
-import { defineRemoveMethod, defineUpdateMethod } from '../factories/defineCRUDMethods'
+import { MediaLib } from './MediaLib'
+import { onServer } from '../utils/arch'
+import { defineRemoveMethod, defineUpdateMethod } from '../api/factories/defineCRUDMethods'
 
 // decorate schema with custom AutoForm
 const settings = Meteor.settings.hosts.items
