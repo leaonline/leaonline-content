@@ -2,6 +2,7 @@ import '../imports/startup/server/webapp'
 import '../imports/startup/server/accounts'
 import '../imports/startup/server/backendConfig'
 import '../imports/startup/server/tts'
+import '../imports/startup/server/types'
 import '../imports/startup/server/contexts'
 
 // import '../imports/startup/server/mediaLib'
