@@ -8,12 +8,6 @@
   "mediaLib": {
     "title": "Medien-Bibliothek"
   },
-  "competency": {
-    "title": "Kannbeschreibung",
-    "competencyId": "KB",
-    "descriptionTeacher": "Text KL",
-    "descriptionLearner": "Text TN"
-  },
   "task": {
     "title": "Aufgabe",
     "taskId": "Aufgaben-ID",
@@ -26,34 +20,7 @@
   "taskSet": {
     "title": "Aufgaben-Set"
   },
-  "status": {
-    "title": "Bearbeitungsstatus",
-    "inProgress": "In Bearbeitung",
-    "inReview": "In Revision",
-    "deprecated": "Veraltet / Überholt",
-    "published": "Veröffentlicht"
-  },
-  "dimensions": {
-    "title": "Dimensionen",
-    "dimension": "Dimension",
-    "understand": {
-      "title": "Sprache"
-    },
-    "reading": {
-      "title": "Lesen"
-    },
-    "writing": {
-      "title": "Schreiben"
-    },
-    "math": {
-      "title": "Rechnen"
-    }
-  },
-  "levels": {
-    "title": "Schwierigkeiten",
-    "level": "Schwierigkeitsgrad",
-    "easy": "Einfach",
-    "medium": "Mittel",
-    "hard": "Schwer"
+  "dimension": {
+    "title": "Dimension"
   }
 }
