@@ -7,7 +7,7 @@ import { createPublications } from '../../api/factories/createPublication'
 import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { Log } from '../../utils/log'
-import { BackendConfig } from '../../api/config/BackendConfig'
+import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 
 // after upload validation
 import  { getUserCheck } from '../../api/grid/checkuser'
@@ -19,7 +19,7 @@ const validateMime = getCheckMime(i18nFactory)
 const allowedOrigins = new RegExp(Meteor.settings.hosts.backend.urlRegEx)
 
 // { type, name, label, description, schema, content }
-BackendConfig.add({
+ServiceRegistry.add({
   name: MediaLib.name,
   label: MediaLib.label,
   icon: MediaLib.icon,

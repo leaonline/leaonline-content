@@ -1,1 +1,1 @@
-export {MediaLib} from 'meteor/leaonline:interfaces/MediaLib'
+export {MediaLib} from 'meteor/leaonline:interfaces/contexts/MediaLib'

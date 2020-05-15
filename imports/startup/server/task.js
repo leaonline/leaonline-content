@@ -3,7 +3,7 @@ import { createCollection } from '../../api/factories/createCollection'
 import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { createPublications } from '../../api/factories/createPublication'
-import { BackendConfig } from '../../api/config/BackendConfig'
+import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 import { MediaLib } from '../../contexts/MediaLib'
 import { createRoutes } from '../../api/factories/createRoute'
 
@@ -27,14 +27,14 @@ createRoutes(routes)
 
 const insertUpdate = {
   method: Task.methods.update.name,
-  schema: JSON.stringify(Task.schema, BackendConfig.replacer)
+  schema: JSON.stringify(Task.schema, ServiceRegistry.replacer)
 }
 
-BackendConfig.add({
+ServiceRegistry.add({
   name: Task.name,
   label: Task.label,
   icon: Task.icon,
-  type: BackendConfig.types.list,
+  type: ServiceRegistry.types.list,
   fields: {
     taskId: {
       label: Task.schema.taskId.label

@@ -46,6 +46,7 @@ leaonline:method-factory@1.0.0
 leaonline:oauth-lea@1.0.2
 leaonline:publication-factory@1.0.0
 leaonline:ratelimit-factory@1.0.0
+leaonline:service-registry@1.0.0
 leaonline:utils@1.0.0
 leaonline:webapp@1.0.0
 livedata@1.0.18

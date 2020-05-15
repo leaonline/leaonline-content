@@ -3,7 +3,7 @@ import { createCollection } from '../../api/factories/createCollection'
 import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { createPublications } from '../../api/factories/createPublication'
-import { BackendConfig } from '../../api/config/BackendConfig'
+import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 import { Dimensions } from '../../contexts/Dimensions'
 import { createRoutes } from '../../api/factories/createRoute'
 
@@ -26,21 +26,21 @@ createRoutes(routes)
 
 const insertUpdate = {
   method: Competency.methods.update.name,
-  schema: JSON.stringify(Competency.schema, BackendConfig.replacer)
+  schema: JSON.stringify(Competency.schema, ServiceRegistry.replacer)
 }
 
-BackendConfig.add({
+ServiceRegistry.add({
   name: Competency.name,
   label: Competency.label,
   icon: Competency.icon,
-  type: BackendConfig.types.list,
+  type: ServiceRegistry.types.list,
   fields: {
     competencyId: {
       label: Competency.schema.competencyId.label
     },
     dimension: {
       label: Dimensions.label,
-      type: BackendConfig.fieldTypes.context,
+      type: ServiceRegistry.fieldTypes.context,
       context: Dimensions.name
     },
     descriptionTeacher: {

@@ -1,6 +1,9 @@
 // loading all contexts
 import { Dimension } from '../../contexts/Dimension'
 import { Competency } from '../../contexts/Competency'
+import { Field } from '../../contexts/Field'
+import { UnitSet } from '../../contexts/UnitSet'
+import { Unit } from '../../contexts/Unit'
 
 // decorators
 import { defineInsertMethod, defineRemoveMethod, defineUpdateMethod } from '../../api/factories/defineCRUDMethods'
@@ -12,10 +15,9 @@ import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { createPublications } from '../../api/factories/createPublication'
 import { createRoutes } from '../../api/factories/createRoute'
-import { context2BackendConfig } from '../../api/config/context2BackendConfig'
 
 // service arch
-import { BackendConfig } from '../../api/config/BackendConfig'
+import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 
 function register (context) {
   context.methods = context.methods || {}
@@ -43,7 +45,7 @@ function register (context) {
   const routes = Object.values(context.routes)
   createRoutes(routes)
 
-  BackendConfig.add(context)
+  ServiceRegistry.register(context)
 }
 
-[Dimension, Competency].forEach(register)
+[Field, Dimension, Competency, UnitSet, Unit].forEach(register)

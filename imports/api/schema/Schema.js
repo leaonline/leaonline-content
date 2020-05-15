@@ -1,9 +1,9 @@
 import { Tracker } from 'meteor/tracker'
-import SimpleSchema from 'simpl-schema'
+import { ServiceRegistry } from '../config/ServiceRegistry'
 import { onClient } from '../../utils/arch'
-import { SchemaOptions } from 'meteor/leaonline:interfaces/SchemaOptions'
+import SimpleSchema from 'simpl-schema'
 
-const schemaOptions = Object.keys(SchemaOptions)
+const schemaOptions = Object.keys(ServiceRegistry.schemaOptions)
 SimpleSchema.extendOptions(schemaOptions)
 
 export const Schema = {}

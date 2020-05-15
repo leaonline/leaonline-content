@@ -1,5 +1,5 @@
 import { Status } from '../../types/Status'
 import { ColorType } from '../../types/ColorTypes'
-import { BackendConfig } from '../../api/config/BackendConfig'
+import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 
-[Status, ColorType].forEach(BackendConfig.add)
+[Status, ColorType].forEach(ServiceRegistry.register)

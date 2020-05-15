@@ -4,7 +4,7 @@ import { createCollection } from '../../api/factories/createCollection'
 import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
 import { createPublications } from '../../api/factories/createPublication'
-import { BackendConfig } from '../../api/config/BackendConfig'
+import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 import { Dimensions } from '../../contexts/Dimensions'
 import { createRoutes } from '../../api/factories/createRoute'
 
@@ -27,18 +27,18 @@ createRoutes(routes)
 
 const insertUpdate = {
   method: TaskSet.methods.update.name,
-  schema: JSON.stringify(TaskSet.schema, BackendConfig.replacer)
+  schema: JSON.stringify(TaskSet.schema, ServiceRegistry.replacer)
 }
 
-BackendConfig.add({
+ServiceRegistry.add({
   name: TaskSet.name,
   label: TaskSet.label,
   icon: TaskSet.icon,
-  type: BackendConfig.types.list,
+  type: ServiceRegistry.types.list,
   fields: {
     dimension: {
       label: Dimensions.label,
-      type: BackendConfig.fieldTypes.context,
+      type: ServiceRegistry.fieldTypes.context,
       context: Dimensions.name
     },
     level: {
@@ -46,7 +46,7 @@ BackendConfig.add({
     },
     tasks: {
       label: Task.label,
-      type: BackendConfig.fieldTypes.collection,
+      type: ServiceRegistry.fieldTypes.collection,
       collection: Task.name,
       field: Task.schema.taskId.name
     }

@@ -1,7 +1,7 @@
 {
   "apps": {
     "content": {
-      "title": "Content-Server",
+      "title": "Inhalte / Content",
       "description": "Stellt statische Inhalte über HTTP Routen zur Verfügung"
     }
   },

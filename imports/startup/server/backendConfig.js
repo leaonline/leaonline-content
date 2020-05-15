@@ -1,17 +1,17 @@
-import { BackendConfig } from '../../api/config/BackendConfig'
+import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 import { createMethods } from '../../api/factories/createMethods'
 import { rateLimitMethods } from '../../api/factories/rateLimit'
 import de from '../../../resources/i18n/i18n_de'
 import commonDe from 'meteor/leaonline:interfaces/common/i18n_de'
 
-BackendConfig.init({
+ServiceRegistry.init({
   icon: 'file',
   label: 'content',
   description: 'apps.content.description'
 })
 
-BackendConfig.addLang('de', Object.assign(commonDe, de))
+ServiceRegistry.addLang('de', Object.assign(commonDe, de))
 
-const methods = Object.values(BackendConfig.methods)
+const methods = Object.values(ServiceRegistry.methods)
 createMethods(methods)
 rateLimitMethods(methods)
