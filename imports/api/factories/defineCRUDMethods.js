@@ -3,7 +3,6 @@ import { getCollection } from '../../utils/collection'
 
 export const defineInsertMethod = ({ name, schema, numRequests, timeInterval, run }) => {
   const runFct = run || function (insertDoc) {
-    console.log('insert', name, insertDoc)
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
 

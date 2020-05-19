@@ -24,7 +24,8 @@
     ]
   },
   "files": {
-    "bucketName": "contentFiles"
+    "bucketName": "contentFiles",
+    "maxSize": 10240000
   },
   "tts": {
     "maxChars": 15000,

@@ -10,57 +10,21 @@ import { Log } from '../../utils/log'
 import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 
 // after upload validation
-import  { getUserCheck } from '../../api/grid/checkuser'
-import  { getCheckMime } from '../../api/grid/checkMime'
+import { getUserCheck } from '../../api/grid/checkuser'
+import { getCheckMime } from '../../api/grid/checkMime'
 
-const i18nFactory = x => x
-const validateUser = getUserCheck()
-const validateMime = getCheckMime(i18nFactory)
-const allowedOrigins = new RegExp(Meteor.settings.hosts.backend.urlRegEx)
+ServiceRegistry.register(MediaLib)
 
-// { type, name, label, description, schema, content }
-ServiceRegistry.add({
-  name: MediaLib.name,
-  label: MediaLib.label,
-  icon: MediaLib.icon,
-  type: 'gallery',
-  fields: {
-    name: 1,
-    size: 1
-  },
-  actions: {
-    upload: {
-      schema: {
-        fileId: {
-          type: 'String',
-          autoform: {
-            type: 'fileUpload',
-            collection: MediaLib.name,
-            accept: 'image/*'
-          }
-        }
-      },
-      accept: 'image/*,.svg'
-    },
-    remove: {
-      method: MediaLib.methods.remove.name,
-      schema: { _id: 'String' }
-    }
-  },
-  roles: ['CRUDMediaLib'], // TODO put in Roles
-  group: 'editors', // TODO put in Groups,
-  isFilesCollection: MediaLib.isFilesCollection,
-  mainCollection: MediaLib.name,
-  collections: [
-    MediaLib.name
-  ],
-  publications: [{
-    name: MediaLib.publications.all.name,
-    schema: MediaLib.publications.all.schema
-  }]
+
+
+const FilesCollection = createFilesCollection({
+  collectionName: MediaLib.name,
+  allowedOrigins,
+  debug: true,
+  validateUser,
+  validateMime
 })
 
-const FilesCollection = createFilesCollection({ collectionName: MediaLib.name, allowedOrigins, debug: true, validateUser, validateMime })
 MediaLib.filesCollection = () => FilesCollection
 MediaLib.collection = () => FilesCollection.collection
 
