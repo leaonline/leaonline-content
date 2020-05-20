@@ -7,8 +7,8 @@ import { Unit } from '../../contexts/Unit'
 import { MediaLib } from '../../contexts/MediaLib'
 
 // decorators
-import { defineInsertMethod, defineRemoveMethod, defineUpdateMethod } from '../../api/factories/defineCRUDMethods'
-import { defineAllPublication } from '../../api/factories/definePublication'
+import { defineInsertMethod, defineRemoveMethod, defineUpdateMethod } from '../../api/decorators/defineCRUDMethods'
+import { defineAllPublication } from '../../api/decorators/definePublication'
 
 // factories
 import { createCollection } from '../../api/factories/createCollection'
