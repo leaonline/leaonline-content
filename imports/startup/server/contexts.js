@@ -22,7 +22,7 @@ import { createRoutes } from '../../api/factories/createRoute'
 import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 import { getUserCheck } from '../../api/grid/checkuser'
 import { getCheckMime } from '../../api/grid/checkMime'
-import { Meteor } from "meteor/meteor"
+import { Meteor } from 'meteor/meteor'
 
 const i18nFactory = x => x
 const validateUser = getUserCheck()
@@ -40,7 +40,6 @@ function register (context) {
 
   context.routes = context.routes || {}
 
-
   if (context.isFilesCollection) {
     createFilesCollection({
       collectionName: MediaLib.name,
@@ -54,7 +53,6 @@ function register (context) {
   } else {
     createCollection(context)
   }
-
 
   const methods = Object.values(context.methods)
   createMethods(methods)

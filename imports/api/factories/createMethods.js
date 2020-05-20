@@ -4,7 +4,7 @@ import { Schema } from '../schema/Schema'
 
 export const createMethod = createMethodFactory({
   schemaFactory: Schema.create,
-  mixins: [ checkPermissions ]
+  mixins: [checkPermissions]
 })
 
 export const createMethods = methods => methods.forEach(createMethod)

@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 
 export const checkPermissions = function (options) {
-  const exception = options.isPublic || (options.permission && options.permission(...args))
+  const exception = options.isPublic || (options.permission && options.permission())
   if (exception) return options
 
   const runFct = options.run

@@ -4,7 +4,7 @@ import { Schema } from '../schema/Schema'
 
 export const createPublication = createPublicationFactory({
   schemaFactory: Schema.create,
-  mixins: [ checkPermissions ]
+  mixins: [checkPermissions]
 })
 
 export const createPublications = publications => publications.forEach(createPublication)

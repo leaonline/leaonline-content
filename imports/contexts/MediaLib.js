@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { MediaLib } from 'meteor/leaonline:interfaces/contexts/MediaLib'
 
 MediaLib.routes.mediaUrl.run = function (req, res, next) {
@@ -8,4 +9,4 @@ MediaLib.routes.mediaUrl.run = function (req, res, next) {
 
 MediaLib.maxSize = Meteor.settings.files.maxSize
 
-export  { MediaLib }
+export { MediaLib }

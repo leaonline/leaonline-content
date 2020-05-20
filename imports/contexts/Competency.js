@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { Competency } from 'meteor/leaonline:interfaces/contexts/Competency'
 
 const settings = Meteor.settings.competencies
@@ -5,8 +6,8 @@ const competenciesUrl = settings.url
 
 Competency.httpRoutes = Competency.httpRoutes || {}
 Competency.httpRoutes.byId = {
-  path: competenciesUrl, // TODO from settings
-  method: 'post',
+  path: competenciesUrl,
+  method: 'get',
   schema: {
     ids: {
       type: Array,

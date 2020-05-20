@@ -42,7 +42,7 @@ ServiceRegistry.add({
       context: Dimensions.name
     },
     level: {
-      label: Task.label,
+      label: Task.label
     },
     tasks: {
       label: Task.label,
