@@ -6,7 +6,7 @@ import commonDe from 'meteor/leaonline:interfaces/common/i18n_de'
 
 ServiceRegistry.init({
   icon: 'file',
-  label: 'content',
+  label: 'apps.content.title',
   description: 'apps.content.description'
 })
 
