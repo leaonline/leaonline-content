@@ -1,1 +1,1 @@
-export { Status } from 'meteor/leaonline:interfaces/types/Status'
+export { Status } from 'meteor/leaonline:corelib/types/Status'

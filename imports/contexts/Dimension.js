@@ -1,1 +1,1 @@
-export { Dimension } from 'meteor/leaonline:interfaces/contexts/Dimension'
+export { Dimension } from 'meteor/leaonline:corelib/contexts/Dimension'

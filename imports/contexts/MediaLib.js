@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { MediaLib } from 'meteor/leaonline:interfaces/contexts/MediaLib'
+import { MediaLib } from 'meteor/leaonline:corelib/contexts/MediaLib'
 
 MediaLib.routes.mediaUrl.run = function (req, res, next) {
   const { _id } = this.data()

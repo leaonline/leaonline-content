@@ -1,1 +1,1 @@
-export { ColorType } from 'meteor/leaonline:interfaces/types/ColorType'
+export { ColorType } from 'meteor/leaonline:corelib/types/ColorType'

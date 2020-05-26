@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import { Competency } from 'meteor/leaonline:interfaces/contexts/Competency'
+import { Competency } from 'meteor/leaonline:corelib/contexts/Competency'
 
 const settings = Meteor.settings.competencies
 const competenciesUrl = settings.url

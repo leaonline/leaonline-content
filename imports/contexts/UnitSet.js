@@ -1,1 +1,1 @@
-export { UnitSet } from 'meteor/leaonline:interfaces/contexts/UnitSet'
+export { UnitSet } from 'meteor/leaonline:corelib/contexts/UnitSet'
