@@ -5,6 +5,8 @@ import { Field } from '../../contexts/Field'
 import { UnitSet } from '../../contexts/UnitSet'
 import { Unit } from '../../contexts/Unit'
 import { MediaLib } from '../../contexts/MediaLib'
+import { SingleChoice } from '../../contexts/SingleChoice'
+import { Cloze } from '../../contexts/Cloze'
 
 // decorators
 import { defineInsertMethod, defineRemoveMethod, defineUpdateMethod } from '../../api/decorators/defineCRUDMethods'
@@ -68,4 +70,11 @@ function register (context) {
   ServiceRegistry.register(context)
 }
 
+// editable contexts will be decorated,
+// punched through the factories
+// and then added to the ServiceRegistry
 [MediaLib, Field, Dimension, Competency, UnitSet, Unit].forEach(register)
+
+// non-editable contexts, that are also not types
+// are only registered to the factory
+;[SingleChoice, Cloze].forEach(ServiceRegistry.register)
