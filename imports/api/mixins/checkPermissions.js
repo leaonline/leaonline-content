@@ -6,7 +6,7 @@ export const checkPermissions = function (options) {
 
   const runFct = options.run
   options.run = function run (...args) {
-    console.log('checkPermissions', this.userId, Meteor.user())
+    // console.log('checkPermissions', this.userId, Meteor.user())
     // user level permission
     let userId = this.userId
     if (!userId) {
