@@ -6,7 +6,9 @@ export const defineInsertMethod = ({ name, schema, numRequests, timeInterval, ru
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
 
-    return Collection.insert(insertDoc)
+    const insertId = Collection.insert(insertDoc)
+    console.info(`[${name}]: created ${insertId}`)
+    return insertId
   }
 
   return {
@@ -30,7 +32,9 @@ export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, ru
     }
 
     delete updateDoc._id
-    return Collection.update(_id, { $set: updateDoc })
+    const updated = Collection.update(_id, { $set: updateDoc })
+    console.info(`[${name}]: updated ${_id} ${updated}`)
+    return updated
   }
 
   return {
@@ -51,8 +55,11 @@ export const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval,
   const runFct = run || function ({ _id }) {
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
-    return Collection.remove(_id)
+    const removed = Collection.remove(_id)
+    console.info(`[${name}]: removed ${_id} ${removed}`)
+    return removed
   }
+
   return {
     name: `${name}.methods.remove`,
     schema: {

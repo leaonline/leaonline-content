@@ -28,6 +28,7 @@ const i18nFactory = x => x
 const validateUser = getUserCheck()
 const validateMime = getCheckMime(i18nFactory)
 const allowedOrigins = new RegExp(Meteor.settings.hosts.backend.urlRegEx)
+const defaultLog = (...args) => console.info.apply(console, args)
 
 function register (context) {
   context.methods = context.methods || {}
@@ -36,7 +37,7 @@ function register (context) {
   context.methods.remove = defineRemoveMethod({ name: context.name })
 
   context.publications = context.publications || {}
-  context.publications.all = defineAllPublication({ name: context.name })
+  context.publications.all = defineAllPublication({ name: context.name, log: defaultLog })
 
   context.routes = context.routes || {}
 
@@ -44,7 +45,7 @@ function register (context) {
     createFilesCollection({
       collectionName: MediaLib.name,
       allowedOrigins,
-      debug: true,
+      debug: Meteor.isDevelopment,
       validateUser,
       validateMime,
       maxSize: context.maxSize,
