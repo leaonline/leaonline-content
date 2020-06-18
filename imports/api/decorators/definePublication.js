@@ -7,7 +7,7 @@ export const defineAllPublication = ({ name, schema, projection, log, query, num
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
     const finalQuery = Object.assign({}, queryDoc, query)
     const cursr = Collection.find(finalQuery, projection)
-    console.info(`[${name}] publish`, finalQuery, ' => ' , cursr.count())
+    console.info(`[${name}] publish`, finalQuery, ' => ', cursr.count())
     return cursr
   }
 
