@@ -20,6 +20,7 @@ Competency.httpRoutes.byId = {
     }
   },
   run: function ({ ids }) {
+    // TODO denormalize category
     const cleanedIds = ids.filter(entry => typeof entry === 'string')
     const CompetencyCollection = Competency.collection()
     return CompetencyCollection.find({ competencyId: { $in: cleanedIds } }).fetch()
