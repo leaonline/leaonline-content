@@ -8,12 +8,12 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
-    "@babel/runtime": "^7.8.7",
+    "@babel/runtime": "^7.11.2",
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
-    "meteor-node-stubs": "^1.0.0",
+    "meteor-node-stubs": "^1.0.1",
     "mmmagic": "^0.5.3",
-    "simpl-schema": "^1.5.7"
+    "simpl-schema": "^1.10.0"
   },
   "meteor": {
     "mainModule": {

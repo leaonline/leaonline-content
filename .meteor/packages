@@ -36,7 +36,7 @@ leaonline:webapp
 # accounts / oauth
 #========================================
 # alanning:roles
-accounts-base@1.6.0
+accounts-base@1.7.0
 leaonline:accounts-lea
 leaonline:ddp-login-handler
 service-configuration@1.0.11
