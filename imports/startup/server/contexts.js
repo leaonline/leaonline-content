@@ -1,5 +1,6 @@
 // loading all contexts
 import { Dimension } from '../../contexts/Dimension'
+import { Level } from '../../contexts/Level'
 import { CompetencyCategory } from '../../contexts/CompetencyCategory'
 import { Competency } from '../../contexts/Competency'
 import { Field } from '../../contexts/Field'
@@ -72,4 +73,4 @@ function register (context) {
 // editable contexts will be decorated,
 // punched through the factories
 // and then added to the ServiceRegistry
-[MediaLib, Field, Dimension, CompetencyCategory, Competency, UnitSet, Unit].forEach(register)
+[MediaLib, Field, Dimension, Level, CompetencyCategory, Competency, UnitSet, Unit].forEach(register)
