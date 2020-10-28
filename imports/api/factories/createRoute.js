@@ -1,11 +1,22 @@
 // import { Meteor } from 'meteor/meteor'
 import { Schema } from '../schema/Schema'
+import cors from 'cors'
 import { createHTTPFactory } from 'meteor/leaonline:http-factory'
 
-// const allowedOrigins = Meteor.settings.hosts.allowedOrigins
+const allowedOrigins = (Meteor.settings.hosts.allowedOrigins).map(s => new RegExp(s))
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (origin && allowedOrigins.some(pattern => pattern.test(origin))) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 export const createRoute = createHTTPFactory({
-  schemaFactory: Schema.create
+  schemaFactory: Schema.create,
+  cors: cors(corsOptions)
 })
 
 export const createRoutes = routes => routes.forEach(createRoute)
