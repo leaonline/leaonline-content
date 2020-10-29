@@ -32,6 +32,7 @@ const validateMime = getCheckMime(i18nFactory)
 const allowedOrigins = new RegExp(Meteor.settings.hosts.backend.urlRegEx)
 
 function register (context) {
+  console.info(`[${context.name}]: register`)
   context.methods = context.methods || {}
   context.methods.insert = defineInsertMethod({ name: context.name, schema: context.schema })
   context.methods.update = defineUpdateMethod({ name: context.name, schema: context.schema })
@@ -42,8 +43,10 @@ function register (context) {
 
   context.routes = context.routes || {}
 
+  let collection
+
   if (context.isFilesCollection) {
-    createFilesCollection({
+    collection = createFilesCollection({
       collectionName: MediaLib.name,
       allowedOrigins,
       debug: Meteor.isDevelopment,
@@ -53,7 +56,7 @@ function register (context) {
       extensions: context.extensions
     })
   } else {
-    createCollection(context)
+    collection = createCollection(context)
   }
 
   const methods = Object.values(context.methods)
@@ -68,6 +71,8 @@ function register (context) {
   createRoutes(routes)
 
   ServiceRegistry.register(context)
+
+  context.collection = () => collection
 }
 
 // editable contexts will be decorated,
