@@ -13,7 +13,7 @@ UnitSet.routes.all.run = function () {
     }).fetch()
   }
 
-  return UnitSet.collection().find({ field: { $in: fields }}).fetch()
+  return UnitSet.collection().find({ field: { $in: fields } }).fetch()
 }
 
 export { UnitSet }

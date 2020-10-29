@@ -1,7 +1,7 @@
-// import { Meteor } from 'meteor/meteor'
+import { Meteor } from 'meteor/meteor'
+import { createHTTPFactory } from 'meteor/leaonline:http-factory'
 import { Schema } from '../schema/Schema'
 import cors from 'cors'
-import { createHTTPFactory } from 'meteor/leaonline:http-factory'
 
 const allowedOrigins = (Meteor.settings.hosts.allowedOrigins).map(s => new RegExp(s))
 const corsOptions = {

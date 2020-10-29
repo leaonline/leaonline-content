@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { onServer } from '../../utils/arch'
 import { getCollection } from '../../utils/collection'
 
