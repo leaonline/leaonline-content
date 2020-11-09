@@ -1,19 +1,39 @@
 import { UnitSet } from 'meteor/leaonline:corelib/contexts/UnitSet'
 
 UnitSet.routes.all.run = function () {
-  const { fields } = this.data()
-  // if no fields are given, we assume, that this is a call from
-  // the diagnostics app, which is not linked to any fields
-  if (!fields || fields.length === 0) {
-    return UnitSet.collection().find({
-      $or: [
-        { field: { $exists: false } }, // field does not exist
-        { field: null } // field has been removed
-      ]
-    }).fetch()
+  const api = this
+  const { field, job, isLegacy } = api.data()
+  const query = {}
+
+  if (isLegacy === 'true') {
+    query.isLegacy = true
   }
 
-  return UnitSet.collection().find({ field: { $in: fields } }).fetch()
+  if (field) {
+    query.field = field
+  }
+
+  if (job) {
+    query.job = job
+  }
+
+  if (Object.keys(query).length === 0) {
+    this.error({
+      code: 500,
+      title: 'routes.queryFailed',
+      description: 'routes.emptyQueryNotSupported',
+      info: JSON.stringify({ query })
+    })
+  }
+
+  api.log(query, UnitSet.collection().find(query).count())
+  return UnitSet.collection().find(query).fetch()
+}
+
+UnitSet.routes.byId.run = function () {
+  const api = this
+  const { _id } = api.data()
+  return UnitSet.collection().findOne(_id)
 }
 
 export { UnitSet }

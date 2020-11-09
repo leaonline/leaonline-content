@@ -21,4 +21,6 @@ export const createRoute = createHTTPFactory({
   cors: cors(corsOptions)
 })
 
-export const createRoutes = routes => routes.forEach(createRoute)
+export const createRoutes = routes => routes.forEach(route => {
+  return createRoute(route)
+})
