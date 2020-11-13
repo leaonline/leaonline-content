@@ -7,7 +7,6 @@
 meteor-base@1.4.0             # Packages every Meteor app needs to have
 mongo@1.10.0                   # The database Meteor supports right now
 
-standard-minifier-css@1.6.1   # CSS minifier run for production mode
 standard-minifier-js@2.6.0    # JS minifier run for production mode
 ecmascript@0.14.3              # Enable ECMAScript2015+ syntax in app code
 

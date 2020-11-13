@@ -53,7 +53,6 @@ logging@1.1.20
 mdg:validated-method@1.2.0
 meteor@1.9.3
 meteor-base@1.4.0
-minifier-css@1.5.3
 minifier-js@2.6.0
 minimongo@1.6.0
 modern-browsers@0.1.5
@@ -82,7 +81,6 @@ routepolicy@1.1.0
 service-configuration@1.0.11
 sha@1.0.9
 socket-stream-client@0.3.1
-standard-minifier-css@1.6.1
 standard-minifier-js@2.6.0
 tmeasday:check-npm-versions@0.3.2
 tracker@1.2.0
