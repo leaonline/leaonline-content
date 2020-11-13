@@ -25,6 +25,7 @@ import { ServiceRegistry } from '../../api/config/ServiceRegistry'
 import { getUserCheck } from '../../api/grid/checkuser'
 import { getCheckMime } from '../../api/grid/checkMime'
 import { Meteor } from 'meteor/meteor'
+import { implementGetByIdRoute } from '../../api/decorators/implementGetByIdRoute'
 
 const i18nFactory = x => x
 const validateUser = getUserCheck()
@@ -42,6 +43,7 @@ function register (context) {
   context.publications.all = defineAllPublication({ name: context.name })
 
   context.routes = context.routes || {}
+  implementGetByIdRoute(context)
 
   let collection
 

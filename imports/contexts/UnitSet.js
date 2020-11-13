@@ -30,10 +30,4 @@ UnitSet.routes.all.run = function () {
   return UnitSet.collection().find(query).fetch()
 }
 
-UnitSet.routes.byId.run = function () {
-  const api = this
-  const { _id } = api.data()
-  return UnitSet.collection().findOne(_id)
-}
-
 export { UnitSet }
