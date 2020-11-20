@@ -1,4 +1,4 @@
-# leaonline-content
+# Content server for lea.online
 
 This application requires dependencies to handle file conversions and TTS synthesis.
 
