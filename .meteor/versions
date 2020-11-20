@@ -39,7 +39,7 @@ leaonline:collection-factory@1.0.2
 leaonline:corelib@1.0.0
 leaonline:ddp-login-handler@1.0.4
 leaonline:ejson-regexp@1.1.0
-leaonline:files-collection-factory@1.0.0
+leaonline:grid-factory@1.0.0
 leaonline:http-factory@1.0.0
 leaonline:method-factory@1.0.0
 leaonline:oauth-lea@1.0.2

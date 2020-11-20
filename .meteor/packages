@@ -26,7 +26,7 @@ leaonline:collection-factory
 leaonline:ratelimit-factory
 leaonline:publication-factory
 leaonline:method-factory
-leaonline:files-collection-factory
+leaonline:grid-factory
 leaonline:http-factory
 leaonline:service-registry
 leaonline:webapp
