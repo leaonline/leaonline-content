@@ -1,11 +1,14 @@
 import { Meteor } from 'meteor/meteor'
 
 function userExists (userId) {
-  return !!(userId && Meteor.users.findOne(userId))
+  return !!(userId && Meteor.users.find(userId).count() > 0)
 }
 
 export const getUserCheck = function () {
-  return function validateUser (user) {
-    return userExists(user && user._id)
+  return function validateUser (userId, file, type) {
+    if (type === 'download') {
+      return true
+    }
+    return userExists(userId)
   }
 }
