@@ -9,19 +9,15 @@
     "redirectUrl": "http://localhost:3030/_oauth/lea"
   },
   "hosts": {
+    "otulea": {
+      "url": "http://localhost:3000"
+    },
     "backend": {
-      "urlRegEx": "^http:\/\/.*$"
-    },
-    "items": {
-      "url": "http://localhost:8080",
-      "list": "/",
-      "create": "/edit",
-      "edit": "/edit?contentId=",
-      "play": "/play?contentId="
-    },
-    "allowedOrigins": [
-      ".*localhost.*"
-    ]
+      "url": "http://localhost:5050",
+      "urlRegEx": {
+        "regex": "^http:\/\/.*$"
+      }
+    }
   },
   "files": {
     "bucketName": "contentFiles",

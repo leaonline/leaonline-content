@@ -6,8 +6,8 @@
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
-    "lint:code": "standard | snazzy",
-    "lint:code-fix": "standard | snazzy"
+    "lint:code": "standardx --verbose | snazzy",
+    "lint:code-fix": "standardx --fix --verbose | snazzy"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.1",
@@ -25,7 +25,30 @@
     "testModule": "tests/main.js"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/eslint-parser": "^7.12.1",
+    "eslint-plugin-security": "^1.4.0",
     "snazzy": "^9.0.0",
-    "standard": "^16.0.0"
+    "standardx": "^7.0.0"
+  },
+  "babel": {},
+  "eslintConfig": {
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "sourceType": "module",
+      "allowImportExportEverywhere": true
+    },
+    "plugins": [
+      "security"
+    ],
+    "extends": [
+      "plugin:security/recommended"
+    ],
+    "rules": {
+      "brace-style": [
+        "error",
+        "stroustrup"
+      ]
+    }
   }
 }

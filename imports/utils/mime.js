@@ -8,7 +8,8 @@ export const detectMime = fullPath => {
       if (err) {
         console.error(err)
         resolve(null)
-      } else {
+      }
+      else {
         resolve(result)
       }
     })

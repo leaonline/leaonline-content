@@ -25,7 +25,8 @@ app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
   if (req.body.text && req.body.text.length > maxChars) {
     res.writeHead(400)
     res.end('Bad request. Max size exceeded.')
-  } else {
+  }
+  else {
     next()
   }
 }))
@@ -39,11 +40,13 @@ app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
       return res.end()
     }
     const filesDoc = TTSBackend.get({ text })
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
     const url = TTSFilesCollection.link(filesDoc)
     Log.debug(url)
     res.setHeader('Content-Type', 'application/json;UTF-8')
     res.end(JSON.stringify({ url }))
-  } catch (error) {
+  }
+  catch (error) {
     Log.error(error)
     res.writeHead(500)
     res.end('internal server error during request')

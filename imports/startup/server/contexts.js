@@ -30,7 +30,10 @@ import { implementGetByIdRoute } from '../../api/decorators/implementGetByIdRout
 const i18nFactory = x => x
 const validateUser = getUserCheck()
 const validateMime = getCheckMime(i18nFactory)
-const allowedOrigins = new RegExp(Meteor.settings.hosts.backend.urlRegEx)
+const allowedOrigins = Object
+  .values(Meteor.settings.hosts)
+  .map(host => host.url)
+console.info('FS ALLOWED ORIGINS', allowedOrigins)
 
 function register (context) {
   console.info(`[${context.name}]: register`)
@@ -57,7 +60,8 @@ function register (context) {
       maxSize: context.maxSize,
       extensions: context.extensions
     })
-  } else {
+  }
+  else {
     collection = createCollection(context)
   }
 
