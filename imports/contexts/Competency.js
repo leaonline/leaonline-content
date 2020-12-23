@@ -27,4 +27,10 @@ Competency.httpRoutes.byId = {
   }
 }
 
+Competency.routes.all.run = function () {
+  const { ids } = this.data()
+  console.info(ids, Competency.collection().find({ _id: { $in: ids } }).count())
+  return Competency.collection().find({ _id: { $in: ids } }).fetch()
+}
+
 export { Competency }
