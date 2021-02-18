@@ -7,16 +7,24 @@ import { Field } from '../../contexts/Field'
 import { UnitSet } from '../../contexts/UnitSet'
 import { Unit } from '../../contexts/Unit'
 import { MediaLib } from '../../contexts/MediaLib'
+import { TestCycle } from '../../contexts/TestCycle'
 
 // decorators
-import { defineInsertMethod, defineRemoveMethod, defineUpdateMethod } from '../../api/decorators/defineCRUDMethods'
+import {
+  defineInsertMethod,
+  defineRemoveMethod,
+  defineUpdateMethod
+} from '../../api/decorators/defineCRUDMethods'
 import { defineAllPublication } from '../../api/decorators/definePublication'
 
 // factories
 import { createCollection } from '../../api/factories/createCollection'
 import { createFilesCollection } from '../../api/factories/createFilesCollection'
 import { createMethods } from '../../api/factories/createMethods'
-import { rateLimitMethods, rateLimitPublications } from '../../api/factories/rateLimit'
+import {
+  rateLimitMethods,
+  rateLimitPublications
+} from '../../api/factories/rateLimit'
 import { createPublications } from '../../api/factories/createPublication'
 import { createRoutes } from '../../api/factories/createRoute'
 
@@ -38,8 +46,14 @@ console.info('FS ALLOWED ORIGINS', allowedOrigins)
 function register (context) {
   console.info(`[${context.name}]: register`)
   context.methods = context.methods || {}
-  context.methods.insert = defineInsertMethod({ name: context.name, schema: context.schema })
-  context.methods.update = defineUpdateMethod({ name: context.name, schema: context.schema })
+  context.methods.insert = defineInsertMethod({
+    name: context.name,
+    schema: context.schema
+  })
+  context.methods.update = defineUpdateMethod({
+    name: context.name,
+    schema: context.schema
+  })
   context.methods.remove = defineRemoveMethod({ name: context.name })
 
   context.publications = context.publications || {}
@@ -84,4 +98,14 @@ function register (context) {
 // editable contexts will be decorated,
 // punched through the factories
 // and then added to the ServiceRegistry
-[MediaLib, Field, Dimension, Level, CompetencyCategory, Competency, UnitSet, Unit].forEach(register)
+[
+  MediaLib,
+  Field,
+  Dimension,
+  Level,
+  CompetencyCategory,
+  Competency,
+  UnitSet,
+  Unit,
+  TestCycle
+].forEach(register)
