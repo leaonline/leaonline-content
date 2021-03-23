@@ -1,16 +1,12 @@
-import { Meteor } from 'meteor/meteor'
 import { onServer } from '../../utils/arch'
 import { getCollection } from '../../utils/collection'
 
 export const defineInsertMethod = ({ name, schema, numRequests, timeInterval, run, debug = false }) => {
-  const log = (...args) => Meteor.isDevelopment && debug && console.info.apply(null, args)
   const runFct = run || function (insertDoc) {
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
 
-    const insertId = Collection.insert(insertDoc)
-    log(`[${name}]: created ${insertId}`)
-    return insertId
+    return Collection.insert(insertDoc)
   }
 
   return {
@@ -23,7 +19,6 @@ export const defineInsertMethod = ({ name, schema, numRequests, timeInterval, ru
 }
 
 export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debug = false }) => {
-  const log = (...args) => Meteor.isDevelopment && debug && console.info.apply(null, args)
   const runFct = run || function (updateDoc) {
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
@@ -35,9 +30,7 @@ export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, ru
     }
 
     delete updateDoc._id
-    const updated = Collection.update(_id, { $set: updateDoc })
-    log(`[${name}]: updated ${_id} ${updated}`)
-    return updated
+    return Collection.update(_id, { $set: updateDoc })
   }
 
   return {
@@ -55,13 +48,10 @@ export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, ru
 }
 
 export const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
-  const log = (...args) => Meteor.isDevelopment && debug && console.info.apply(null, args)
   const runFct = run || function ({ _id }) {
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
-    const removed = Collection.remove(_id)
-    log(`[${name}]: removed ${_id} ${removed}`)
-    return removed
+    return Collection.remove(_id)
   }
 
   return {

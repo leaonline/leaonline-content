@@ -34,6 +34,7 @@ import { getUserCheck } from '../../api/grid/checkuser'
 import { getCheckMime } from '../../api/grid/checkMime'
 import { Meteor } from 'meteor/meteor'
 import { implementGetByIdRoute } from '../../api/decorators/implementGetByIdRoute'
+import { metaSchema } from '../../api/schema/metaSchema'
 
 const i18nFactory = x => x
 const validateUser = getUserCheck()
@@ -76,7 +77,35 @@ function register (context) {
     })
   }
   else {
-    collection = createCollection(context)
+    collection = createCollection({
+      name: context.name,
+      schema: Object.assign({}, context.schema, metaSchema),
+      attachSchema: true
+    })
+
+    // we always want to track who created a document
+    collection.before.insert(function (userId, doc) {
+      console.info(context.name, 'insert', { userId }, doc)
+      doc.meta = {
+        createdBy: userId,
+        createdAt: new Date(),
+        history: []
+      }
+    })
+
+    // we also want to know who updated a document
+    collection.before.update(function (userId, doc, fieldNames, modifier /*, options */) {
+      console.info(context.name, 'update', { userId, doc: doc._id }, modifier)
+
+      modifier.$set = modifier.$set || {}
+      // last updates
+      modifier.$set['meta.updatedAt'] = new Date()
+      modifier.$set['meta.updatedBy'] = userId
+    })
+
+    collection.before.remove(function (userId, doc) {
+      console.info(context.name, 'remove', { userId }, doc._id)
+    })
   }
 
   const methods = Object.values(context.methods)

@@ -49,6 +49,7 @@ ostrio:files
 # collections
 #========================================
 aldeed:collection2
+matb33:collection-hooks
 dburles:mongo-collection-instances
 
 
