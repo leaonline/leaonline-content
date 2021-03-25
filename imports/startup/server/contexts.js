@@ -49,7 +49,6 @@ function register (context) {
   console.info(`[${context.name}]: start create context pipeline`)
   context.methods = context.methods || {}
 
-
   context.methods.insert = defineInsertMethod({ name: context.name, schema: context.schema })
   context.methods.update = defineUpdateMethod({ name: context.name, schema: context.schema })
   context.methods.remove = defineRemoveMethod({ name: context.name })

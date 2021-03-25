@@ -124,7 +124,7 @@ export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval,
         type: Array,
         optional: true
       },
-      'dependencies.$.skip.$': String,
+      'dependencies.$.skip.$': String
     },
     numRequests: numRequests || 1,
     timeInterval: timeInterval || 1000,
