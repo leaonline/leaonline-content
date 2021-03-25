@@ -35,7 +35,7 @@ id-map@1.1.0
 inter-process-messaging@0.1.1
 lai:collection-extensions@0.2.1_1
 leaonline:accounts-lea@1.0.1
-leaonline:collection-factory@1.0.2
+leaonline:collection-factory@1.0.3
 leaonline:corelib@1.0.0
 leaonline:ddp-login-handler@1.0.4
 leaonline:ejson-regexp@1.1.0

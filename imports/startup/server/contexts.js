@@ -13,7 +13,8 @@ import { TestCycle } from '../../contexts/TestCycle'
 import {
   defineInsertMethod,
   defineRemoveMethod,
-  defineUpdateMethod
+  defineUpdateMethod,
+  defineGetAllMethod, defineGetOneMethod
 } from '../../api/decorators/defineCRUDMethods'
 import { defineAllPublication } from '../../api/decorators/definePublication'
 
@@ -45,17 +46,15 @@ const allowedOrigins = Object
 console.info('FS ALLOWED ORIGINS', allowedOrigins)
 
 function register (context) {
-  console.info(`[${context.name}]: register`)
+  console.info(`[${context.name}]: start create context pipeline`)
   context.methods = context.methods || {}
-  context.methods.insert = defineInsertMethod({
-    name: context.name,
-    schema: context.schema
-  })
-  context.methods.update = defineUpdateMethod({
-    name: context.name,
-    schema: context.schema
-  })
+
+
+  context.methods.insert = defineInsertMethod({ name: context.name, schema: context.schema })
+  context.methods.update = defineUpdateMethod({ name: context.name, schema: context.schema })
   context.methods.remove = defineRemoveMethod({ name: context.name })
+  context.methods.getAll = defineGetAllMethod({ name: context.name })
+  context.methods.getOne = defineGetOneMethod({ name: context.name })
 
   context.publications = context.publications || {}
   context.publications.all = defineAllPublication({ name: context.name })

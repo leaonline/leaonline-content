@@ -1,9 +1,8 @@
-import { Meteor } from 'meteor/meteor'
 import { onServer } from '../../utils/arch'
 import { getCollection } from '../../utils/collection'
 
 export const defineAllPublication = ({ name, schema, projection, query, numRequests, timeInterval, isPublic, run, debug }) => {
-  const log = (...args) => Meteor.isDevelopment && debug && console.info.apply(null, args)
+  const log = (...args) => console.info.apply(null, args)
   const runFct = run || function (queryDoc = {}) {
     const Collection = getCollection(name)
     if (!Collection) {

@@ -64,3 +64,70 @@ export const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval,
     run: onServer(runFct)
   }
 }
+
+export const defineGetOneMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
+  const runFct = run || function ({ _id }) {
+    const Collection = getCollection(name)
+    if (!Collection) throw new Error(`[${name}]: Expected collection by name <${name}>`)
+
+    return Collection.findOne(_id)
+  }
+
+  return {
+    name: `${name}.methods.getOne`,
+    schema: {
+      _id: String
+    },
+    numRequests: numRequests || 1,
+    timeInterval: timeInterval || 1000,
+    run: onServer(runFct)
+  }
+}
+
+export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
+  const runFct = run || function ({ dependencies }) {
+    const Collection = getCollection(name)
+    if (!Collection) throw new Error(`[${name}]: Expected collection by name <${name}>`)
+
+    const query = {}
+    const fields = {}
+    const docs = Collection.find(query, { fields }).fetch()
+    const all = { [name]: docs }
+
+    if (dependencies) {
+      dependencies.forEach(dependency => {
+        const DepCollection = getCollection(dependency.name)
+        if (!DepCollection) throw new Error(`[${name}]: Expected collection by name <${dependency.name}>`)
+
+        const depQuery = {}
+        if (dependency.skip?.length) {
+          depQuery._id = { $nin: dependency.skip }
+        }
+
+        all[dependency.name] = DepCollection.find(depQuery, { fields }).fetch()
+      })
+    }
+
+    return all
+  }
+
+  return {
+    name: `${name}.methods.getAll`,
+    schema: {
+      dependencies: {
+        type: Array,
+        optional: true
+      },
+      'dependencies.$': Object,
+      'dependencies.$.name': String,
+      'dependencies.$.skip': {
+        type: Array,
+        optional: true
+      },
+      'dependencies.$.skip.$': String,
+    },
+    numRequests: numRequests || 1,
+    timeInterval: timeInterval || 1000,
+    run: onServer(runFct)
+  }
+}

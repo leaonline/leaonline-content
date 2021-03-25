@@ -7,4 +7,7 @@ export const createMethod = createMethodFactory({
   mixins: [checkPermissions]
 })
 
-export const createMethods = methods => methods.forEach(createMethod)
+export const createMethods = methods => methods.forEach(def => {
+  console.info('[createMethod]:', def.name)
+  createMethod(def)
+})
