@@ -3,6 +3,7 @@ import { getCollection } from '../../utils/collection'
 
 export const defineInsertMethod = ({ name, schema, numRequests, timeInterval, run, debug = false }) => {
   const runFct = run || function (insertDoc) {
+    console.info(`[${name}]: insert`, { userId: this.userId })
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
 
@@ -20,6 +21,7 @@ export const defineInsertMethod = ({ name, schema, numRequests, timeInterval, ru
 
 export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debug = false }) => {
   const runFct = run || function (updateDoc) {
+    console.info(`[${name}]: update`, { userId: this.userId })
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
 
@@ -49,6 +51,7 @@ export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, ru
 
 export const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
   const runFct = run || function ({ _id }) {
+    console.info(`[${name}]: remove`, { userId: this.userId, _id })
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
     return Collection.remove(_id)
@@ -67,6 +70,7 @@ export const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval,
 
 export const defineGetOneMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
   const runFct = run || function ({ _id }) {
+    console.info(`[${name}]: get one`, { userId: this.userId, _id })
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`[${name}]: Expected collection by name <${name}>`)
 
@@ -86,9 +90,9 @@ export const defineGetOneMethod = ({ name, isPublic, roles, group, timeInterval,
 
 export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
   const runFct = run || function ({ dependencies }) {
+    console.info(`[${name}]: get all`, { userId: this.userId, dependencies })
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`[${name}]: Expected collection by name <${name}>`)
-
     const query = {}
     const fields = {}
     const docs = Collection.find(query, { fields }).fetch()
