@@ -8,6 +8,11 @@ MediaLib.routes.mediaUrl.run = function (req, res, next) {
   return MediaLib.filesCollection().link(filesDoc)
 }
 
+MediaLib.methods.remove.run = function ({ _id }) {
+  const filesCollection = MediaLib.collection().filesCollection
+  return filesCollection.remove({ _id })
+}
+
 MediaLib.maxSize = Meteor.settings.files.maxSize
 
 export { MediaLib }

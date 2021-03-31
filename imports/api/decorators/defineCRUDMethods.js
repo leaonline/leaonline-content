@@ -21,7 +21,7 @@ export const defineInsertMethod = ({ name, schema, numRequests, timeInterval, ru
 
 export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debug = false }) => {
   const runFct = run || function (updateDoc) {
-    console.info(`[${name}]: update`, { userId: this.userId })
+    console.info(`[${name}]: update`, { userId: this.userId }, arguments)
     const Collection = getCollection(name)
     if (!Collection) throw new Error(`Expected collection by name <${name}>`)
 

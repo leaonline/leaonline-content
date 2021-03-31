@@ -1,4 +1,5 @@
 // loading all contexts
+import { AlphaLevel } from '../../contexts/AlphaLevel'
 import { Dimension } from '../../contexts/Dimension'
 import { Level } from '../../contexts/Level'
 import { CompetencyCategory } from '../../contexts/CompetencyCategory'
@@ -8,6 +9,7 @@ import { UnitSet } from '../../contexts/UnitSet'
 import { Unit } from '../../contexts/Unit'
 import { MediaLib } from '../../contexts/MediaLib'
 import { TestCycle } from '../../contexts/TestCycle'
+import { Thresholds } from '../../contexts/Thresholds'
 
 // decorators
 import {
@@ -49,11 +51,11 @@ function register (context) {
   console.info(`[${context.name}]: start create context pipeline`)
   context.methods = context.methods || {}
 
-  context.methods.insert = defineInsertMethod({ name: context.name, schema: context.schema })
-  context.methods.update = defineUpdateMethod({ name: context.name, schema: context.schema })
-  context.methods.remove = defineRemoveMethod({ name: context.name })
-  context.methods.getAll = defineGetAllMethod({ name: context.name })
-  context.methods.getOne = defineGetOneMethod({ name: context.name })
+  context.methods.insert = context.methods.insert || defineInsertMethod({ name: context.name, schema: context.schema })
+  context.methods.update = context.methods.update || defineUpdateMethod({ name: context.name, schema: context.schema })
+  context.methods.remove = context.methods.remove || defineRemoveMethod({ name: context.name })
+  context.methods.getAll = context.methods.getAll || defineGetAllMethod({ name: context.name })
+  context.methods.getOne = context.methods.getOne || defineGetOneMethod({ name: context.name })
 
   context.publications = context.publications || {}
   context.publications.all = defineAllPublication({ name: context.name })
@@ -126,6 +128,7 @@ function register (context) {
 // punched through the factories
 // and then added to the ServiceRegistry
 [
+  AlphaLevel,
   MediaLib,
   Field,
   Dimension,
@@ -134,5 +137,6 @@ function register (context) {
   Competency,
   UnitSet,
   Unit,
-  TestCycle
+  TestCycle,
+  Thresholds
 ].forEach(register)
