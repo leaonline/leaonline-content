@@ -15,7 +15,7 @@ Thresholds.methods.getOne = {
   },
   numRequests: 1,
   timeInterval: 250,
-  run: onServer(function ({ _id} = {}) {
+  run: onServer(function () {
     return Thresholds.collection().findOne()
   })
 }
