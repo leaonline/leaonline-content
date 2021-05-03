@@ -31,5 +31,8 @@
   },
   "competencies": {
     "url": "/competencies"
+  },
+  "patches": {
+    "clozeScoringSchema": true
   }
 }
