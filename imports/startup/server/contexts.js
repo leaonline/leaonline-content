@@ -38,6 +38,7 @@ import { getCheckMime } from '../../api/grid/checkMime'
 import { Meteor } from 'meteor/meteor'
 import { implementGetByIdRoute } from '../../api/decorators/implementGetByIdRoute'
 import { metaSchema } from '../../api/schema/metaSchema'
+import { CollectionTimeStamp } from '../../api/collection/CollectionTimeStamp'
 
 const i18nFactory = x => x
 const validateUser = getUserCheck()
@@ -122,6 +123,10 @@ function register (context) {
   ServiceRegistry.register(context)
 
   context.collection = () => collection
+
+  CollectionTimeStamp.register(context.name, context.isFilesCollection
+    ? collection.collection
+    : collection)
 }
 
 // editable contexts will be decorated,
