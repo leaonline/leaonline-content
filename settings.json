@@ -10,7 +10,9 @@
   },
   "hosts": {
     "otulea": {
-      "url": "http://localhost:3000"
+      "url": "http://localhost:3000",
+      "username": "otuleasystem",
+      "password": "000111222333444555666777888999"
     },
     "backend": {
       "url": "http://localhost:5050",
