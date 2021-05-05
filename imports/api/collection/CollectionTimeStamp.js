@@ -2,6 +2,7 @@ export const CollectionTimeStamp = {}
 
 const timeStamps = new Map()
 const streams = new Map()
+
 CollectionTimeStamp.register = (name, collection) => {
   if (streams.has(name)) return
   if (!collection) throw new Error(`Expected collection for ${name}`)
@@ -9,10 +10,11 @@ CollectionTimeStamp.register = (name, collection) => {
   // the initial -1 entry indicates a registered context but no timestamp yet
   timeStamps.set(name, -1)
 
-  const rawCollection = collection.rawCollection()
-  const stream = rawCollection.watch()
-  stream.on('changed', () => timeStamps.set(name, Date.now()))
-  streams.set(name, stream)
+  const updateTimeStamp = () => timeStamps.set(name, Date.now())
+
+  collection.after.insert(updateTimeStamp)
+  collection.after.update(updateTimeStamp)
+  collection.after.remove(updateTimeStamp)
 }
 
 CollectionTimeStamp.get = name => {

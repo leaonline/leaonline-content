@@ -16,7 +16,7 @@ import {
   defineInsertMethod,
   defineRemoveMethod,
   defineUpdateMethod,
-  defineGetAllMethod, defineGetOneMethod
+  defineGetAllMethod, defineGetOneMethod, defineAllMethod
 } from '../../api/decorators/defineCRUDMethods'
 import { defineAllPublication } from '../../api/decorators/definePublication'
 
@@ -57,6 +57,7 @@ function register (context) {
   context.methods.remove = context.methods.remove || defineRemoveMethod({ name: context.name })
   context.methods.getAll = context.methods.getAll || defineGetAllMethod({ name: context.name })
   context.methods.getOne = context.methods.getOne || defineGetOneMethod({ name: context.name })
+  context.methods.all = context.methods.all || defineAllMethod({ name: context.name })
 
   context.publications = context.publications || {}
   context.publications.all = defineAllPublication({ name: context.name })

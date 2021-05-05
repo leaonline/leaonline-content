@@ -135,3 +135,38 @@ export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval,
     run: onServer(runFct)
   }
 }
+
+
+export const defineAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests }) => {
+  return {
+    name: `${name}.methods.all`,
+    schema: {
+      ids: {
+        type: Array,
+        optional: true
+      },
+      'ids.$': String,
+      isLegacy: {
+        type: Boolean,
+        optional: true
+      }
+    },
+    numRequests: numRequests || 1,
+    timeInterval: timeInterval || 1000,
+    run: onServer(function ({ ids, isLegacy }) {
+      const Collection = getCollection(name)
+      if (!Collection) throw new Error(`[${name}]: Expected collection by name <${name}>`)
+
+      const query = {}
+      if (ids) {
+        query._id = { $in: ids }
+      }
+
+      if (typeof isLegacy === 'boolean') {
+        query.isLegacy = isLegacy
+      }
+
+      return Collection.find(query).fetch()
+    })
+  }
+}
