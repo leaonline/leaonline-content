@@ -105,6 +105,17 @@ function register (context) {
       modifier.$set['meta.updatedBy'] = userId
     })
 
+    if (context.afterInsert) {
+      collection.after.insert(context.afterInsert)
+      delete context.afterInsert
+    }
+
+
+    if (context.afterUpdate) {
+      collection.after.update(context.afterUpdate)
+      delete context.afterUpdate
+    }
+
     collection.before.remove(function (userId, doc) {
       console.info(context.name, 'remove', { userId }, doc._id)
     })

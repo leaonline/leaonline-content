@@ -1,7 +1,5 @@
 import { CollectionTimeStamp } from '../../api/collection/CollectionTimeStamp'
-import { createMethods } from '../../api/factories/createMethods'
-import { rateLimitMethods } from '../../api/factories/rateLimit'
+import { createRoutes } from '../../api/factories/createRoute'
 
-const methods = Object.values(CollectionTimeStamp.methods)
-createMethods(methods)
-rateLimitMethods(methods)
+const methods = Object.values(CollectionTimeStamp.routes)
+createRoutes(methods)

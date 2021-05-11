@@ -31,14 +31,16 @@ CollectionTimeStamp.get = name => {
   return timeStamps.get(name)
 }
 
-CollectionTimeStamp.methods = {}
+CollectionTimeStamp.routes = {}
 
-CollectionTimeStamp.methods.get = {
-  name: 'collectionTimeStamp.methods.get',
+CollectionTimeStamp.routes.get = {
+  path: '/timestamp/get',
+  method: 'get',
   schema: {
     context: String
   },
-  run: function ({ context }) {
+  run: function () {
+    const { context } = this.data()
     return CollectionTimeStamp.get(context)
   }
 }

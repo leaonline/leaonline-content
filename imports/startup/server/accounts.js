@@ -4,7 +4,6 @@ import { registerOAuthDDPLoginHandler } from 'meteor/leaonline:ddp-login-handler
 
 Meteor.startup(() => {
   setupOAuth()
-  setupDDP()
 })
 
 function setupOAuth() {
@@ -25,15 +24,4 @@ function setupOAuth() {
   )
 
   registerOAuthDDPLoginHandler({ identityUrl: oauth.identityUrl })
-}
-
-function setupDDP () {
-  Object.values(Meteor.settings.hosts).forEach(host => {
-    const { username, password } = host
-    if (username && !Accounts.findUserByUsername(username)) {
-      console.log('[Accounts]: create new ddp user', username)
-      const userId = Accounts.createUser({ username, password })
-      console.log('[Accounts]: => ', userId)
-    }
-  })
 }
