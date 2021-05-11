@@ -11,26 +11,26 @@ import { TestCycle } from '../../contexts/TestCycle'
  * by -> Unit pages (length) changes
  * do -> update all UnitSets, that contain this unit
  */
-export const unitProgressChanged = ({ unitId }) => {
-  console.debug('[Unit](unitProgressChanged):', unitId, UnitSet.collection().find({ units: unitId }).count())
+export const unitProgressChanged = ({ unitId, debug = () => {} }) => {
+  debug('(unitProgressChanged):', unitId)
   UnitSet
     .collection()
     .find({ units: unitId })
-    .forEach(updateUnitSetProgress)
+    .forEach(unitSetDoc => updateUnitSetProgress({ unitSetDoc, debug }))
 }
 
 /**
  * by -> UnitSet.units changed
  * do -> update this unitSet progress
  */
-export const unitSetOrderChanged = ({ unitSetId }) => {
-  console.debug('[UnitSet](unitOrderChanged):', unitSetId)
+export const unitSetOrderChanged = ({ unitSetId, debug = () => {} }) => {
+  debug('(unitOrderChanged):', unitSetId)
   const unitSetDoc = UnitSet.collection().findOne(unitSetId)
-  updateUnitSetProgress(unitSetDoc)
+  updateUnitSetProgress({ unitSetDoc, debug })
 }
 
-const updateUnitSetProgress = unitSetDoc => {
-  console.debug('[UnitSet](updateUnitSetProgress)')
+const updateUnitSetProgress = ({ unitSetDoc, debug }) => {
+  debug('(updateUnitSetProgress)')
   let progress = 0
 
   Unit
@@ -54,25 +54,26 @@ const updateUnitSetProgress = unitSetDoc => {
  * by -> unitSet { progress } changed
  * do -> update all linking TestCycles
  */
-export const unitSetProgressChanged = ({ unitSetId }) => {
-  console.debug('[TestCycle](unitSetProgressChanged):', unitSetId)
+export const unitSetProgressChanged = ({ unitSetId, debug = () => {} }) => {
+  debug('(unitSetProgressChanged):', unitSetId)
   TestCycle
     .collection()
     .find({ unitSets: unitSetId })
-    .forEach(updateTestCycleProgress)
+    .forEach(testCycleDoc => updateTestCycleDoc({ testCycleDoc, debug }))
 }
 
 /**
  * by -> testCycle.unitSets changed
  * do -> get { progress } from unitSets and update
  */
-export const testCycleOrderChanged = ({ testCycleId }) => {
-  console.debug('[TestCycle](unitSetOrderChanged):', testCycleId)
+export const testCycleOrderChanged = ({ testCycleId, debug = () => {} }) => {
+  debug('(unitSetOrderChanged):', testCycleId)
   const testCycleDoc = TestCycle.collection().findOne(testCycleId)
-  updateTestCycleProgress(testCycleDoc)
+  updateTestCycleDoc({ testCycleDoc, debug })
 }
 
-const updateTestCycleProgress = testCycleDoc => {
+const updateTestCycleDoc = ({ testCycleDoc, debug }) => {
+  debug('(updateTestCycleDoc)')
   let progress = 0
   UnitSet
     .collection()

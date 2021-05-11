@@ -1,6 +1,17 @@
 import { Meteor } from 'meteor/meteor'
-import { updateClozeScoringSchema } from '../../api/patches/upateClozeScoringSchema'
 
-if (Meteor.settings.patches?.clozeScoringSchema) {
-  updateClozeScoringSchema()
+const { patches } = Meteor.settings
+
+if (patches?.clozeScoringSchema) {
+  (function () {
+    import { updateClozeScoringSchema } from '../../api/patches/upateClozeScoringSchema'
+    updateClozeScoringSchema()
+  })()
+}
+
+if (patches?.recomputeProgress) {
+  (function () {
+    import { recomputeProgress } from '../../api/patches/recomputeProgress'
+    recomputeProgress()
+  })()
 }

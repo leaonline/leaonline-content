@@ -33,6 +33,7 @@
     "url": "/competencies"
   },
   "patches": {
-    "clozeScoringSchema": true
+    "clozeScoringSchema": true,
+    "recomputeProgress": true
   }
 }
