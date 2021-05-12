@@ -110,7 +110,6 @@ function register (context) {
       delete context.afterInsert
     }
 
-
     if (context.afterUpdate) {
       collection.after.update(context.afterUpdate)
       delete context.afterUpdate

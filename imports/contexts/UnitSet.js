@@ -45,7 +45,7 @@ UnitSet.afterUpdate = function (userId, doc) {
   const { previous } = this
 
   if (previous.progress !== doc.progress) {
-   return unitSetProgressChanged({ unitSetId: doc._id })
+    return unitSetProgressChanged({ unitSetId: doc._id })
   }
 
   if (!listsAreEqual(previous.units, doc.units)) {

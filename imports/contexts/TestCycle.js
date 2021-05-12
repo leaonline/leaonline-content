@@ -1,7 +1,7 @@
 import { TestCycle } from 'meteor/leaonline:corelib/contexts/TestCycle'
 import { listsAreEqual } from '../api/progress/listsAreEqual'
 import {
-  testCycleOrderChanged,
+  testCycleOrderChanged
 } from '../api/progress/calculateProgress'
 
 TestCycle.routes.all.run = function () {

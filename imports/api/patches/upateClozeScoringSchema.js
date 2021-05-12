@@ -1,4 +1,5 @@
 import { Unit } from '../../contexts/Unit'
+import { setProperty } from '../../utils/setProperty'
 
 export const updateClozeScoringSchema = () => {
   console.debug('[patch]: updateClozeScoringSchema')
@@ -13,7 +14,11 @@ export const updateClozeScoringSchema = () => {
           ;(entry?.value?.scoring || []).forEach((scoring, scoringIndex) => {
             if (typeof scoring.competency === 'string') {
               const key = `pages.${pageIndex}.content.${contentIndex}.value.scoring.${scoringIndex}.competency`
-              updatedScoring[key] = [scoring.competency] // eslint-ignore-line
+              setProperty(updatedScoring, key, [scoring.competency], {
+                enumerable: true,
+                configurable: true,
+                writable: true
+              })
               updateRequired = true
             }
           })

@@ -6,7 +6,7 @@ Meteor.startup(() => {
   setupOAuth()
 })
 
-function setupOAuth() {
+function setupOAuth () {
   const { oauth } = Meteor.settings
   ServiceConfiguration.configurations.upsert(
     { service: 'lea' },

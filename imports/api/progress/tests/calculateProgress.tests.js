@@ -1,6 +1,5 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
-import { Random } from 'meteor/random'
 import {
   unitSetOrderChanged,
   testCycleOrderChanged,
@@ -18,7 +17,6 @@ import { restoreAll } from '../../../../tests/helpers/testHelpers'
 
 describe('calculate progress', function () {
   let unitId
-  let unitSetId
   let testCycleId
   let UnitCollection
   let UnitSetCollection
@@ -37,7 +35,6 @@ describe('calculate progress', function () {
     TestCycleCollection = TestCycle.collection()
 
     unitId = createUnitDoc()
-    unitSetId = createUnitSetDoc()
     testCycleId = createTestCycleDoc()
   })
 
@@ -64,7 +61,7 @@ describe('calculate progress', function () {
   })
 
   describe(unitSetOrderChanged.name, function () {
-    it('updates the single unitSet if it\'s units order has changed', function ( ) {
+    it('updates the single unitSet if it\'s units order has changed', function () {
       const units = [createUnitDoc(), createUnitDoc(), createUnitDoc()]
       const unitSetId = UnitSetCollection.insert({ units })
       expect(UnitSetCollection.findOne(unitSetId).progress).to.equal(undefined)
@@ -81,7 +78,6 @@ describe('calculate progress', function () {
       expect(TestCycleCollection.findOne(testCycleId).progress).to.equal(undefined)
       expect(TestCycleCollection.findOne(tcDoc1).progress).to.equal(undefined)
       expect(TestCycleCollection.findOne(tcDoc2).progress).to.equal(undefined)
-
 
       unitSetProgressChanged({ unitSetId: docId })
 

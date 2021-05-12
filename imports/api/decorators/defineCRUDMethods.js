@@ -136,7 +136,6 @@ export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval,
   }
 }
 
-
 export const defineAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests }) => {
   return {
     name: `${name}.methods.all`,

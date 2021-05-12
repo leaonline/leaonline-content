@@ -1,18 +1,5 @@
-import SimpleSchema from 'simpl-schema'
 import sinon from 'sinon'
-
-// allow our custom schema keys here to pass schema based tests
-SimpleSchema.extendOptions(['autoform'])
-
-export const createSchema = (schema, options) => new SimpleSchema(schema, options)
-export const multiSchema = (...defs) => SimpleSchema.oneOf(defs)
-
-export const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
-export const iterate = (num, fct) => (new Array(num)).forEach(fct)
-
-export const unsafeInt = negative => negative
-  ? (Number.MIN_SAFE_INTEGER - 1)
-  : (Number.MAX_SAFE_INTEGER + 1)
+import { getProperty } from '../../imports/utils/getProperty'
 
 // /////////////////////////////////////////////////////////////////////////////
 //
@@ -37,10 +24,11 @@ export const stub = (target, name, handler) => {
 }
 
 export const restore = (target, name) => {
-  if (!target[name] || !target[name].restore) {
+  const prop = getProperty(target, name)
+  if (!prop?.restore) {
     throw new Error(`not stubbed: ${name}`)
   }
-  target[name].restore()
+  prop.restore()
   stubs.delete(target)
 }
 
