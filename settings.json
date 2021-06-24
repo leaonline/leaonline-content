@@ -34,6 +34,7 @@
   },
   "patches": {
     "clozeScoringSchema": true,
-    "recomputeProgress": true
+    "recomputeProgress": true,
+    "linkAlphaLevel": true
   }
 }

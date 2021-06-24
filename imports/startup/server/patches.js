@@ -15,3 +15,10 @@ if (patches?.recomputeProgress) {
     recomputeProgress()
   })()
 }
+
+if (patches?.linkAlphaLevel) {
+  (function () {
+    import { linkAlphaLevel } from '../../api/patches/linkAlphaLevel'
+    linkAlphaLevel()
+  })()
+}

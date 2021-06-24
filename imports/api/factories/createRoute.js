@@ -30,9 +30,14 @@ const corsOptions = {
 
 export const createRoute = createHTTPFactory({
   schemaFactory: Schema.create,
-  cors: cors(corsOptions)
+  cors: cors(corsOptions),
+  debug: function (req, res, next) {
+    console.debug(req.method, req.url)
+    next()
+  }
 })
 
 export const createRoutes = routes => routes.forEach(route => {
+  console.debug('[createRoute]: ', route.path)
   return createRoute(route)
 })
