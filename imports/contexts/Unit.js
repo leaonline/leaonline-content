@@ -2,7 +2,13 @@ import { Unit } from 'meteor/leaonline:corelib/contexts/Unit'
 import { UnitSet } from './UnitSet'
 import { unitProgressChanged } from '../api/progress/calculateProgress'
 
-Unit.routes.all.run = function ({ unitSet }) {
+Unit.routes.all.run = function () {
+  const { unitSet, ids } = this.data()
+
+  if (ids?.length) {
+    return Unit.collection().find({ _id: { $in: ids } }).fetch()
+  }
+
   if (!unitSet) return []
 
   if (UnitSet.collection().find(unitSet).count() > 1) {
