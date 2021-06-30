@@ -3,8 +3,9 @@ import { WebApp } from 'meteor/webapp'
 import { TTSFiles } from '../../api/tts/TTSFiles'
 import { TTSBackend } from '../../api/tts/TTSEngine'
 import { createFilesCollection } from '../../api/factories/createFilesCollection'
-import { Log } from '../../utils/log'
+import { createLog } from '../../utils/log'
 
+const debug = createLog('[TTSEngine]:')
 const app = WebApp.connectHandlers
 
 const TTSFilesCollection = createFilesCollection(TTSFiles)
@@ -34,7 +35,7 @@ app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
 app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
   try {
     const { text } = req.body
-    Log.debug(req.method, req.body, req.query)
+    debug(req.method, req.body, req.query)
     if (!text || text.length === 0) {
       res.writeHead(404)
       return res.end()
@@ -42,12 +43,12 @@ app.use('/tts', Meteor.bindEnvironment(function (req, res, next) {
     const filesDoc = TTSBackend.get({ text })
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const url = TTSFilesCollection.link(filesDoc)
-    Log.debug(url)
+    debug(url)
     res.setHeader('Content-Type', 'application/json;UTF-8')
     res.end(JSON.stringify({ url }))
   }
   catch (error) {
-    Log.error(error)
+    console.error(error)
     res.writeHead(500)
     res.end('internal server error during request')
   }

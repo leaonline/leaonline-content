@@ -79,7 +79,7 @@ const updateTestCycleDoc = ({ testCycleDoc, debug }) => {
     .collection()
     .find({
       _id: {
-        $in: testCycleDoc.unitSets
+        $in: (testCycleDoc.unitSets || [])
       }
     })
     .forEach(unitSetDoc => {

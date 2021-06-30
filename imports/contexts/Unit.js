@@ -1,6 +1,9 @@
 import { Unit } from 'meteor/leaonline:corelib/contexts/Unit'
 import { UnitSet } from './UnitSet'
 import { unitProgressChanged } from '../api/progress/calculateProgress'
+import { createLog } from '../utils/log'
+
+const debug = createLog(Unit.name)
 
 Unit.routes.all.run = function () {
   const { unitSet, ids } = this.data()
@@ -19,7 +22,7 @@ Unit.routes.all.run = function () {
 }
 
 Unit.afterInsert = function (userId, doc) {
-  unitProgressChanged({ unitId: doc._id })
+  unitProgressChanged({ unitId: doc._id, debug })
 }
 
 Unit.afterUpdate = function (userId, doc) {
@@ -29,7 +32,7 @@ Unit.afterUpdate = function (userId, doc) {
     return console.debug('[Unit](afterUpdate): skip progress counting')
   }
 
-  unitProgressChanged({ unitId: doc._id })
+  unitProgressChanged({ unitId: doc._id, debug })
 }
 
 export { Unit }

@@ -1,16 +1,13 @@
-import { Meteor } from 'meteor/meteor'
-
-export const Log = {}
-
-Log.debug = function (...args) {
-  if (Meteor.isDevelopment) {
-    console.log(...args)
+/**
+ *
+ * @param name
+ * @param target
+ * @return {function(...[*]=): void}
+ */
+export const createLog = (name, target = console.debug) => {
+  const logName = `[${name}]:`
+  return (...args) => {
+    args.unshift(logName)
+    return target.apply(null, args)
   }
-}
-
-Log.error = function (...args) {
-  if (Meteor.isDevelopment) {
-    console.error(...args)
-  }
-  // TODO add to error log
 }

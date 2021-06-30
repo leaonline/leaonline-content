@@ -4,6 +4,9 @@ import {
   unitSetProgressChanged
 } from '../api/progress/calculateProgress'
 import { listsAreEqual } from '../api/progress/listsAreEqual'
+import { createLog } from '../utils/log'
+
+const debug = createLog(UnitSet.name)
 
 UnitSet.routes.all.run = function () {
   const api = this
@@ -35,9 +38,15 @@ UnitSet.routes.all.run = function () {
   return UnitSet.collection().find(query).fetch()
 }
 
+UnitSet.beforeUpdate = function (userId, doc, fieldNames, modifier /*, options */) {
+  if (!modifier.$set.units === null) {
+    modifier.$set.units = []
+  }
+}
+
 UnitSet.afterInsert = function (userId, doc) {
   if (doc.units?.length) {
-    unitSetOrderChanged({ unitSetId: doc._id })
+    unitSetOrderChanged({ unitSetId: doc._id, debug })
   }
 }
 
@@ -45,11 +54,11 @@ UnitSet.afterUpdate = function (userId, doc) {
   const { previous } = this
 
   if (previous.progress !== doc.progress) {
-    return unitSetProgressChanged({ unitSetId: doc._id })
+    return unitSetProgressChanged({ unitSetId: doc._id, debug })
   }
 
   if (!listsAreEqual(previous.units, doc.units)) {
-    return unitSetOrderChanged({ unitSetId: doc._id })
+    return unitSetOrderChanged({ unitSetId: doc._id, debug })
   }
 }
 

@@ -9,7 +9,11 @@ describe(listsAreEqual.name, function () {
     ;[
       [],
       [undefined, []],
+      [null, []],
       [[], undefined],
+      [undefined, undefined],
+      [null, null],
+      [[], null],
       [[], []],
       [[''], ['']],
       [['1'], ['1']],

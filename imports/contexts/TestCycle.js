@@ -3,6 +3,9 @@ import { listsAreEqual } from '../api/progress/listsAreEqual'
 import {
   testCycleOrderChanged
 } from '../api/progress/calculateProgress'
+import { createLog } from '../utils/log'
+
+const debug = createLog(TestCycle.name)
 
 TestCycle.routes.all.run = function () {
   const api = this
@@ -32,7 +35,14 @@ TestCycle.routes.all.run = function () {
 
 TestCycle.afterInsert = function (userId, doc) {
   if (doc.unitSets?.length) {
-    testCycleOrderChanged({ testCycleId: doc._id })
+    testCycleOrderChanged({ testCycleId: doc._id, debug })
+  }
+}
+
+TestCycle.beforeUpdate = function (userId, doc, fieldNames, modifier /*, options */) {
+  debug({ modifier })
+  if (!modifier.$set.unitSets === null) {
+    modifier.$set.unitSets = []
   }
 }
 
@@ -40,7 +50,7 @@ TestCycle.afterUpdate = function (userId, doc) {
   const { previous } = this
 
   if (!listsAreEqual(previous.unitSets, doc.unitSets)) {
-    return testCycleOrderChanged({ testCycleId: doc._id })
+    return testCycleOrderChanged({ testCycleId: doc._id, debug })
   }
 }
 
