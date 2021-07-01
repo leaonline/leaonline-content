@@ -40,8 +40,8 @@ TestCycle.afterInsert = function (userId, doc) {
 }
 
 TestCycle.beforeUpdate = function (userId, doc, fieldNames, modifier /*, options */) {
-  debug({ modifier })
-  if (!modifier.$set.unitSets === null) {
+  if (modifier.$set.unitSets === null) {
+    debug('modifier.$set.unitSets is null, fallback to  []')
     modifier.$set.unitSets = []
   }
 }

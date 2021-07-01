@@ -39,7 +39,8 @@ UnitSet.routes.all.run = function () {
 }
 
 UnitSet.beforeUpdate = function (userId, doc, fieldNames, modifier /*, options */) {
-  if (!modifier.$set.units === null) {
+  if (modifier.$set.units === null) {
+    debug('modifier.$set.units is null, fallback to  []')
     modifier.$set.units = []
   }
 }
