@@ -36,5 +36,11 @@
     "clozeScoringSchema": true,
     "recomputeProgress": true,
     "linkAlphaLevel": true
+  },
+  "status": {
+    "active": false,
+    "interval": 5000,
+    "secret": "lea.online.secret",
+    "url": "http://localhost:7070/collect"
   }
 }

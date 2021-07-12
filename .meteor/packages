@@ -32,6 +32,9 @@ leaonline:http-factory
 leaonline:service-registry
 leaonline:webapp
 
+jkuester:http
+leaonline:status
+
 #========================================
 # accounts / oauth
 #========================================
