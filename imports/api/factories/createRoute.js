@@ -12,6 +12,7 @@ const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) {
       callback(new Error(`${origin} is not allowed by CORS`))
+      return
     }
 
     const parsedOrigin = origin.charAt(origin.length - 1) === '/'
@@ -20,11 +21,10 @@ const corsOptions = {
 
     if (allowedOrigins.includes(parsedOrigin)) {
       callback(null, true)
+      return
     }
 
-    else {
-      callback(new Error(`${parsedOrigin} is not allowed by CORS`))
-    }
+    callback(new Error(`${parsedOrigin} is not allowed by CORS`))
   }
 }
 
