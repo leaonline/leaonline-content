@@ -32,7 +32,7 @@ leaonline:http-factory
 leaonline:service-registry
 leaonline:webapp
 
-jkuester:http
+http
 leaonline:status
 
 #========================================

@@ -33,7 +33,6 @@ hot-code-push@1.0.4
 http@1.4.3
 id-map@1.1.0
 inter-process-messaging@0.1.1
-jkuester:http@2.0.1
 lai:collection-extensions@0.2.1_1
 leaonline:accounts-lea@1.0.1
 leaonline:collection-factory@1.0.4
