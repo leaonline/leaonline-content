@@ -1,3 +1,4 @@
+import '../imports/startup/server/settingsSchema'
 import '../imports/startup/server/webapp'
 import '../imports/startup/server/validation'
 import '../imports/startup/server/accounts'
