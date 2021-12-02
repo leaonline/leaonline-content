@@ -8,6 +8,10 @@
     "identityUrl": "http://localhost:9090/oauth/ident",
     "redirectUrl": "http://localhost:3030/_oauth/lea"
   },
+  "hashing": {
+    "algorithm": "sha256",
+    "digest": "hex"
+  },
   "hosts": {
     "otulea": {
       "url": "http://localhost:3000"
@@ -17,6 +21,11 @@
       "urlRegEx": {
         "regex": "^http:\/\/.*$"
       }
+    },
+    "teacher": {
+      "url": "http://localhost:5555",
+      "secret":"thisisalongsecretpassphrase01234567890",
+      "expires": 3600000
     }
   },
   "files": {

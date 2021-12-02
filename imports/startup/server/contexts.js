@@ -1,15 +1,16 @@
 // loading all contexts
 import { AlphaLevel } from '../../contexts/AlphaLevel'
-import { Dimension } from '../../contexts/Dimension'
-import { Level } from '../../contexts/Level'
-import { CompetencyCategory } from '../../contexts/CompetencyCategory'
+import { Assets } from '../../contexts/Assets'
 import { Competency } from '../../contexts/Competency'
+import { CompetencyCategory } from '../../contexts/CompetencyCategory'
+import { Dimension } from '../../contexts/Dimension'
 import { Field } from '../../contexts/Field'
-import { UnitSet } from '../../contexts/UnitSet'
-import { Unit } from '../../contexts/Unit'
+import { Level } from '../../contexts/Level'
 import { MediaLib } from '../../contexts/MediaLib'
 import { TestCycle } from '../../contexts/TestCycle'
 import { Thresholds } from '../../contexts/Thresholds'
+import { Unit } from '../../contexts/Unit'
+import { UnitSet } from '../../contexts/UnitSet'
 
 // decorators
 import {
@@ -39,6 +40,7 @@ import { Meteor } from 'meteor/meteor'
 import { implementGetByIdRoute } from '../../api/decorators/implementGetByIdRoute'
 import { metaSchema } from '../../api/schema/metaSchema'
 import { CollectionTimeStamp } from '../../api/collection/CollectionTimeStamp'
+import { ContextRegistry } from '../../api/config/ContextRegistry'
 
 const i18nFactory = x => x
 const validateUser = getUserCheck()
@@ -63,13 +65,24 @@ function register (context) {
   context.publications.all = defineAllPublication({ name: context.name })
 
   context.routes = context.routes || {}
+
+  // add additional cache header directives
+  Object.values(context.routes).forEach(route => {
+    route.cacheControl = function (req, res, next) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+      res.setHeader('Pragma', 'no-cache')
+      res.setHeader('Expires', '0')
+      next()
+    }
+  })
+
   implementGetByIdRoute(context)
 
   let collection
 
   if (context.isFilesCollection) {
     collection = createFilesCollection({
-      collectionName: MediaLib.name,
+      collectionName: context.collectionName,
       allowedOrigins,
       debug: Meteor.isDevelopment,
       validateUser,
@@ -90,8 +103,7 @@ function register (context) {
       console.info(context.name, 'insert', { userId }, doc)
       doc.meta = {
         createdBy: userId,
-        createdAt: new Date(),
-        history: []
+        createdAt: new Date()
       }
     })
 
@@ -143,6 +155,7 @@ function register (context) {
   CollectionTimeStamp.register(context.name, context.isFilesCollection
     ? collection.collection
     : collection)
+  ContextRegistry.add(context)
 }
 
 // editable contexts will be decorated,
@@ -150,14 +163,15 @@ function register (context) {
 // and then added to the ServiceRegistry
 [
   AlphaLevel,
-  MediaLib,
-  Field,
-  Dimension,
-  Level,
-  CompetencyCategory,
+  Assets,
   Competency,
-  UnitSet,
-  Unit,
+  CompetencyCategory,
+  Dimension,
+  Field,
+  Level,
+  MediaLib,
   TestCycle,
-  Thresholds
+  Thresholds,
+  Unit,
+  UnitSet
 ].forEach(register)

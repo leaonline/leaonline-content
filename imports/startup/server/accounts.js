@@ -1,6 +1,11 @@
 /* global ServiceConfiguration */
 import { Meteor } from 'meteor/meteor'
-import { registerOAuthDDPLoginHandler } from 'meteor/leaonline:ddp-login-handler'
+import { Accounts } from 'meteor/accounts-base'
+import { HTTP } from 'meteor/jkuester:http'
+import {
+  defaultDDPLoginName,
+  getOAuthDDPLoginHandler
+} from 'meteor/leaonline:ddp-login-handler'
 
 Meteor.startup(() => {
   setupOAuth()
@@ -23,5 +28,11 @@ function setupOAuth () {
     }
   )
 
-  registerOAuthDDPLoginHandler({ identityUrl: oauth.identityUrl })
+  const loginHandler = getOAuthDDPLoginHandler({
+    identityUrl: oauth.identityUrl,
+    httpGet: (url, requestOptions) => HTTP.get(url, requestOptions),
+    debug: console.debug
+  })
+
+  Accounts.registerLoginHandler(defaultDDPLoginName, loginHandler)
 }

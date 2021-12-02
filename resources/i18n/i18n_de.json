@@ -22,5 +22,11 @@
   },
   "dimension": {
     "title": "Dimension"
+  },
+  "assets": {
+    "title": "Öffentliche Dateien"
+  },
+  "actions": {
+    "download": "Download"
   }
 }

@@ -89,34 +89,9 @@ export const defineGetOneMethod = ({ name, isPublic, roles, group, timeInterval,
 }
 
 export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
-  const runFct = run || function ({ dependencies }) {
-    console.info(`[${name}]: get all`, { userId: this.userId, dependencies })
-    const Collection = getCollection(name)
-    if (!Collection) throw new Error(`[${name}]: Expected collection by name <${name}>`)
-    const query = {}
-    const fields = {}
-    const docs = Collection.find(query, { fields }).fetch()
-    const all = { [name]: docs }
-
-    if (dependencies) {
-      dependencies.forEach(dependency => {
-        const DepCollection = getCollection(dependency.name)
-        if (!DepCollection) throw new Error(`[${name}]: Expected collection by name <${dependency.name}>`)
-
-        const depQuery = {}
-        if (dependency.skip?.length) {
-          depQuery._id = { $nin: dependency.skip }
-        }
-
-        all[dependency.name] = DepCollection.find(depQuery, { fields }).fetch()
-      })
-    }
-
-    return all
-  }
-
   return {
     name: `${name}.methods.getAll`,
+    token: true,
     schema: {
       dependencies: {
         type: Array,
@@ -128,11 +103,40 @@ export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval,
         type: Array,
         optional: true
       },
-      'dependencies.$.skip.$': String
+      'dependencies.$.skip.$': String,
+      token: {
+        type: String,
+        optional: true
+      }
     },
     numRequests: numRequests || 1,
     timeInterval: timeInterval || 1000,
-    run: onServer(runFct)
+    run: onServer(run || function ({ dependencies }) {
+      console.info(`[${name}]: get all`, { userId: this.userId, dependencies })
+      const Collection = getCollection(name)
+      if (!Collection) throw new Error(`[${name}]: Expected collection by name <${name}>`)
+
+      const query = {}
+      const fields = {}
+      const docs = Collection.find(query, { fields }).fetch()
+      const all = { [name]: docs }
+
+      if (dependencies) {
+        dependencies.forEach(dependency => {
+          const DepCollection = getCollection(dependency.name)
+          if (!DepCollection) throw new Error(`[${name}]: Expected collection by name <${dependency.name}>`)
+
+          const depQuery = {}
+          if (dependency.skip?.length) {
+            depQuery._id = { $nin: dependency.skip }
+          }
+
+          all[dependency.name] = DepCollection.find(depQuery, { fields }).fetch()
+        })
+      }
+
+      return all
+    })
   }
 }
 
