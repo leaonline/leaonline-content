@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { createHash } from '../crypto/createHash'
 
-const { hosts,  } = Meteor.settings
+const { hosts } = Meteor.settings
 const credentials = new Map()
 
 Object.entries(hosts).forEach(([name, host]) => {

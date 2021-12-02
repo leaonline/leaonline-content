@@ -1,8 +1,10 @@
+import { Meteor } from 'meteor/meteor'
+import { Random } from 'meteor/random'
 import { getCredentials } from './getCredentials'
 import { tokens } from './tokens'
 
 export const createToken = ({ client, hash }) => {
-  const credentials = getCredentials({ client, hash})
+  const credentials = getCredentials({ client, hash })
 
   if (!credentials) {
     throw new Meteor.Error('403', 'errors.permissionDenied', { client, hash })
