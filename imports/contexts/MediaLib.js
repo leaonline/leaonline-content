@@ -13,7 +13,7 @@ MediaLib.methods.remove.run = async function ({ _id }) {
   const mediaDoc = filesCollection.findOne(_id)
 
   if (!mediaDoc) {
-    throw new Meteor.Error('errors.docNotFound', 'mediaLib.noDocById', { _id})
+    throw new Meteor.Error('errors.docNotFound', 'mediaLib.noDocById', { _id })
   }
 
   console.debug('file found, remove', mediaDoc._id, mediaDoc.name)

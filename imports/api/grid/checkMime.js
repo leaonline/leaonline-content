@@ -42,7 +42,7 @@ export const getCheckMime = (i18nFactory = x => x, filesContext) => {
     }
 
     // and if that's not the case it might still be supported
-    if (filesContext.extensions === null  || filesContext.extensions.includes(detectedExt)) {
+    if (filesContext.extensions === null || filesContext.extensions.includes(detectedExt)) {
       return true
     }
 

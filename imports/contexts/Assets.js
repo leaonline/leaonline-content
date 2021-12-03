@@ -13,7 +13,7 @@ Assets.methods.remove.run = async function ({ _id }) {
   const assetDoc = filesCollection.findOne(_id)
 
   if (!assetDoc) {
-    throw new Meteor.Error('errors.docNotFound', 'assets.noDocById', { _id})
+    throw new Meteor.Error('errors.docNotFound', 'assets.noDocById', { _id })
   }
 
   console.debug('file found, remove', assetDoc._id, assetDoc.name)
