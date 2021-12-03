@@ -1,4 +1,7 @@
 {
+  "errors": {
+    "docNotFound": "Dokument nicht gefunden"
+  },
   "apps": {
     "content": {
       "title": "Inhalte / Content",
@@ -24,7 +27,8 @@
     "title": "Dimension"
   },
   "assets": {
-    "title": "Öffentliche Dateien"
+    "title": "Öffentliche Dateien",
+    "noDocById": "Für die ID existiert keine öffentliche Datei"
   },
   "actions": {
     "download": "Download"

@@ -44,7 +44,6 @@ import { ContextRegistry } from '../../api/config/ContextRegistry'
 
 const i18nFactory = x => x
 const validateUser = getUserCheck()
-const validateMime = getCheckMime(i18nFactory)
 const allowedOrigins = Object
   .values(Meteor.settings.hosts)
   .map(host => host.url)
@@ -81,6 +80,11 @@ function register (context) {
   let collection
 
   if (context.isFilesCollection) {
+
+    // mime validation is context-sensitive, because some file categories
+    // have a very special way of dealing with their existions, mimes etc.
+    const validateMime = getCheckMime(i18nFactory, context)
+
     collection = createFilesCollection({
       collectionName: context.collectionName,
       allowedOrigins,

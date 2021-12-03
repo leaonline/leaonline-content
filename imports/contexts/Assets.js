@@ -8,11 +8,30 @@ Assets.routes.assetUrl.run = function (req, res, next) {
   return Assets.filesCollection().link(filesDoc)
 }
 
-Assets.methods.remove.run = function ({ _id }) {
-  const filesCollection = Assets.collection().filesCollection
-  return filesCollection.remove({ _id })
+Assets.methods.remove.run = async function ({ _id }) {
+  const filesCollection = Assets.collection()
+  const assetDoc = filesCollection.findOne(_id)
+
+  if (!assetDoc) {
+    throw new Meteor.Error('errors.docNotFound', 'assets.noDocById', { _id})
+  }
+
+  console.debug('file found, remove', assetDoc._id, assetDoc.name)
+  const remove = () => new Promise((resolve, reject) => {
+    assetDoc.remove(error => {
+      if (error) return reject(error)
+      resolve(true)
+    })
+  })
+
+  return await remove()
 }
 
 Assets.maxSize = Meteor.settings.files.maxSize
+
+Assets.validateMime = function ({ extension, mime, file }) {
+  // TODO are there any specific validations we need for assets?
+  return true
+}
 
 export { Assets }

@@ -41,7 +41,7 @@ export const createRoute = createHTTPFactory({
         : split[2]
 
       const ctx = ContextRegistry.get(contextName)
-
+      console.debug('[HTTP]: isPublic?', contextName, ctx?.isPublic)
       if (ctx?.isPublic) {
         return next()
       }

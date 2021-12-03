@@ -8,9 +8,23 @@ MediaLib.routes.mediaUrl.run = function (req, res, next) {
   return MediaLib.filesCollection().link(filesDoc)
 }
 
-MediaLib.methods.remove.run = function ({ _id }) {
-  const filesCollection = MediaLib.collection().filesCollection
-  return filesCollection.remove({ _id })
+MediaLib.methods.remove.run = async function ({ _id }) {
+  const filesCollection = MediaLib.collection()
+  const mediaDoc = filesCollection.findOne(_id)
+
+  if (!mediaDoc) {
+    throw new Meteor.Error('errors.docNotFound', 'mediaLib.noDocById', { _id})
+  }
+
+  console.debug('file found, remove', mediaDoc._id, mediaDoc.name)
+  const remove = () => new Promise((resolve, reject) => {
+    mediaDoc.remove(error => {
+      if (error) return reject(error)
+      resolve(true)
+    })
+  })
+
+  return await remove()
 }
 
 MediaLib.maxSize = Meteor.settings.files.maxSize

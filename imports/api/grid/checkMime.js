@@ -1,22 +1,63 @@
-import { Meteor } from 'meteor/meteor'
-import { Magic, MAGIC_MIME_TYPE } from 'mmmagic'
-import mime from 'mime-types'
+import { check } from 'meteor/check'
+import { detectMime } from '../../utils/mime'
+import mimeTypes from 'mime-types'
+import { createLog } from '../../utils/log'
 
-export const getCheckMime = i18nFactory => (uploadedFile) => {
-  const magic = new Magic(MAGIC_MIME_TYPE)
-  return new Promise((resolve, reject) => {
-    magic.detectFile(uploadedFile.path, Meteor.bindEnvironment((err, mimeType) => {
-      const lookup = mime.lookup(uploadedFile.path)
-      if (err) {
-        reject(err)
-      }
-      else if (!lookup || lookup.indexOf(mimeType) === -1) {
-        const errorMessage = i18nFactory('filesCollection.mimeError', { expected: lookup, got: mimeType })
-        reject(new Error(errorMessage))
-      }
-      else {
-        resolve(true)
-      }
+const debug = createLog('checkMime')
+
+export const getCheckMime = (i18nFactory = x => x, filesContext) => {
+  check(i18nFactory, Function)
+
+  return async uploadedFile => {
+    const { path, extension } = uploadedFile
+    debug('check mime for', uploadedFile.name, uploadedFile.mime)
+
+    const detected = await detectMime(path)
+
+    if (!detected) {
+      throw new Error(i18nFactory('files.mimeError', {
+        expected: uploadedFile.ext,
+        got: 'undefined',
+        ending: 'undefined'
+      }))
+    }
+
+    debug('detected', detected, 'one path', path)
+    const detectedExt = detected.ext
+    const detectedMime = detected.mime
+    const lookup = mimeTypes.lookup(path) || ''
+
+    if (typeof filesContext.validateMime === 'function') {
+      return filesContext.validateMime({
+        extension: detectedExt,
+        mime: detectedMime,
+        file: uploadedFile
+      })
+    }
+
+    // in this first approach we check if the detected mime matches the
+    // expected, which occurs in many non-container-wrapped file formats
+    if (lookup === detectedMime) {
+      return true
+    }
+
+    // and if that's not the case it might still be supported
+    if (filesContext.extensions === null  || filesContext.extensions.includes(detectedExt)) {
+      return true
+    }
+
+    const resolvedExtension = mimeTypes.extension(detectedMime)
+
+    // for containers, we need to reverse-check if the detected mime is
+    // matching the ending we expect the container format to have
+    if (resolvedExtension === extension) {
+      return true
+    }
+
+    throw new Error(i18nFactory('files.mimeError', {
+      expected: lookup,
+      got: detectedMime,
+      ending: resolvedExtension
     }))
-  })
+  }
 }
