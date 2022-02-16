@@ -20,12 +20,11 @@ const corsImpl = cors({
       : origin
 
     if (allowedOrigins.includes(parsedOrigin)) {
-      console.log(`[HTTP]: ${parsedOrigin} not in allowed origins`, allowedOrigins.toString())
       callback(null, true)
       return
     }
 
-    callback(new Error(`${parsedOrigin} is not allowed by CORS`))
+    callback(new Error(`[HTTP]: ${parsedOrigin} is not allowed by CORS`))
   }
 })
 

@@ -8,6 +8,9 @@ const urlField = {
 }
 
 const settingsSchema = schema({
+  jwt: schema({
+    key: String
+  }),
   oauth: schema({
     clientId: String,
     secret: String,
@@ -36,6 +39,10 @@ const settingsSchema = schema({
       secret: String,
       expires: SimpleSchema.Integer
     }),
+    appbackend: schema({
+      url: urlField,
+      sub: String
+    })
   }),
   files: schema({
     bucketName: String,

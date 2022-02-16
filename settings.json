@@ -1,4 +1,7 @@
 {
+  "jwt": {
+    "key": "0123456789001234567890"
+  },
   "oauth": {
     "clientId": "9876543210",
     "secret": "98765432109876543210",
@@ -26,6 +29,10 @@
       "url": "http://localhost:5555",
       "secret":"thisisalongsecretpassphrase01234567890",
       "expires": 3600000
+    },
+    "appbackend": {
+      "url": "http://localhost:8080",
+      "sub": "app-backend-01234567890"
     }
   },
   "files": {
