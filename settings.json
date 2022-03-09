@@ -1,4 +1,5 @@
 {
+  "cors": false,
   "jwt": {
     "key": "0123456789001234567890"
   },
@@ -49,9 +50,9 @@
     "url": "/competencies"
   },
   "patches": {
-    "clozeScoringSchema": true,
-    "recomputeProgress": true,
-    "linkAlphaLevel": true
+    "clozeScoringSchema": false,
+    "recomputeProgress": false,
+    "linkAlphaLevel": false
   },
   "status": {
     "active": false,

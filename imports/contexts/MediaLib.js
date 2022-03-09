@@ -1,6 +1,9 @@
 import { Meteor } from 'meteor/meteor'
 import { MediaLib } from 'meteor/leaonline:corelib/contexts/MediaLib'
 
+// Media Lib is explicitly public so any app can access them
+MediaLib.isPublic = true
+
 MediaLib.routes.mediaUrl.run = function (req, res, next) {
   const { _id } = this.data()
   const filesDoc = MediaLib.collection().findOne(_id)

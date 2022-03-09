@@ -8,6 +8,7 @@ const urlField = {
 }
 
 const settingsSchema = schema({
+  cors: Boolean,
   jwt: schema({
     key: String
   }),
