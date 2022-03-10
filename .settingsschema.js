@@ -38,7 +38,8 @@ const settingsSchema = schema({
     teacher: schema({
       url:  urlField,
       secret: String,
-      expires: SimpleSchema.Integer
+      expires: SimpleSchema.Integer,
+      sub: String
     }),
     appbackend: schema({
       url: urlField,

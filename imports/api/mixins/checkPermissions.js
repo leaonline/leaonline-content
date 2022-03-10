@@ -56,7 +56,7 @@ const tokenIsValid = (function () {
       verifiedJwt = nJwt.verify(token, signingKey)
     }
     catch (e) {
-      console.log(e.message) // todo log incident
+      console.error(e.message) // todo log incident
       return false
     }
 

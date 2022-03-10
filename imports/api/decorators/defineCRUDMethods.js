@@ -107,16 +107,26 @@ export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval,
       token: {
         type: String,
         optional: true
+      },
+      isLegacy: {
+        type: Boolean,
+        optional: true
       }
     },
     numRequests: numRequests || 1,
     timeInterval: timeInterval || 1000,
-    run: onServer(run || function ({ dependencies }) {
-      console.info(`[${name}]: get all`, { userId: this.userId, dependencies })
+    run: onServer(run || function ({ dependencies, isLegacy }) {
+      console.info(`[${name}]: get all`, { userId: this.userId, dependencies, isLegacy })
+
       const Collection = getCollection(name)
       if (!Collection) throw new Error(`[${name}]: Expected collection by name <${name}>`)
 
       const query = {}
+
+      if (isLegacy === true) {
+        query.isLegacy = true
+      }
+
       const fields = {}
       const docs = Collection.find(query, { fields }).fetch()
       const all = { [name]: docs }

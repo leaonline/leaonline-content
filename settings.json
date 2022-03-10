@@ -29,7 +29,8 @@
     "teacher": {
       "url": "http://localhost:5555",
       "secret":"thisisalongsecretpassphrase01234567890",
-      "expires": 3600000
+      "expires": 3600000,
+      "sub": "teacher-app-01234567890"
     },
     "appbackend": {
       "url": "http://localhost:8080",
