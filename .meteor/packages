@@ -11,14 +11,18 @@ mongo@1.13.0                   # The database Meteor supports right now
 zodern:remove-client-js
 ecmascript@0.16.0              # Enable ECMAScript2015+ syntax in app code
 
-mdg:validated-method
-ostrio:i18n
-
+#========================================
+# testing
+#========================================
+meteortesting:mocha
+lmieulet:meteor-coverage@3.2.0!
 
 #========================================
 # core
 #========================================
 leaonline:corelib
+mdg:validated-method
+ostrio:i18n
 
 #========================================
 # factories and startup pipeline
@@ -32,7 +36,7 @@ leaonline:http-factory
 leaonline:service-registry
 leaonline:webapp
 
-jkuester:http@2.0.1
+jkuester:http@2.2.0
 # leaonline:status
 
 #========================================
@@ -63,9 +67,3 @@ dburles:mongo-collection-instances
 sha@1.0.9
 audit-argument-checks@1.0.7
 force-ssl@1.1.0
-
-#========================================
-# testing
-#========================================
-lmieulet:meteor-coverage@4.1.0
-meteortesting:mocha

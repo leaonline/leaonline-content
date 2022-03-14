@@ -10,7 +10,7 @@ const allowedOrigins = Object
 
 const corsImpl = cors({
   origin: function (origin, callback) {
-    console.debug('[CORS]: check request from origin', origin)
+    console.debug('[CORS]: request from', origin)
 
     if (!origin) {
       callback(new Error(`${origin} is not allowed by CORS`))
@@ -42,9 +42,9 @@ export const createRoute = createHTTPFactory({
         : split[2]
 
       const ctx = ContextRegistry.get(contextName)
-      console.debug('[HTTP]:', contextName, 'isPublic:', !!ctx?.isPublic, 'asked by')
 
       if (ctx?.isPublic) {
+        console.debug('[CORS]: skip cors on public', contextName)
         return next()
       }
     }
