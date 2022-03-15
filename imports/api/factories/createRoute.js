@@ -32,6 +32,8 @@ const corsImpl = cors({
 
 export const createRoute = createHTTPFactory({
   schemaFactory: Schema.create,
+  cors: corsImpl,
+  /*
   cors: function (req, res, next) {
     const url = req.url || ''
 
@@ -45,12 +47,13 @@ export const createRoute = createHTTPFactory({
 
       if (ctx?.isPublic) {
         console.debug('[CORS]: skip cors on public', contextName)
-        return next()
+        // return next()
       }
     }
 
     return corsImpl(req, res, next)
   },
+  */
   debug: function (req, res, next) {
     console.debug(req.method, req.url)
     next()
