@@ -60,5 +60,11 @@
     "interval": 5000,
     "secret": "lea.online.secret",
     "url": "http://localhost:7070/collect"
+  },
+  "email": {
+    "appName": "leaonline.content",
+    "notify": ["admin@example.com"],
+    "from": "system@example.com",
+    "replyTo": "no-reply@example.com"
   }
 }

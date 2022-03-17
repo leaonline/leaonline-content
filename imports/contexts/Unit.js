@@ -2,6 +2,7 @@ import { Unit } from 'meteor/leaonline:corelib/contexts/Unit'
 import { UnitSet } from './UnitSet'
 import { unitProgressChanged } from '../api/progress/calculateProgress'
 import { createLog } from '../utils/log'
+import { notifyAboutError } from '../api/errors/notifyAboutError'
 
 const debug = createLog(Unit.name)
 
@@ -15,7 +16,9 @@ Unit.routes.all.run = function () {
   if (!unitSet) return []
 
   if (UnitSet.collection().find(unitSet).count() > 1) {
-    throw new Error(`Doc not found for ${UnitSet.name} by id ${unitSet}`)
+    const error = new Error(`Doc not found for ${UnitSet.name} by id ${unitSet}`)
+    notifyAboutError({ error })
+    throw error
   }
 
   return Unit.collection().find({ unitSet }).map(doc => doc._id)

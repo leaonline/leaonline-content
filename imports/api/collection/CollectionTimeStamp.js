@@ -1,3 +1,5 @@
+import { notifyAboutError } from '../errors/notifyAboutError'
+
 export const CollectionTimeStamp = {}
 
 const timeStamps = new Map()
@@ -5,7 +7,11 @@ const streams = new Map()
 
 CollectionTimeStamp.register = (name, collection) => {
   if (streams.has(name)) return
-  if (!collection) throw new Error(`Expected collection for ${name}`)
+  if (!collection) {
+    const error = new Error(`Expected collection for ${name}`)
+    notifyAboutError({ error })
+    throw error
+  }
 
   // the initial -1 entry indicates a registered context but no timestamp yet
   timeStamps.set(name, -1)
@@ -19,7 +25,9 @@ CollectionTimeStamp.register = (name, collection) => {
 
 CollectionTimeStamp.get = name => {
   if (!timeStamps.has(name)) {
-    throw new Error(`No timestamp for ${name} registered`)
+    const error = new Error(`No timestamp for ${name} registered`)
+    notifyAboutError({ error })
+    throw error
   }
 
   const current = timeStamps.get(name)

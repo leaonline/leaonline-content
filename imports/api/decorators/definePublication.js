@@ -1,12 +1,15 @@
 import { onServer } from '../../utils/arch'
 import { getCollection } from '../../utils/collection'
+import { notifyAboutError } from '../errors/notifyAboutError'
 
 export const defineAllPublication = ({ name, schema, projection, query, numRequests, timeInterval, isPublic, run, debug }) => {
   const log = (...args) => console.info.apply(null, args)
   const runFct = run || function (queryDoc = {}) {
     const Collection = getCollection(name)
     if (!Collection) {
-      throw new TypeError(`Expected collection by name <${name}>`)
+      const error = new TypeError(`Expected collection by name <${name}>`)
+      notifyAboutError({ error })
+      throw error
     }
 
     const finalQuery = Object.assign({}, queryDoc, query)

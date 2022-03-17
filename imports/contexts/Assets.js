@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Assets } from 'meteor/leaonline:corelib/contexts/Assets'
+import { notifyAboutError } from '../api/errors/notifyAboutError'
 
 Assets.routes.assetUrl.run = function (req, res, next) {
   const { _id } = this.data()
@@ -13,7 +14,9 @@ Assets.methods.remove.run = async function ({ _id }) {
   const assetDoc = filesCollection.findOne(_id)
 
   if (!assetDoc) {
-    throw new Meteor.Error('errors.docNotFound', 'assets.noDocById', { _id })
+    const error = new Meteor.Error('errors.docNotFound', 'assets.noDocById', { _id })
+    notifyAboutError({ error })
+    throw error
   }
 
   console.debug('file found, remove', assetDoc._id, assetDoc.name)

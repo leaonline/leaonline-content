@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { MediaLib } from 'meteor/leaonline:corelib/contexts/MediaLib'
+import { notifyAboutError } from '../api/errors/notifyAboutError'
 
 // Media Lib is explicitly public so any app can access them
 MediaLib.isPublic = true
@@ -16,7 +17,9 @@ MediaLib.methods.remove.run = async function ({ _id }) {
   const mediaDoc = filesCollection.findOne(_id)
 
   if (!mediaDoc) {
-    throw new Meteor.Error('errors.docNotFound', 'mediaLib.noDocById', { _id })
+    const error = new Meteor.Error('errors.docNotFound', 'mediaLib.noDocById', { _id })
+    notifyAboutError({ error })
+    throw error
   }
 
   console.debug('file found, remove', mediaDoc._id, mediaDoc.name)

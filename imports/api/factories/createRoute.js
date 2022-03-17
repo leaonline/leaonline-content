@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor'
 import { createHTTPFactory } from 'meteor/leaonline:http-factory'
 import { Schema } from '../schema/Schema'
-import { ContextRegistry } from '../config/ContextRegistry'
 import cors from 'cors'
+import { notifyAboutError } from '../errors/notifyAboutError'
 
 const allowedOrigins = Object
   .values(Meteor.settings.hosts)
@@ -13,7 +13,9 @@ const corsImpl = cors({
     console.debug('[CORS]: request from', origin)
 
     if (!origin) {
-      callback(new Error(`${origin} is not allowed by CORS`))
+      const error = new Error(`${origin} is not allowed by CORS`)
+      notifyAboutError({ error, origin })
+      callback(error)
       return
     }
 
@@ -26,7 +28,9 @@ const corsImpl = cors({
       return
     }
 
-    callback(new Error(`[HTTP]: ${parsedOrigin} is not allowed by CORS`))
+    const error = new Error(`[HTTP]: ${parsedOrigin} is not allowed by CORS`)
+    notifyAboutError({ error, origin: parsedOrigin })
+    callback(error)
   }
 })
 
@@ -54,8 +58,11 @@ export const createRoute = createHTTPFactory({
     return corsImpl(req, res, next)
   },
   */
+  onError (error, method, path) {
+    notifyAboutError({ error, method, path })
+  },
   debug: function (req, res, next) {
-    console.debug(req.method, req.url)
+    console.debug('debug', req.method, req.url)
     next()
   }
 })

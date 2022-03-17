@@ -2,6 +2,7 @@ import { check } from 'meteor/check'
 import { detectMime } from '../../utils/mime'
 import mimeTypes from 'mime-types'
 import { createLog } from '../../utils/log'
+import { notifyAboutError } from '../errors/notifyAboutError'
 
 const debug = createLog('checkMime')
 
@@ -15,11 +16,13 @@ export const getCheckMime = (i18nFactory = x => x, filesContext) => {
     const detected = await detectMime(path)
 
     if (!detected) {
-      throw new Error(i18nFactory('files.mimeError', {
+      const error = new Error(i18nFactory('files.mimeError', {
         expected: uploadedFile.ext,
         got: 'undefined',
         ending: 'undefined'
       }))
+      notifyAboutError({ error })
+      throw error
     }
 
     debug('detected', detected, 'one path', path)
@@ -54,10 +57,12 @@ export const getCheckMime = (i18nFactory = x => x, filesContext) => {
       return true
     }
 
-    throw new Error(i18nFactory('files.mimeError', {
+    const error = new Error(i18nFactory('files.mimeError', {
       expected: lookup,
       got: detectedMime,
       ending: resolvedExtension
     }))
+    notifyAboutError({ error })
+    throw error
   }
 }

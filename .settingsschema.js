@@ -69,6 +69,12 @@ const settingsSchema = schema({
     secret: String,
     url: urlField
   }),
+  email: schema({
+    appName: String,
+    from: String,
+    notify: [String],
+    replyTo: String
+  }),
   public: Object
 })
 
