@@ -10,7 +10,6 @@ set -e
 
 # defaults:
 
-T_BROWSER="puppeteer"   # uses headless browser for client tests
 T_COVERAGE=0            # has coverage disabled
 T_FILTER=""             # runs all defined tests
 T_RUN_ONCE=""           # runs in watch mode
@@ -25,7 +24,6 @@ Usage: $(basename $0) [OPTIONS]
 
 Options:
   -a <String>     Filter architecture, allowed values: 'server' or 'client'
-  -b              Use a real browser for client tests (default is headless)
   -c              Activate code-coverage reports
   -g <RegExp>     Filter tests by a given RegExp (uses Mocha-grep)
   -h              Show help
@@ -50,9 +48,6 @@ while getopts "a:bcg:hov" opt; do
         echo "$SCRIPT_USAGE"
         exit 1
       fi
-      ;;
-    b)
-      T_BROWSER=""
       ;;
     g)
       T_FILTER=${OPTARG}
@@ -80,7 +75,7 @@ done
 # build paths:
 
 PROJECT_PATH=$(pwd)
-T_PACKAGE_DIRS="../lib:../libnpm:../liboauth:../libext:../meteor-collection2/package:./github"
+T_PACKAGE_DIRS="../lib:../liboauth:./github"
 
 PORT=3077
 
@@ -93,14 +88,13 @@ then
 	echo "=> Run once? [${T_RUN_ONCE}]"
 	echo "=> grep pattern: [${T_FILTER}]"
 	echo "=> coverage: [${T_COVERAGE}]"
-	echo "=> Browser: [${T_BROWSER}]"
 	echo "=> Arch: [server: ${T_SERVER}, client: ${T_CLIENT}]"
 fi
 
 # create command:
 
 METEOR_PACKAGE_DIRS=${T_PACKAGE_DIRS}  \
-    TEST_SERVER=${T_SERVER} \
+    TEST_SERVER=1 \
     TEST_CLIENT=${T_CLIENT} \
     MOCHA_GREP=${T_FILTER} \
     BABEL_ENV=COVERAGE \

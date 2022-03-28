@@ -1,1 +1,1 @@
-// import './api/progress'
+import './api/progress'
