@@ -27,7 +27,8 @@ const settingsSchema = schema({
   }),
   hosts: schema({
     otulea: schema({
-      url:  urlField
+      url:  urlField,
+      sub: String
     }),
     backend: schema({
       url:  urlField,

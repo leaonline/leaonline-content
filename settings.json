@@ -18,7 +18,8 @@
   },
   "hosts": {
     "otulea": {
-      "url": "http://localhost:3000"
+      "url": "http://localhost:3000",
+      "sub": "otulea-01234567890"
     },
     "backend": {
       "url": "http://localhost:5050",
