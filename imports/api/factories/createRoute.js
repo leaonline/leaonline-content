@@ -10,12 +10,8 @@ const allowedOrigins = Object
 
 const corsImpl = cors({
   origin: function (origin, callback) {
-    console.debug('[CORS]: request from', origin)
-
     if (!origin) {
-      const error = new Error(`${origin} is not allowed by CORS`)
-      notifyAboutError({ error, origin })
-      callback(error)
+      callback(null, true)
       return
     }
 
@@ -36,7 +32,15 @@ const corsImpl = cors({
 
 export const createRoute = createHTTPFactory({
   schemaFactory: Schema.create,
-  cors: corsImpl,
+  cors: function(req, res, next) {
+    if (!req.headers?.origin) {
+      console.debug('[CORS]: request from', req.headers)
+    }
+    else {
+      console.debug('[CORS]: request from', req.headers.origin)
+    }
+    return corsImpl.call(this, req, res, next)
+  },
   /*
   cors: function (req, res, next) {
     const url = req.url || ''
