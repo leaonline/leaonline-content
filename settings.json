@@ -67,5 +67,14 @@
     "notify": ["admin@example.com"],
     "from": "system@example.com",
     "replyTo": "no-reply@example.com"
+  },
+  "rateLimit": {
+    "methods": {
+      "get": [1, 250],
+      "all": [1, 1000],
+      "insert": [1, 1000],
+      "update": [1, 1000],
+      "remove": [1, 1000]
+    }
   }
 }

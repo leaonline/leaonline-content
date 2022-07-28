@@ -4,10 +4,8 @@ import { createBucket } from '../grid/createBucket'
 import { createObjectId } from '../grid/createObjectId'
 import fs from 'fs'
 
-const i18nFactory = x => x // TODO
-
 export const createFilesCollection = createGridFilesFactory({
-  i18nFactory: i18nFactory,
+  i18nFactory: x => x,
   bucketFactory: createBucket,
   defaultBucket: Meteor.settings.files.bucketName,
   createObjectId: createObjectId,

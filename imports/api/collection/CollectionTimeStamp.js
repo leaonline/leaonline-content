@@ -1,12 +1,30 @@
 import { notifyAboutError } from '../errors/notifyAboutError'
 
-export const CollectionTimeStamp = {}
+/**
+ * Registers hooks on a Collection to automatically track the timestamp
+ * of a collection's latest updates.
+ *
+ * Enables the timestamp for a given collection to be retrieved by
+ * GET route.
+ *
+ * All works in-memory, so no persistence involved.
+ */
+export const CollectionTimeStamp = {
+  name: 'CollectionTimeStamp'
+}
 
 const timeStamps = new Map()
 const streams = new Map()
 
+/**
+ * Registers a collection for update tracking.
+ * Uses collection hooks for insert/update/remove to
+ * update the timestamp.
+ * @param name {string} ctx name
+ * @param collection {Mongo.Collection}
+ */
 CollectionTimeStamp.register = (name, collection) => {
-  if (streams.has(name)) return
+  if (streams.has(name)) { return }
   if (!collection) {
     const error = new Error(`Expected collection for ${name}`)
     notifyAboutError({ error })
@@ -21,11 +39,17 @@ CollectionTimeStamp.register = (name, collection) => {
   collection.after.insert(updateTimeStamp)
   collection.after.update(updateTimeStamp)
   collection.after.remove(updateTimeStamp)
+  streams.set(name, collection)
 }
 
+/**
+ * Get the timestamp for a given ctx name
+ * @param name {string} ctx name
+ * @return {Number}
+ */
 CollectionTimeStamp.get = name => {
   if (!timeStamps.has(name)) {
-    const error = new Error(`No timestamp for ${name} registered`)
+    const error = new Error(`No collection for ${name} registered`)
     notifyAboutError({ error })
     throw error
   }

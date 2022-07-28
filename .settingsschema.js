@@ -76,6 +76,15 @@ const settingsSchema = schema({
     notify: [String],
     replyTo: String
   }),
+  rateLimit: schema({
+    methods: schema({
+      get: [SimpleSchema.Integer],
+      all: [SimpleSchema.Integer],
+      insert: [SimpleSchema.Integer],
+      update: [SimpleSchema.Integer],
+      remove: [SimpleSchema.Integer],
+    })
+  }),
   public: Object
 })
 

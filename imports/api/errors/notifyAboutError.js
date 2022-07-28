@@ -15,6 +15,7 @@ export const notifyAboutError = ({ error, userId, ...args }) => {
     return
   }
 
+
   Meteor.defer(() => {
     const serializableError = {
       name: error.error || error.name || 'Error',
@@ -28,10 +29,12 @@ export const notifyAboutError = ({ error, userId, ...args }) => {
       ...args
     }
 
+    const title = serializableError.message || serializableError.name
+
     notify.forEach(address => {
       Email.send({
         to: address,
-        subject: `${appName} [error]: ${serializableError.type} - ${serializableError.name}`,
+        subject: `${appName} [error]: ${serializableError.type} - ${title}`,
         replyTo: replyTo,
         from: from,
         text: JSON.stringify(serializableError, 2)

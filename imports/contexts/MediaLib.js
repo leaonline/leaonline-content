@@ -35,4 +35,6 @@ MediaLib.methods.remove.run = async function ({ _id }) {
 
 MediaLib.maxSize = Meteor.settings.files.maxSize
 
+delete MediaLib.publications.all
+
 export { MediaLib }

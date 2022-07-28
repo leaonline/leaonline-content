@@ -32,9 +32,11 @@ Assets.methods.remove.run = async function ({ _id }) {
 
 Assets.maxSize = Meteor.settings.files.maxSize
 
-Assets.validateMime = function ({ extension, mime, file }) {
+Assets.validateMime = function validateMime ({ extension, mime, file }) {
   // TODO are there any specific validations we need for assets?
   return true
 }
+
+delete Assets.publications.all
 
 export { Assets }

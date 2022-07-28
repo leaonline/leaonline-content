@@ -1,11 +1,14 @@
 import { onServer } from '../../utils/arch'
 import { getCollection } from '../../utils/collection'
 import { notifyAboutError } from '../errors/notifyAboutError'
+import { ContextRegistry } from '../../api/config/ContextRegistry'
 
-export const defineAllPublication = ({ name, schema, projection, query, numRequests, timeInterval, isPublic, run, debug }) => {
+const defineAllPublication = ({ name, schema, projection, query, numRequests, timeInterval, isPublic, run, debug }) => {
   const log = (...args) => console.info.apply(null, args)
   const runFct = run || function (queryDoc = {}) {
-    const Collection = getCollection(name)
+    const ctx = ContextRegistry.get(name)
+    const Collection = ctx && ctx.collection()
+
     if (!Collection) {
       const error = new TypeError(`Expected collection by name <${name}>`)
       notifyAboutError({ error })
@@ -27,4 +30,9 @@ export const defineAllPublication = ({ name, schema, projection, query, numReque
     log: log,
     run: onServer(runFct)
   }
+}
+
+export const Publications = {
+  name: 'Publications',
+  defineAllPublication
 }

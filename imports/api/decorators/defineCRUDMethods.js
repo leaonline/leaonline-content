@@ -1,43 +1,42 @@
 import { onServer } from '../../utils/arch'
 import { getCollection } from '../../utils/collection'
 import { notifyAboutError } from '../errors/notifyAboutError'
+import { ContextRegistry } from '../config/ContextRegistry'
 
-export const defineInsertMethod = ({ name, schema, numRequests, timeInterval, run, debug = false }) => {
+const defineInsertMethod = ({ name, schema, numRequests, timeInterval, run, debug = false }) => {
+  // TODO check args
   const methodName = `${name}.methods.insert`
   const runFct = run || function (insertDoc) {
-    console.info(`[${name}]: insert`, { userId: this.userId })
-    const Collection = getCollection(name)
-    if (!Collection) {
-      const error = new Error(`Expected collection by name <${name}>`)
-      notifyAboutError({ error, userId: this.userId, methodName })
-      throw error
-    }
-
+    const Collection = collectionByName({
+      name,
+      methodName,
+      userId: this.userId
+    })
     return Collection.insert(insertDoc)
   }
 
   return {
     name: methodName,
     schema: Object.assign({}, schema),
-    numRequests: numRequests || 1,
-    timeInterval: timeInterval || 250,
+    numRequests: numRequests,
+    timeInterval: timeInterval,
     run: onServer(runFct)
   }
 }
 
-export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debug = false }) => {
+const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debug = false }) => {
+  // TODO check args
   const methodName = `${name}.methods.update`
   const runFct = run || function (updateDoc) {
-    console.info(`[${name}]: update`, { userId: this.userId }, arguments)
-    const Collection = getCollection(name)
-    if (!Collection) {
-      const error = new Error(`Expected collection by name <${name}>`)
-      notifyAboutError({ error })
-      throw error
-    }
+    const Collection = collectionByName({
+      name,
+      methodName,
+      userId: this.userId
+    })
 
     const { _id } = updateDoc
     const document = Collection.findOne(_id)
+
     if (!document) {
       const error = new Error(`Expected document by _id <${_id}>`)
       notifyAboutError({ error, userId: this.userId, methodName })
@@ -56,23 +55,21 @@ export const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, ru
         optional: true
       }
     }),
-    numRequests: numRequests || 1,
-    timeInterval: timeInterval || 250,
+    numRequests: numRequests,
+    timeInterval: timeInterval,
     run: onServer(runFct)
   }
 }
 
-export const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
+const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
+  // TODO check args
   const methodName = `${name}.methods.remove`
-  const runFct = run || function ({ _id }) {
-    console.info(`[${name}]: remove`, { userId: this.userId, _id })
-
-    const Collection = getCollection(name)
-    if (!Collection) {
-      const error = new Error(`Expected collection by name <${name}>`)
-      notifyAboutError({ error, userId: this.userId, methodName })
-      throw error
-    }
+  const runFct = run || function ({ _id } = {}) {
+    const Collection = collectionByName({
+      name,
+      methodName,
+      userId: this.userId
+    })
 
     return Collection.remove(_id)
   }
@@ -82,23 +79,21 @@ export const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval,
     schema: {
       _id: String
     },
-    numRequests: numRequests || 1,
-    timeInterval: timeInterval || 1000,
+    numRequests: numRequests,
+    timeInterval: timeInterval,
     run: onServer(runFct)
   }
 }
 
-export const defineGetOneMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
+const defineGetOneMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
+  // TODO check args
   const methodName = `${name}.methods.getOne`
-  const runFct = run || function ({ _id }) {
-    console.info(`[${name}]: get one`, { userId: this.userId, _id })
-    const Collection = getCollection(name)
-    if (!Collection) {
-      const error = new Error(`[${name}]: Expected collection by name <${name}>`)
-      notifyAboutError({ error, userId: this.userId, methodName })
-      throw error
-    }
-
+  const runFct = run || function ({ _id } = {}) {
+    const Collection = collectionByName({
+      name,
+      methodName,
+      userId: this.userId
+    })
     return Collection.findOne(_id)
   }
 
@@ -107,14 +102,16 @@ export const defineGetOneMethod = ({ name, isPublic, roles, group, timeInterval,
     schema: {
       _id: String
     },
-    numRequests: numRequests || 1,
-    timeInterval: timeInterval || 1000,
+    numRequests: numRequests,
+    timeInterval: timeInterval,
     run: onServer(runFct)
   }
 }
 
-export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
+const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
+  // TODO check args
   const methodName = `${name}.methods.getAll`
+
   return {
     name: methodName,
     token: true,
@@ -137,28 +134,34 @@ export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval,
       isLegacy: {
         type: Boolean,
         optional: true
+      },
+      skip: {
+        type: Array,
+        optional: true
+      },
+      'skip.$': {
+        type: String
       }
     },
-    numRequests: numRequests || 1,
-    timeInterval: timeInterval || 1000,
-    run: onServer(run || function ({ dependencies, isLegacy }) {
-      console.info(`[${name}]: get all`, {
-        userId: this.userId,
-        dependencies,
-        isLegacy
+    numRequests: numRequests,
+    timeInterval: timeInterval,
+    run: onServer(run || function ({ skip, dependencies, isLegacy } = {}) {
+      const Collection = collectionByName({
+        name,
+        methodName,
+        userId: this.userId
       })
-
-      const Collection = getCollection(name)
-      if (!Collection) {
-        const error = new Error(`[${name}]: Expected collection by name <${name}>`)
-        notifyAboutError({ error, userId: this.userId })
-        throw error
-      }
 
       const query = {}
 
-      if (isLegacy === true) {
-        query.isLegacy = true
+      if (Array.isArray(skip) && skip.length > 0) {
+        query._id = { $nin: skip }
+      }
+
+      if (typeof isLegacy === 'boolean') {
+        query.isLegacy = isLegacy
+          ? true
+          : { $in: [null, undefined, false] }
       }
 
       const fields = {}
@@ -167,14 +170,14 @@ export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval,
 
       if (dependencies) {
         dependencies.forEach(dependency => {
-          const DepCollection = getCollection(dependency.name)
-          if (!DepCollection) {
-            const error = new Error(`[${name}]: Expected collection by name <${dependency.name}>`)
-            notifyAboutError({ error, userId: this.userId, methodName })
-            throw error
-          }
+          const DepCollection = collectionByName({
+            name: dependency.name,
+            methodName,
+            userId: this.userId
+          })
 
           const depQuery = {}
+
           if (dependency.skip?.length) {
             depQuery._id = { $nin: dependency.skip }
           }
@@ -188,8 +191,10 @@ export const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval,
   }
 }
 
-export const defineAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests }) => {
+const defineAllMethod = ({ name, isPublic, roles, group, timeInterval, numRequests }) => {
+  // TODO check args
   const methodName = `${name}.methods.all`
+
   return {
     name: methodName,
     schema: {
@@ -203,15 +208,14 @@ export const defineAllMethod = ({ name, isPublic, roles, group, timeInterval, nu
         optional: true
       }
     },
-    numRequests: numRequests || 1,
-    timeInterval: timeInterval || 1000,
-    run: onServer(function ({ ids, isLegacy }) {
-      const Collection = getCollection(name)
-      if (!Collection) {
-        const error = new Error(`[${name}]: Expected collection by name <${name}>`)
-        notifyAboutError({ error, userId: this.userId, methodName })
-        throw error
-      }
+    numRequests: numRequests,
+    timeInterval: timeInterval,
+    run: onServer(function ({ ids, isLegacy } = {}) {
+      const Collection = collectionByName({
+        name,
+        methodName,
+        userId: this.userId
+      })
 
       const query = {}
       if (ids) {
@@ -220,9 +224,33 @@ export const defineAllMethod = ({ name, isPublic, roles, group, timeInterval, nu
 
       if (typeof isLegacy === 'boolean') {
         query.isLegacy = isLegacy
+          ? true
+          : { $in: [null, undefined, false] }
       }
 
       return Collection.find(query).fetch()
     })
   }
+}
+
+const collectionByName = ({ name, methodName, userId }) => {
+  const ctx = ContextRegistry.get(name)
+  const collection = ctx && ctx.collection()
+
+  if (!collection) {
+    const error = new Error(`[${methodName}]: Expected collection by name <${name}>`)
+    notifyAboutError({ error, userId, methodName })
+    throw error
+  }
+
+  return collection
+}
+
+export const CRUDMethods = {
+  defineGetOneMethod,
+  defineGetAllMethod,
+  defineInsertMethod,
+  defineUpdateMethod,
+  defineRemoveMethod,
+  defineAllMethod
 }

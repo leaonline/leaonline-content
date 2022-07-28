@@ -1,0 +1,6 @@
+import './initCollection.tests'
+import './initMethods.tests'
+import './initPublications.tests'
+import './initRoutes.tests'
+import './initContext.tests'
+import './registerContext.tests'
