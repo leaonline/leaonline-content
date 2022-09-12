@@ -9,7 +9,9 @@ describe(createInitContext.name, function () {
     initEmpty(ctx)
     expect(ctx).to.deep.equal({}) // unmutated
 
-    const withMutators = createInitContext([x => { x.foo = 'bar' }])
+    const withMutators = createInitContext([x => {
+      x.foo = 'bar'
+    }])
     withMutators(ctx)
     expect(ctx).to.deep.equal({ foo: 'bar' }) // mutated
   })

@@ -1,4 +1,4 @@
-import { Meteor } from "meteor/meteor"
+import { Meteor } from 'meteor/meteor'
 import cors from 'cors'
 import { notifyAboutError } from '../../errors/notifyAboutError'
 import { createLog } from '../../../utils/log'
@@ -39,7 +39,7 @@ const corsImpl = cors({
 /**
  * Returns a ready-to-use cors middleware
  */
-export const getCors = () => function(req, res, next) {
+export const getCors = () => function (req, res, next) {
   if (!req.headers?.origin) {
     debug('request from', req.headers)
   }

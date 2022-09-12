@@ -134,17 +134,16 @@ describe('CRUDMethods', function () {
 
       // ensure deps must exist
       const fakeId = Random.id()
-      expect(() => getAll.run({ dependencies: [{ name: fakeId}]}))
+      expect(() => getAll.run({ dependencies: [{ name: fakeId }] }))
         .to.throw(`[${getAll.name}]: Expected collection by name <${fakeId}>`)
 
-
-      expect(getAll.run({ dependencies: [dep]})).to.deep.equal({
+      expect(getAll.run({ dependencies: [dep] })).to.deep.equal({
         [name]: allDocs,
         [dep.name]: depDocs
       })
 
       // with skip
-      expect(getAll.run({ dependencies: [{ name: dep.name, skip: [depId]}]}))
+      expect(getAll.run({ dependencies: [{ name: dep.name, skip: [depId] }] }))
         .to.deep.equal({
           [name]: allDocs,
           [dep.name]: []

@@ -1,4 +1,6 @@
 /* eslint-env mocha */
+import { Email } from 'meteor/email'
+import { Mongo } from 'meteor/mongo'
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { CollectionTimeStamp } from '../CollectionTimeStamp'
@@ -12,7 +14,7 @@ describe(CollectionTimeStamp.name, function () {
   afterEach(function () {
     restoreAll()
   })
-  it ('returns a fallback if no timestamp is added yet', async function () {
+  it('returns a fallback if no timestamp is added yet', async function () {
     CollectionTimeStamp.register(name, collection)
     const now = Date.now()
     await asyncTimeout(50)
@@ -32,7 +34,7 @@ describe(CollectionTimeStamp.name, function () {
     await asyncTimeout(50)
     // should still be equal
     expect(CollectionTimeStamp.get(name)).to.equal(now)
-    collection.update(insertDocId, { $set: { foo: 'bar' }})
+    collection.update(insertDocId, { $set: { foo: 'bar' } })
     const afterUpdate = CollectionTimeStamp.get(name)
     expect(afterUpdate).to.be.above(now)
     now = afterUpdate
@@ -57,7 +59,7 @@ describe(CollectionTimeStamp.name, function () {
     await asyncTimeout(50) // email send is deferred
     expect(sent).to.equal(true)
   })
-  it('throws on access to unregistered collection',async function () {
+  it('throws on access to unregistered collection', async function () {
     let sent = false
     stub(Email, 'send', () => {
       sent = true
@@ -69,7 +71,7 @@ describe(CollectionTimeStamp.name, function () {
     expect(sent).to.equal(true)
   })
   it('provides a route for accessing the timestamp', async function () {
-    let now = Date.now()
+    const now = Date.now()
     const env = {
       data: () => ({
         context: name

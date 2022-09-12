@@ -15,7 +15,6 @@ export const notifyAboutError = ({ error, userId, ...args }) => {
     return
   }
 
-
   Meteor.defer(() => {
     const serializableError = {
       name: error.error || error.name || 'Error',

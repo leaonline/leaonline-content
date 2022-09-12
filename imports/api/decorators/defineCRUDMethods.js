@@ -1,5 +1,4 @@
 import { onServer } from '../../utils/arch'
-import { getCollection } from '../../utils/collection'
 import { notifyAboutError } from '../errors/notifyAboutError'
 import { ContextRegistry } from '../config/ContextRegistry'
 

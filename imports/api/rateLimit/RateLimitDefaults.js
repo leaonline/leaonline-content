@@ -1,4 +1,5 @@
-import { Meteor } from "meteor/meteor"
+import { Meteor } from 'meteor/meteor'
+import { getProperty } from '../../utils/getProperty'
 
 const { methods } = Meteor.settings.rateLimit
 
@@ -7,13 +8,11 @@ export const RateLimitDefaults = {}
 RateLimitDefaults.methods = {}
 
 const method = name => {
-  if (!methods[name]) {
+  if (!(name in methods)) {
     throw new Error(`Expected ${name} in Meteor.settings.rateLimit.methods`)
   }
-  return {
-    numRequests: methods[name][0],
-    timeInterval: methods[name][1]
-  }
+  const [numRequests, timeInterval] = getProperty(methods, name)
+  return { numRequests, timeInterval }
 }
 
 RateLimitDefaults.methods.get = () => method('get')
