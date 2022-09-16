@@ -1,4 +1,6 @@
 /* eslint-env mocha */
+import { Mongo } from 'meteor/mongo'
+import { Meteor } from 'meteor/meteor'
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { initRoutes } from '../initRoutes'
@@ -56,7 +58,7 @@ describe(initRoutes.name, function () {
       'content-encoding': 'gzip',
       'content-type': 'application/json',
       'transfer-encoding': 'chunked',
-      'vary': 'Origin, Accept-Encoding'
+      vary: 'Origin, Accept-Encoding'
     })
 
     const response2 = await HTTP.get(Meteor.absoluteUrl(path2))

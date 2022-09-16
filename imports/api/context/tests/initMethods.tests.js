@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+import { Mongo } from 'meteor/mongo'
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { initMethods } from '../initMethods'
@@ -46,7 +47,7 @@ describe(initMethods.name, function () {
       context.methods.remove,
       context.methods.getAll,
       context.methods.getOne,
-      context.methods.all,
+      context.methods.all
     ].forEach((method, index) => {
       expect(method.name).to.equal(`${context.name}.methods.${index}`)
       expect(method.run()).to.equal(value)

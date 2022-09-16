@@ -1,11 +1,10 @@
-import { Meteor } from "meteor/meteor"
+import { Meteor } from 'meteor/meteor'
 import { CollectionTimeStamp } from '../collection/CollectionTimeStamp'
 import { createCollection } from '../factories/createCollection'
 import { createFilesCollection } from '../factories/createFilesCollection'
 import { metaSchema } from '../schema/metaSchema'
 import { getCheckMime } from '../grid/checkMime'
 import { getUserCheck } from '../grid/checkuser'
-
 
 const validateUser = getUserCheck()
 const allowedOrigins = Object.values(Meteor.settings.hosts).map(host => host.url)

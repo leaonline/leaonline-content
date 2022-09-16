@@ -4,8 +4,6 @@ import { notifyAboutError } from '../errors/notifyAboutError'
 import { getCors } from '../middleware/cors/getCors'
 import { getCacheControl } from '../middleware/cacheControl/getCacheControl'
 
-
-
 export const createRoute = createHTTPFactory({
   schemaFactory: Schema.create,
   cors: getCors(),

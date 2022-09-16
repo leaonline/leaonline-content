@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+import { Mongo } from 'meteor/mongo'
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { initPublications } from '../initPublications'

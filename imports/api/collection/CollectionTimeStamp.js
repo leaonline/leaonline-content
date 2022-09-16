@@ -24,7 +24,9 @@ const streams = new Map()
  * @param collection {Mongo.Collection}
  */
 CollectionTimeStamp.register = (name, collection) => {
-  if (streams.has(name)) { return }
+  if (streams.has(name)) {
+    return
+  }
   if (!collection) {
     const error = new Error(`Expected collection for ${name}`)
     notifyAboutError({ error })

@@ -1,11 +1,11 @@
 /* eslint-env mocha */
+import { Email } from 'meteor/email'
 import { expect } from 'chai'
-import { Random } from 'meteor/random'
 import { getCors } from '../getCors'
 import { restoreAll, stub } from '../../../../../tests/helpers/testHelpers'
 import { asyncTimeout } from '../../../../utils/asyncTimeout'
 import { ServerResponse } from 'http'
-import { Meteor } from "meteor/meteor"
+import { Meteor } from 'meteor/meteor'
 
 describe(getCors.name, function () {
   afterEach(function () {

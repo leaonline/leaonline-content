@@ -1,6 +1,5 @@
 /* eslint-env mocha */
 import { expect } from 'chai'
-import { Random } from 'meteor/random'
 import { stub, restoreAll } from '../../../tests/helpers/testHelpers'
 import { detectMime } from '../mime'
 import FileType from 'file-type'

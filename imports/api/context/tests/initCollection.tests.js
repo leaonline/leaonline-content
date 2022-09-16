@@ -19,7 +19,9 @@ describe(initCollection.name, function () {
 
   it('creates a new Mongo.Collection with schema attached', function () {
     let registered = false
-    overrideStub(CollectionTimeStamp, 'register', () => { registered = true })
+    overrideStub(CollectionTimeStamp, 'register', () => {
+      registered = true
+    })
 
     const schema = { title: String }
     const context = { name, schema }
@@ -39,8 +41,7 @@ describe(initCollection.name, function () {
     const collection = context.collection()
     const insertDocId = collection.insert({ title })
     expect(collection.findOne().title).to.equal(title)
-    collection.update(insertDocId, { $set: { title: 'foo' }})
-
+    collection.update(insertDocId, { $set: { title: 'foo' } })
 
     const { meta, ...doc } = collection.findOne(insertDocId)
     expect(doc).to.deep.equal({ _id: insertDocId, title: 'foo' })
@@ -54,9 +55,15 @@ describe(initCollection.name, function () {
     let beforeUpdateCalled = false
     let afterUpdateCalled = false
 
-    const afterInsert = () => { afterInsertCalled = true }
-    const beforeUpdate = () => { beforeUpdateCalled = true }
-    const afterUpdate = () => { afterUpdateCalled = true }
+    const afterInsert = () => {
+      afterInsertCalled = true
+    }
+    const beforeUpdate = () => {
+      beforeUpdateCalled = true
+    }
+    const afterUpdate = () => {
+      afterUpdateCalled = true
+    }
 
     const title = Random.id()
     const schema = { title: String }
@@ -65,9 +72,9 @@ describe(initCollection.name, function () {
 
     const collection = context.collection()
     const insertDocId = collection.insert({ title })
-    collection.update(insertDocId, { $set: { title: 'foo' }})
+    collection.update(insertDocId, { $set: { title: 'foo' } })
 
-    expect(afterUpdateCalled).to.equal(true)
+    expect(afterInsertCalled).to.equal(true)
     expect(beforeUpdateCalled).to.equal(true)
     expect(afterUpdateCalled).to.equal(true)
   })
