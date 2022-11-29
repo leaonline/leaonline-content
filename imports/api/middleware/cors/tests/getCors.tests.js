@@ -21,14 +21,15 @@ describe(getCors.name, function () {
     const res = {}
     const next = () => {}
     let sent = false
+
     stub(Email, 'send', doc => {
-      console.debug(doc)
       const error = JSON.parse(doc.text)
-      expect(error.message).to.equal('[HTTP]: foo is not allowed by CORS')
+      expect(error.message).to.equal('[HTTP]: foo is not allowed by CORS policy')
       sent = true
     })
-    cors(req, res, next)
-    await asyncTimeout(25)
+
+    await cors(req, res, next)
+    await asyncTimeout(50)
     expect(sent).to.equal(true)
   })
   it('does not notify about undefined origins', async function () {
@@ -45,7 +46,7 @@ describe(getCors.name, function () {
     stub(Email, 'send', doc => {
       sent = true
     })
-    cors(req, res, next)
+    await cors(req, res, next)
     await asyncTimeout(25)
     expect(sent).to.equal(false)
   })
@@ -64,7 +65,7 @@ describe(getCors.name, function () {
     stub(Email, 'send', doc => {
       sent = true
     })
-    cors(req, res, next)
+    await cors(req, res, next)
     await asyncTimeout(25)
     expect(sent).to.equal(false)
   })
@@ -83,7 +84,7 @@ describe(getCors.name, function () {
     stub(Email, 'send', doc => {
       sent = true
     })
-    cors(req, res, next)
+    await cors(req, res, next)
     await asyncTimeout(25)
     expect(sent).to.equal(false)
   })

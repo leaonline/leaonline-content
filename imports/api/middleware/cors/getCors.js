@@ -24,7 +24,7 @@ const corsImpl = cors({
       return
     }
 
-    const error = new Error(`[HTTP]: ${parsedOrigin} is not allowed by CORS`)
+    const error = new Error(`[HTTP]: ${parsedOrigin} is not allowed by CORS policy`)
 
     // we only notify if origin contains useful info, since
     // we can't get something out of undefined origin
@@ -46,27 +46,6 @@ export const getCors = () => function (req, res, next) {
   else {
     debug('request from', req.headers.origin)
   }
+
   return corsImpl.call(this, req, res, next)
 }
-
-/*
-cors: function (req, res, next) {
-  const url = req.url || ''
-
-  if (url.startsWith('/cdn/storage/')) {
-    const split = url.split('/')
-    const contextName = split[0] === ''
-      ? split[3]
-      : split[2]
-
-    const ctx = ContextRegistry.get(contextName)
-
-    if (ctx?.isPublic) {
-      console.debug('[CORS]: skip cors on public', contextName)
-      // return next()
-    }
-  }
-
-  return corsImpl(req, res, next)
-},
-*/
