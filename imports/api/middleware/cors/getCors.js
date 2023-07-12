@@ -1,12 +1,10 @@
-import { Meteor } from 'meteor/meteor'
 import cors from 'cors'
 import { notifyAboutError } from '../../errors/notifyAboutError'
 import { createLog } from '../../../utils/log'
+import { getAllowedOrigins } from '../../origins/getAllowedOrigins'
 
 const debug = createLog('CORS')
-const allowedOrigins = Object
-  .values(Meteor.settings.hosts)
-  .map(host => host.url)
+const allowedOrigins = getAllowedOrigins()
 
 const corsImpl = cors({
   origin: function (origin, callback) {
@@ -19,7 +17,7 @@ const corsImpl = cors({
       ? origin.substring(0, origin.length - 1)
       : origin
 
-    if (allowedOrigins.includes(parsedOrigin)) {
+    if (allowedOrigins.urls.includes(parsedOrigin)) {
       callback(null, true)
       return
     }

@@ -5,9 +5,10 @@ import { createFilesCollection } from '../factories/createFilesCollection'
 import { metaSchema } from '../schema/metaSchema'
 import { getCheckMime } from '../grid/checkMime'
 import { getUserCheck } from '../grid/checkuser'
+import { getAllowedOrigins } from '../origins/getAllowedOrigins'
 
 const validateUser = getUserCheck()
-const allowedOrigins = Object.values(Meteor.settings.hosts).map(host => host.url)
+const allowedOrigins = getAllowedOrigins()
 
 export const initCollection = context => {
   let collection
@@ -20,7 +21,7 @@ export const initCollection = context => {
 
     collection = createFilesCollection({
       collectionName: context.collectionName,
-      allowedOrigins,
+      allowedOrigins: allowedOrigins.regExp,
       debug: Meteor.isDevelopment,
       validateUser,
       validateMime,
