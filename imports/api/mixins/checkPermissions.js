@@ -1,11 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { notifyAboutError } from '../errors/notifyAboutError'
-
-class PermissionDeniedError extends Meteor.Error {
-  constructor (reason, details) {
-    super('errors.permissionDenied', reason, details)
-  }
-}
+import { PermissionDeniedError } from '../errors/PermissionDeniedError'
 
 export const checkPermissions = function (options) {
   const exception = !!options.isPublic
@@ -82,7 +77,6 @@ const tokenIsValid = (function () {
       verifiedJwt = nJwt.verify(token, signingKey)
     }
     catch (e) {
-      console.error(e.message) // todo log incident
       return { valid: false, reason: e.message }
     }
 
@@ -106,7 +100,7 @@ const tokenIsValid = (function () {
     if (!hasHost) {
       return {
         valid: false,
-        reason: `host ${verifiedJwt.body.iss} has invalid url or sub`
+        reason: `host ${body.iss} has invalid url or invalid sub ${body.sub}`
       }
     }
 
