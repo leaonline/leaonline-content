@@ -24,6 +24,7 @@ Usage: $(basename $0) [OPTIONS]
 
 Options:
   -a <String>     Filter architecture, allowed values: 'server' or 'client'
+  -b              Use a real browser for client tests (default is headless)
   -c              Activate code-coverage reports
   -g <RegExp>     Filter tests by a given RegExp (uses Mocha-grep)
   -h              Show help
@@ -32,7 +33,7 @@ Options:
 "
 
 
-while getopts "a:bcg:hov" opt; do
+while getopts "a:cg:hov" opt; do
   case $opt in
     a)
       if [ "$OPTARG" = "client" ]
@@ -75,7 +76,7 @@ done
 # build paths:
 
 PROJECT_PATH=$(pwd)
-T_PACKAGE_DIRS="../lib:../liboauth:./github"
+T_PACKAGE_DIRS="../lib:../libnpm:../liboauth:../:./github"
 
 PORT=3077
 
@@ -94,12 +95,13 @@ fi
 # create command:
 
 METEOR_PACKAGE_DIRS=${T_PACKAGE_DIRS}  \
-    TEST_SERVER=1 \
+    TEST_SERVER=${T_SERVER} \
     TEST_CLIENT=${T_CLIENT} \
     MOCHA_GREP=${T_FILTER} \
     BABEL_ENV=COVERAGE \
     COVERAGE=${T_COVERAGE} \
     COVERAGE_OUT_HTML=1 \
+    COVERAGE_OUT_LCOVONLY=1 \
     COVERAGE_APP_FOLDER=$PWD/ \
     COVERAGE_VERBOSE_MODE=${T_VERBOSE} \
     meteor test \
