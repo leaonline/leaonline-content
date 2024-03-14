@@ -30,29 +30,78 @@ jobs:
 
     - run: npm install
     - run: npm run lint:code
+        
+        # CHECKOUTS
+        - name: Checkout
+          uses: actions/checkout@v4
 
-  # uncomment when tests have been added
-  tests:
-    name: Meteor ${{ matrix.meteor }} tests
-    runs-on: ubuntu-latest
-    needs: [lintcode]
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
+        - name: Checkout leaonline:corelib repo
+          uses: actions/checkout@v4
+          with:
+            repository: leaonline/corelib
+            path: github/corelib
 
-      - name: Setup meteor
-        uses: meteorengineer/setup-meteor@v1
-        with:
-          meteor-release: '2.12'
+        - name: Checkout leaonline:service-registry repo
+          uses: actions/checkout@v4
+          with:
+            repository: leaonline/service-registry
+            path: github/service-registry
 
-      - run: meteor npm install
-      - run: sh ./test.sh -c -o
+        - name: Checkout Collection2
+          uses: actions/checkout@v4
+          with:
+            repository: Meteor-Community-Packages/meteor-collection2
+            path: github/meteor-collection2
+            ref: release/v4
 
-      - name: Upload coverage
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-folder
-          path: .coverage/
+        # CACHING
+        - name: Install Meteor
+          id: cache-meteor-install
+          uses: actions/cache@v4
+          with:
+            path: ~/.meteor
+            key: v1-meteor-${{ hashFiles('.meteor/versions') }}
+            restore-keys: |
+              v1-meteor-
+
+        - name: Cache NPM dependencies
+          id: cache-meteor-npm
+          uses: actions/cache@v4
+          with:
+            path: ~/.npm
+            key: v1-npm-${{ hashFiles('package-lock.json') }}
+            restore-keys: |
+              v1-npm-
+
+        - name: Cache Meteor build
+          id: cache-meteor-build
+          uses: actions/cache@v4
+          with:
+            path: |
+              .meteor/local/resolver-result-cache.json
+              .meteor/local/plugin-cache
+              .meteor/local/isopacks
+              .meteor/local/bundler-cache/scanner
+            key: v1-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
+            restore-key: |
+              v1-meteor_build_cache-
+
+        - name: Setup meteor
+          uses: meteorengineer/setup-meteor@v1
+          with:
+            meteor-release: '2.12'
+
+        - name: Install NPM Dependencies
+          run: meteor npm ci
+
+        - name: Run Tests
+          run: sh ./test.sh -c -o
+
+        - name: Upload coverage
+          uses: actions/upload-artifact@v2
+          with:
+            name: coverage-folder
+            path: .coverage/
 
   coverage:
     name: Coverage report
