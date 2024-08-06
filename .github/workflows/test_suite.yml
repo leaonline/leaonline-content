@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - develop
   pull_request:
 
 jobs:
@@ -93,7 +92,7 @@ jobs:
       - name: Setup meteor
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: '2.12'
+          meteor-release: '3.0.1'
 
       - name: Install NPM Dependencies
         run: meteor npm ci
