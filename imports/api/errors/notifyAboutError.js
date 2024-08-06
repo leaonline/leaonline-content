@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Email } from 'meteor/email'
+import { EJSON } from 'meteor/ejson'
 
 const { appName, notify, replyTo, from } = Meteor.settings.email
 
@@ -15,7 +16,7 @@ export const notifyAboutError = ({ error, userId, ...args }) => {
     return
   }
 
-  Meteor.defer(() => {
+  Meteor.defer(async () => {
     const serializableError = {
       name: error.error || error.name || 'Error',
       type: error.type || 'native',
@@ -30,14 +31,14 @@ export const notifyAboutError = ({ error, userId, ...args }) => {
 
     const title = serializableError.message || serializableError.name
 
-    notify.forEach(address => {
-      Email.send({
+    return Promise.all(notify.map(address => {
+      return Email.sendAsync({
         to: address,
         subject: `${appName} [error]: ${serializableError.type} - ${title}`,
         replyTo: replyTo,
         from: from,
-        text: JSON.stringify(serializableError, 2)
+        text: EJSON.stringify(serializableError, 2)
       })
-    })
+    }))
   })
 }

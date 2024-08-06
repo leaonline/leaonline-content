@@ -4,7 +4,5 @@
 import { UnitSet } from '../UnitSet'
 
 describe(UnitSet.name, function () {
-  it('implements a get-all route', function () {
-
-  })
+  it('implements a get-all route')
 })

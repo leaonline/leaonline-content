@@ -8,6 +8,7 @@ export const createRoute = createHTTPFactory({
   schemaFactory: Schema.create,
   cors: getCors(),
   onError (error, method, path) {
+    console.error(error)
     notifyAboutError({ error, method, path })
   },
   debug: function (req, res, next) {

@@ -11,9 +11,9 @@ import { TestCycle } from '../../contexts/TestCycle'
  * by -> Unit pages (length) changes
  * do -> update all UnitSets, that contain this unit
  */
-export const unitProgressChanged = ({ unitId, debug = () => {} }) => {
+export const unitProgressChanged = async ({ unitId, debug = () => {} }) => {
   debug('(unitProgressChanged):', unitId)
-  UnitSet
+  await UnitSet
     .collection()
     .find({ units: unitId })
     .forEach(unitSetDoc => updateUnitSetProgress({ unitSetDoc, debug }))
@@ -23,17 +23,17 @@ export const unitProgressChanged = ({ unitId, debug = () => {} }) => {
  * by -> UnitSet.units changed
  * do -> update this unitSet progress
  */
-export const unitSetOrderChanged = ({ unitSetId, debug = () => {} }) => {
+export const unitSetOrderChanged = async ({ unitSetId, debug = () => {} }) => {
   debug('(unitOrderChanged):', unitSetId)
-  const unitSetDoc = UnitSet.collection().findOne(unitSetId)
-  updateUnitSetProgress({ unitSetDoc, debug })
+  const unitSetDoc = await UnitSet.collection().findOneAsync(unitSetId)
+  return updateUnitSetProgress({ unitSetDoc, debug })
 }
 
-const updateUnitSetProgress = ({ unitSetDoc, debug }) => {
+const updateUnitSetProgress = async ({ unitSetDoc, debug }) => {
   debug('(updateUnitSetProgress)')
   let progress = 0
 
-  Unit
+  await Unit
     .collection()
     .find({
       _id: {
@@ -45,9 +45,9 @@ const updateUnitSetProgress = ({ unitSetDoc, debug }) => {
       progress += (pages || 0)
     })
 
-  UnitSet
+  await UnitSet
     .collection()
-    .update(unitSetDoc._id, { $set: { progress } })
+    .updateAsync(unitSetDoc._id, { $set: { progress } })
 }
 
 /**
@@ -66,16 +66,16 @@ export const unitSetProgressChanged = ({ unitSetId, debug = () => {} }) => {
  * by -> testCycle.unitSets changed
  * do -> get { progress } from unitSets and update
  */
-export const testCycleOrderChanged = ({ testCycleId, debug = () => {} }) => {
+export const testCycleOrderChanged = async ({ testCycleId, debug = () => {} }) => {
   debug('(unitSetOrderChanged):', testCycleId)
-  const testCycleDoc = TestCycle.collection().findOne(testCycleId)
-  updateTestCycleDoc({ testCycleDoc, debug })
+  const testCycleDoc = await TestCycle.collection().findOneAsync(testCycleId)
+  return updateTestCycleDoc({ testCycleDoc, debug })
 }
 
-const updateTestCycleDoc = ({ testCycleDoc, debug }) => {
+const updateTestCycleDoc = async ({ testCycleDoc, debug }) => {
   debug('(updateTestCycleDoc)')
   let progress = 0
-  UnitSet
+  await UnitSet
     .collection()
     .find({
       _id: {
@@ -85,7 +85,7 @@ const updateTestCycleDoc = ({ testCycleDoc, debug }) => {
     .forEach(unitSetDoc => {
       progress += (unitSetDoc.progress || 0)
     })
-  TestCycle
+  return TestCycle
     .collection()
-    .update(testCycleDoc._id, { $set: { progress } })
+    .updateAsync(testCycleDoc._id, { $set: { progress } })
 }

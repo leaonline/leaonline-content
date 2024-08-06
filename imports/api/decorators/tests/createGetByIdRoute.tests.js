@@ -8,10 +8,10 @@ describe(createGetByIdRoute.name, function () {
   const collection = new Mongo.Collection(null)
   const ctx = { name: Random.id(), collection: () => collection }
 
-  it('creates a run function for a given ctx', function () {
+  it('creates a run function for a given ctx', async function () {
     const run = createGetByIdRoute(ctx)
-    const _id = collection.insert({})
+    const _id = await collection.insertAsync({})
     const env = { data: () => ({ _id }) }
-    expect(run.call(env)).to.deep.equal({ _id })
+    expect(await run.call(env)).to.deep.equal({ _id })
   })
 })

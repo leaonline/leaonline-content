@@ -4,7 +4,7 @@ import { Meteor } from 'meteor/meteor'
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { initRoutes } from '../initRoutes'
-import { HTTP } from 'meteor/jkuester:http'
+import { fetch } from 'meteor/fetch'
 
 describe(initRoutes.name, function () {
   it('omits undefined routes', function () {
@@ -29,7 +29,7 @@ describe(initRoutes.name, function () {
         test: {
           path: path2,
           method: 'get',
-          run: function () {
+          run: async function () {
             return { foo: 'bar' }
           }
         }
@@ -40,28 +40,29 @@ describe(initRoutes.name, function () {
 
     const title = Random.id()
     const insertDocId = collection.insert({ title })
-
-    const params = { _id: insertDocId }
-    const response = await HTTP.get(Meteor.absoluteUrl(path), { params })
-    expect(response.statusCode).to.equal(200)
+    const url = new URL(Meteor.absoluteUrl(path))
+    url.search = new URLSearchParams({ _id: insertDocId }).toString()
+    const response = await fetch(url)
+    const data = await response.json()
+    expect(response.status).to.equal(200)
     expect(response.ok).to.equal(true)
-    expect(response.data).to.deep.equal({ _id: insertDocId, title })
-
-    const { date, ...headers } = response.headers
-    expect(new Date(date).getFullYear()).to.equal(new Date().getFullYear())
+    expect(data).to.deep.equal({ _id: insertDocId, title })
+    const responseHeaders = Object.fromEntries(response.headers.entries())
+    const { date, ...headers } = responseHeaders
     expect(headers).to.deep.equal({
       // global cacheControl on createRoute
       'cache-control': 'no-cache, no-store, must-revalidate',
       pragma: 'no-cache',
       expires: '0',
       connection: 'close',
-      'content-encoding': 'gzip',
-      'content-type': 'application/json',
-      'transfer-encoding': 'chunked',
+      'content-type': 'application/json; charset=utf-8',
+      'content-length': '55',
       vary: 'Origin, Accept-Encoding'
     })
+    expect(new Date(date).getFullYear()).to.equal(new Date().getFullYear())
 
-    const response2 = await HTTP.get(Meteor.absoluteUrl(path2))
-    expect(response2.data).to.deep.equal({ foo: 'bar' })
+    const response2 = await fetch(Meteor.absoluteUrl(path2))
+    const data2 = await response2.json()
+    expect(data2).to.deep.equal({ foo: 'bar' })
   })
 })

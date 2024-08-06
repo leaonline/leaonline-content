@@ -7,7 +7,7 @@ import { createLog } from '../utils/log'
 
 const debug = createLog(TestCycle.name)
 
-TestCycle.routes.all.run = function () {
+TestCycle.routes.all.run = async function () {
   const api = this
   const { field, isLegacy } = api.data()
   const query = {}
@@ -29,24 +29,23 @@ TestCycle.routes.all.run = function () {
     })
   }
 
-  api.log(query, TestCycle.collection().find(query).count())
-  return TestCycle.collection().find(query).fetch()
+  return TestCycle.collection().find(query).fetchAsync()
 }
 
-TestCycle.afterInsert = function (userId, doc) {
+TestCycle.afterInsert = async function (userId, doc) {
   if (doc.unitSets?.length) {
-    testCycleOrderChanged({ testCycleId: doc._id, debug })
+    await testCycleOrderChanged({ testCycleId: doc._id, debug })
   }
 }
 
-TestCycle.beforeUpdate = function (userId, doc, fieldNames, modifier /*, options */) {
+TestCycle.beforeUpdate = async function (userId, doc, fieldNames, modifier /*, options */) {
   if (modifier.$set.unitSets === null) {
     debug('modifier.$set.unitSets is null, fallback to  []')
     modifier.$set.unitSets = []
   }
 }
 
-TestCycle.afterUpdate = function (userId, doc) {
+TestCycle.afterUpdate = async function (userId, doc) {
   const { previous } = this
 
   if (!listsAreEqual(previous.unitSets, doc.unitSets)) {

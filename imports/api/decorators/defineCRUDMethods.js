@@ -5,13 +5,13 @@ import { ContextRegistry } from '../config/ContextRegistry'
 const defineInsertMethod = ({ name, schema, numRequests, timeInterval, run, debug = false }) => {
   // TODO check args
   const methodName = `${name}.methods.insert`
-  const runFct = run || function (insertDoc) {
+  const runFct = run || async function (insertDoc) {
     const Collection = collectionByName({
       name,
       methodName,
       userId: this.userId
     })
-    return Collection.insert(insertDoc)
+    return Collection.insertAsync(insertDoc)
   }
 
   return {
@@ -26,7 +26,7 @@ const defineInsertMethod = ({ name, schema, numRequests, timeInterval, run, debu
 const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debug = false }) => {
   // TODO check args
   const methodName = `${name}.methods.update`
-  const runFct = run || function (updateDoc) {
+  const runFct = run || async function (updateDoc) {
     const Collection = collectionByName({
       name,
       methodName,
@@ -34,7 +34,7 @@ const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debu
     })
 
     const { _id } = updateDoc
-    const document = Collection.findOne(_id)
+    const document = await Collection.findOneAsync(_id)
 
     if (!document) {
       const error = new Error(`Expected document by _id <${_id}>`)
@@ -43,7 +43,7 @@ const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debu
     }
 
     delete updateDoc._id
-    return Collection.update(_id, { $set: updateDoc })
+    return Collection.updateAsync(_id, { $set: updateDoc })
   }
 
   return {
@@ -63,14 +63,14 @@ const defineUpdateMethod = ({ name, schema, timeInterval, numRequests, run, debu
 const defineRemoveMethod = ({ name, isPublic, roles, group, timeInterval, numRequests, run, debug = false }) => {
   // TODO check args
   const methodName = `${name}.methods.remove`
-  const runFct = run || function ({ _id } = {}) {
+  const runFct = run || async function ({ _id } = {}) {
     const Collection = collectionByName({
       name,
       methodName,
       userId: this.userId
     })
 
-    return Collection.remove(_id)
+    return Collection.removeAsync(_id)
   }
 
   return {
@@ -93,7 +93,7 @@ const defineGetOneMethod = ({ name, isPublic, roles, group, timeInterval, numReq
       methodName,
       userId: this.userId
     })
-    return Collection.findOne(_id)
+    return Collection.findOneAsync(_id)
   }
 
   return {
@@ -144,7 +144,7 @@ const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval, numReq
     },
     numRequests: numRequests,
     timeInterval: timeInterval,
-    run: onServer(run || function ({ skip, dependencies, isLegacy } = {}) {
+    run: onServer(run || async function ({ skip, dependencies, isLegacy } = {}) {
       const Collection = collectionByName({
         name,
         methodName,
@@ -164,11 +164,11 @@ const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval, numReq
       }
 
       const fields = {}
-      const docs = Collection.find(query, { fields }).fetch()
+      const docs = await Collection.find(query, { fields }).fetchAsync()
       const all = { [name]: docs }
 
       if (dependencies) {
-        dependencies.forEach(dependency => {
+        for (const dependency of dependencies) {
           const DepCollection = collectionByName({
             name: dependency.name,
             methodName,
@@ -181,8 +181,8 @@ const defineGetAllMethod = ({ name, isPublic, roles, group, timeInterval, numReq
             depQuery._id = { $nin: dependency.skip }
           }
 
-          all[dependency.name] = DepCollection.find(depQuery, { fields }).fetch()
-        })
+          all[dependency.name] = await DepCollection.find(depQuery, { fields }).fetchAsync()
+        }
       }
 
       return all
@@ -227,7 +227,7 @@ const defineAllMethod = ({ name, isPublic, roles, group, timeInterval, numReques
           : { $in: [null, undefined, false] }
       }
 
-      return Collection.find(query).fetch()
+      return Collection.find(query).fetchAsync()
     })
   }
 }

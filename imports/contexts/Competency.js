@@ -19,17 +19,17 @@ Competency.httpRoutes.byId = {
       optional: true
     }
   },
-  run: function ({ ids }) {
+  run: async function ({ ids }) {
     // TODO denormalize category
     const cleanedIds = ids.filter(entry => typeof entry === 'string')
     const CompetencyCollection = Competency.collection()
-    return CompetencyCollection.find({ competencyId: { $in: cleanedIds } }).fetch()
+    return CompetencyCollection.find({ competencyId: { $in: cleanedIds } }).fetchAsync()
   }
 }
 
 Competency.routes.all.run = function () {
   const { ids } = this.data()
-  return Competency.collection().find({ _id: { $in: ids } }).fetch()
+  return Competency.collection().find({ _id: { $in: ids } }).fetchAsync()
 }
 
 export { Competency }

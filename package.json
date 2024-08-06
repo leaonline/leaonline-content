@@ -29,13 +29,22 @@
   "devDependencies": {
     "@babel/core": "^7.22.8",
     "@babel/eslint-parser": "^7.22.7",
+    "babel-plugin-istanbul": "^7.0.0",
     "chai": "^4.3.4",
     "eslint-plugin-security": "^1.4.0",
     "sinon": "^10.0.0",
     "snazzy": "^9.0.0",
     "standardx": "^7.0.0"
   },
-  "babel": {},
+  "babel": {
+    "env": {
+      "COVERAGE": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
   "eslintConfig": {
     "parser": "@babel/eslint-parser",
     "parserOptions": {

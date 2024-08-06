@@ -1,6 +1,6 @@
 import { AlphaLevel } from 'meteor/leaonline:corelib/contexts/AlphaLevel'
 
-AlphaLevel.routes.all.run = function ({ ids, dimension, level }) {
+AlphaLevel.routes.all.run = async function ({ ids, dimension, level }) {
   const query = {}
   if (ids?.length) {
     query.$in = { _id: ids }
@@ -14,7 +14,7 @@ AlphaLevel.routes.all.run = function ({ ids, dimension, level }) {
     query.level = level
   }
 
-  return AlphaLevel.collection().find(query).fetch()
+  return AlphaLevel.collection().find(query).fetchAsync()
 }
 
 export { AlphaLevel }

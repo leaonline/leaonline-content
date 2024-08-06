@@ -42,7 +42,7 @@ describe(checkPermissions.name, function () {
   it('prevents access if no user is authenticated and no token exchange is defined', function (done) {
     const options = createOptions()
 
-    stub(Email, 'send', doc => {
+    stub(Email, 'sendAsync', doc => {
       const error = JSON.parse(doc.text)
       expect(error.message).to.equal('notLoggedIn [errors.permissionDenied]')
       done()
@@ -72,7 +72,7 @@ describe(checkPermissions.name, function () {
     const options = createOptions()
     options.token = true
 
-    stub(Email, 'send', doc => {
+    stub(Email, 'sendAsync', doc => {
       const error = JSON.parse(doc.text)
       expect(error.message).to.equal('tokenInvalid [errors.permissionDenied]')
       done()
@@ -92,7 +92,7 @@ describe(checkPermissions.name, function () {
     const options = createOptions()
     options.token = true
 
-    stub(Email, 'send', doc => {
+    stub(Email, 'sendAsync', doc => {
       const error = JSON.parse(doc.text)
       expect(error.message).to.equal('tokenInvalid [errors.permissionDenied]')
     })

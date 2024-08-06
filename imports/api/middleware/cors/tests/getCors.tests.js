@@ -22,7 +22,7 @@ describe(getCors.name, function () {
     const next = () => {}
     let sent = false
 
-    stub(Email, 'send', doc => {
+    stub(Email, 'sendAsync', doc => {
       const error = JSON.parse(doc.text)
       expect(error.message).to.equal('[HTTP]: foo is not allowed by CORS policy')
       sent = true
@@ -43,7 +43,7 @@ describe(getCors.name, function () {
     const res = new ServerResponse(req)
     const next = () => {}
     let sent = false
-    stub(Email, 'send', doc => {
+    stub(Email, 'sendAsync', doc => {
       sent = true
     })
     await cors(req, res, next)
@@ -62,7 +62,7 @@ describe(getCors.name, function () {
     const res = new ServerResponse(req)
     const next = () => {}
     let sent = false
-    stub(Email, 'send', doc => {
+    stub(Email, 'sendAsync', doc => {
       sent = true
     })
     await cors(req, res, next)
@@ -81,7 +81,7 @@ describe(getCors.name, function () {
     const res = new ServerResponse(req)
     const next = () => {}
     let sent = false
-    stub(Email, 'send', doc => {
+    stub(Email, 'sendAsync', doc => {
       sent = true
     })
     await cors(req, res, next)

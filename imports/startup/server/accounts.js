@@ -1,7 +1,7 @@
 /* global ServiceConfiguration */
 import { Meteor } from 'meteor/meteor'
 import { Accounts } from 'meteor/accounts-base'
-import { HTTP } from 'meteor/jkuester:http'
+import { fetch } from 'meteor/fetch'
 import {
   defaultDDPLoginName,
   getOAuthDDPLoginHandler
@@ -16,13 +16,10 @@ rateLimitAccounts()
 //  //////////////////////////////////////////////////////////
 //  OAUTH2 SETUP
 //  //////////////////////////////////////////////////////////
-Meteor.startup(() => {
-  setupOAuth()
-})
-
-function setupOAuth () {
+Meteor.startup(async () => {
   const { oauth } = Meteor.settings
-  ServiceConfiguration.configurations.upsert(
+
+  await ServiceConfiguration.configurations.upsertAsync(
     { service: 'lea' },
     {
       $set: {
@@ -32,16 +29,20 @@ function setupOAuth () {
         dialogUrl: oauth.dialogUrl,
         accessTokenUrl: oauth.accessTokenUrl,
         identityUrl: oauth.identityUrl,
-        redirectUrl: oauth.redirectUrl
+        redirectUrl: oauth.redirectUrl,
+        debug: oauth.debug
       }
     }
   )
 
-  const loginHandler = getOAuthDDPLoginHandler({
+  Accounts.registerLoginHandler(defaultDDPLoginName, getOAuthDDPLoginHandler({
     identityUrl: oauth.identityUrl,
-    httpGet: (url, requestOptions) => HTTP.get(url, requestOptions),
+    httpGet: async (url, requestOptions) => {
+      console.debug('getOAuthDDPLoginHandler: httpGet', url, requestOptions)
+      const response = await fetch(url, requestOptions)
+      const data = await response.json()
+      return { data, status: response.status }
+    },
     debug: console.debug
-  })
-
-  Accounts.registerLoginHandler(defaultDDPLoginName, loginHandler)
-}
+  }))
+})

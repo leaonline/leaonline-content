@@ -1,8 +1,8 @@
 import { Thresholds } from 'meteor/leaonline:corelib/contexts/Thresholds'
 import { onServer } from '../utils/arch'
 
-Thresholds.routes.all.run = function () {
-  return Thresholds.collection().findOne()
+Thresholds.routes.all.run = async function () {
+  return Thresholds.collection().findOneAsync()
 }
 
 Thresholds.methods.getOne = {
@@ -15,8 +15,8 @@ Thresholds.methods.getOne = {
   },
   numRequests: 1,
   timeInterval: 250,
-  run: onServer(function () {
-    return Thresholds.collection().findOne()
+  run: onServer(async function () {
+    return Thresholds.collection().findOneAsync()
   })
 }
 
@@ -25,14 +25,14 @@ Thresholds.methods.update = {
   schema: Thresholds.schema,
   numRequests: 1,
   timeInterval: 250,
-  run: onServer(function (updateDoc) {
-    const doc = Thresholds.collection().findOne()
+  run: onServer(async function (updateDoc) {
+    const doc = await Thresholds.collection().Async()
 
     if (!doc) {
-      return Thresholds.collection().insert(updateDoc)
+      return Thresholds.collection().insertAsync(updateDoc)
     }
 
-    return Thresholds.collection().update(doc._id, {
+    return Thresholds.collection().updateAsync(doc._id, {
       $set: updateDoc
     })
   })

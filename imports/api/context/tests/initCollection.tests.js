@@ -3,54 +3,54 @@ import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { initCollection } from '../initCollection'
 import { CollectionTimeStamp } from '../../collection/CollectionTimeStamp'
-import { stub, overrideStub, restoreAll } from '../../../../tests/helpers/testHelpers'
+import { stub, restoreAll } from '../../../../tests/helpers/testHelpers'
+import { expectThrow } from '../../../../tests/helpers/expectThrow'
 
-describe(initCollection.name, function () {
+describe(initCollection.name, async function () {
   let name
+  let timeStampStub
 
   beforeEach(function () {
     name = Random.id()
-    stub(CollectionTimeStamp, 'register', () => {})
+    timeStampStub = stub(CollectionTimeStamp, 'register', () => {})
   })
 
   afterEach(function () {
     restoreAll()
   })
 
-  it('creates a new Mongo.Collection with schema attached', function () {
-    let registered = false
-    overrideStub(CollectionTimeStamp, 'register', () => {
-      registered = true
-    })
-
+  it('creates a new Mongo.Collection with schema attached', async function () {
     const schema = { title: String }
     const context = { name, schema }
     initCollection(context)
-
+    expect(timeStampStub.calledOnce).to.equal(true)
     const collection = context.collection()
-    expect(registered).to.equal(true)
-    expect(() => collection.insert({}))
-      .to.throw(`Title is required in ${name} insert`)
+    await expectThrow({
+      fn: () => collection.insertAsync({}),
+      message: `Title is required in ${name} insertAsync`
+    })
   })
-  it('has default hooks added to the collection', function () {
+  it('has default hooks added to the collection', async function () {
     const schema = { title: String }
     const context = { name, schema }
     initCollection(context)
 
     const title = Random.id()
     const collection = context.collection()
-    const insertDocId = collection.insert({ title })
-    expect(collection.findOne().title).to.equal(title)
-    collection.update(insertDocId, { $set: { title: 'foo' } })
+    const insertDocId = await collection.insertAsync({ title })
+    expect(insertDocId).to.be.a('string')
+    const insertDoc = await collection.findOneAsync(insertDocId)
+    expect(insertDoc.title).to.equal(title)
+    await collection.updateAsync(insertDocId, { $set: { title: 'foo' } })
 
-    const { meta, ...doc } = collection.findOne(insertDocId)
+    const { meta, ...doc } = await collection.findOneAsync(insertDocId)
     expect(doc).to.deep.equal({ _id: insertDocId, title: 'foo' })
     expect(meta.createdAt).to.be.instanceOf(Date)
     expect(meta.updatedAt).to.be.instanceOf(Date)
 
-    collection.remove(insertDocId)
+    await collection.removeAsync(insertDocId)
   })
-  it('has custom hooks added to the collection', function () {
+  it('has custom hooks added to the collection', async function () {
     let afterInsertCalled = false
     let beforeUpdateCalled = false
     let afterUpdateCalled = false
@@ -71,14 +71,14 @@ describe(initCollection.name, function () {
     initCollection(context)
 
     const collection = context.collection()
-    const insertDocId = collection.insert({ title })
-    collection.update(insertDocId, { $set: { title: 'foo' } })
+    const insertDocId = await collection.insertAsync({ title })
+    await collection.updateAsync(insertDocId, { $set: { title: 'foo' } })
 
     expect(afterInsertCalled).to.equal(true)
     expect(beforeUpdateCalled).to.equal(true)
     expect(afterUpdateCalled).to.equal(true)
   })
-  it('creates a new FilesCollection if the context is flagged respectively', function () {
+  it('creates a new FilesCollection if the context is flagged respectively', async function () {
     const schema = {}
     const context = {
       collectionName: name,

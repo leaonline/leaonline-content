@@ -10,6 +10,10 @@ import { stub, restoreAll } from '../../../../tests/helpers/testHelpers'
 describe(CollectionTimeStamp.name, function () {
   const collection = new Mongo.Collection(null)
   const name = Random.id()
+  let mailStub
+  beforeEach(() => {
+    mailStub = stub(Email, 'sendAsync', () => {})
+  })
 
   afterEach(function () {
     restoreAll()
@@ -25,7 +29,7 @@ describe(CollectionTimeStamp.name, function () {
 
     // insert
     await asyncTimeout(50)
-    const insertDocId = collection.insert({})
+    const insertDocId = await collection.insertAsync({})
     const afterInsert = CollectionTimeStamp.get(name)
     expect(afterInsert).to.be.above(now)
     now = afterInsert
@@ -34,7 +38,7 @@ describe(CollectionTimeStamp.name, function () {
     await asyncTimeout(50)
     // should still be equal
     expect(CollectionTimeStamp.get(name)).to.equal(now)
-    collection.update(insertDocId, { $set: { foo: 'bar' } })
+    await collection.updateAsync(insertDocId, { $set: { foo: 'bar' } })
     const afterUpdate = CollectionTimeStamp.get(name)
     expect(afterUpdate).to.be.above(now)
     now = afterUpdate
@@ -43,32 +47,24 @@ describe(CollectionTimeStamp.name, function () {
     await asyncTimeout(50)
     // should still be equal
     expect(CollectionTimeStamp.get(name)).to.equal(now)
-    collection.remove(insertDocId)
+    await collection.removeAsync(insertDocId)
     const afterRemove = CollectionTimeStamp.get(name)
     expect(afterRemove).to.be.above(now)
   })
   it('throws if the collection does not exist', async function () {
-    let sent = false
-    stub(Email, 'send', () => {
-      sent = true
-    })
     const unknown = Random.id()
 
     expect(() => CollectionTimeStamp.register(unknown))
       .to.throw(`Expected collection for ${unknown}`)
     await asyncTimeout(50) // email send is deferred
-    expect(sent).to.equal(true)
+    expect(mailStub.calledOnce).to.equal(true)
   })
   it('throws on access to unregistered collection', async function () {
-    let sent = false
-    stub(Email, 'send', () => {
-      sent = true
-    })
     const unknown = Random.id()
     expect(() => CollectionTimeStamp.get(unknown))
       .to.throw(`No collection for ${unknown} registered`)
     await asyncTimeout(50) // email send is deferred
-    expect(sent).to.equal(true)
+    expect(mailStub.calledOnce).to.equal(true)
   })
   it('provides a route for accessing the timestamp', async function () {
     const now = Date.now()
@@ -78,14 +74,12 @@ describe(CollectionTimeStamp.name, function () {
       })
     }
     await asyncTimeout(50)
-    const lastUpdate = CollectionTimeStamp.routes.get.run.call(env)
+    const lastUpdate = await CollectionTimeStamp.routes.get.run.call(env)
     expect(lastUpdate).to.be.below(now)
   })
   it('ignores already registered collections', function () {
-    expect(CollectionTimeStamp.register(name, collection)).to.equal(undefined)
-    expect(CollectionTimeStamp.register(name, collection)).to.equal(undefined)
-    expect(CollectionTimeStamp.register(name, collection)).to.equal(undefined)
-    expect(CollectionTimeStamp.register(name, collection)).to.equal(undefined)
-    expect(CollectionTimeStamp.register(name, collection)).to.equal(undefined)
+    for (let i = 0; i < 10; i++) {
+      expect(CollectionTimeStamp.register(name, collection)).to.equal(undefined)
+    }
   })
 })
