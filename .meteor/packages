@@ -41,7 +41,7 @@ leaonline:http-factory
 leaonline:service-registry
 # leaonline:webapp
 
-jkuester:http@2.2.0
+jkuester:http
 # leaonline:status
 
 #========================================
@@ -62,9 +62,8 @@ ostrio:files
 # collections
 #========================================
 aldeed:collection2@4.0.3
-matb33:collection-hooks@2.0.0-rc.2
+matb33:collection-hooks@2.0.0
 dburles:mongo-collection-instances
-
 
 #========================================
 # SECURITY

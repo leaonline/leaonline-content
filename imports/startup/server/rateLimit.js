@@ -21,5 +21,5 @@ Meteor.startup(() => {
         userId: data.userId
       })
     }
-  })
+  }, false, false)
 })
