@@ -30,7 +30,7 @@ Meteor.startup(async () => {
         accessTokenUrl: oauth.accessTokenUrl,
         identityUrl: oauth.identityUrl,
         redirectUrl: oauth.redirectUrl,
-        debug: oauth.debug
+        debug: true
       }
     }
   )
