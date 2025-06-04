@@ -19,8 +19,7 @@ ecmascript@0.16.9              # Enable ECMAScript2015+ syntax in app code
 # testing
 #========================================
 meteortesting:mocha@3.2.0
-# lmieulet:meteor-coverage@4.3.0
-# mlmieulet:meteor-legacy-coverage@0.4.0
+lmieulet:meteor-coverage@5.0.0
 
 #========================================
 # core
@@ -71,8 +70,10 @@ dburles:mongo-collection-instances
 sha
 audit-argument-checks
 force-ssl
+leaonline:jwt
 
 #========================================
-# reporting
+# reporting and monitoring
 #========================================
 email
+leaonline:health

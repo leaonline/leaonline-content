@@ -36,6 +36,10 @@
     "appbackend": {
       "url": "http://localhost:8080",
       "sub": "app-backend-01234567890"
+    },
+    "status": {
+      "url": "http://localhost:7070",
+      "sub": "app-status-01234567890"
     }
   },
   "files": {
@@ -54,7 +58,12 @@
   "patches": {
     "clozeScoringSchema": false,
     "recomputeProgress": false,
-    "linkAlphaLevel": false
+    "linkAlphaLevel": false,
+    "removeImageOrigin": {
+      "enabled": true,
+      "search": "https://content.lealernen.de",
+      "regex": "^OL_.*$"
+    }
   },
   "status": {
     "active": false,

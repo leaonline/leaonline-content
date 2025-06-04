@@ -1,5 +1,4 @@
 const SimpleSchema = require('simpl-schema')
-const oauthFlows = ['authorization_code']
 const schema = def => new SimpleSchema(def)
 
 const urlField = {
@@ -45,6 +44,10 @@ const settingsSchema = schema({
     appbackend: schema({
       url: urlField,
       sub: String
+    }),
+    status: schema({
+      url: urlField,
+      sub: String
     })
   }),
   files: schema({
@@ -62,7 +65,12 @@ const settingsSchema = schema({
   patches: schema({
     clozeScoringSchema: Boolean,
     recomputeProgress: Boolean,
-    linkAlphaLevel: Boolean
+    linkAlphaLevel: Boolean,
+    removeImageOrigin: schema({
+      enabled: Boolean,
+      search: String,
+      regex: String
+    }),
   }),
   status: schema({
     active: Boolean,

@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { notifyAboutError } from '../errors/notifyAboutError'
 import { PermissionDeniedError } from '../errors/PermissionDeniedError'
+import { createJWTValidator } from 'meteor/leaonline:jwt'
 
 export const checkPermissions = function (options) {
   const exception = !!options.isPublic
@@ -28,6 +29,7 @@ export const checkPermissions = function (options) {
       }
 
       const token = args[0]?.token
+      console.debug('check token for', name, 'token:', token)
       const { valid, reason } = tokenIsValid(token, name)
 
       if (!valid) {
@@ -56,54 +58,15 @@ export const checkPermissions = function (options) {
 //
 /// /////////////////////////////////////////////////////////////////////////////
 
+
 /**
  * Creates a module-internal function that checks a given JWT against
  * a given set of jwt-values from settings.
  * @private
  */
-const tokenIsValid = (function () {
-  const nJwt = require('njwt')
-  const { jwt } = Meteor.settings
-  const hosts = Object.values(Meteor.settings.hosts)
-  const signingKey = jwt.key
-
-  return (token, name) => {
-    if (!token) {
-      return { valid: false, reason: 'no token' }
-    }
-    let verifiedJwt
-
-    try {
-      verifiedJwt = nJwt.verify(token, signingKey)
-    }
-    catch (e) {
-      return { valid: false, reason: e.message }
-    }
-
-    const { body } = verifiedJwt
-
-    // if the jwt was issued for another method this or
-    // the claimed host is not the actual host this
-    // should already fail at this point
-    if (body.scope !== name) {
-      return {
-        valid: false,
-        reason: `invalid scope: ${name} !== ${body.scope}`
-      }
-    }
-
-    // now let's check our hosts if this one is inside there
-    const hasHost = hosts.some(host =>
-      body.iss === host.url &&
-      body.sub === host.sub)
-
-    if (!hasHost) {
-      return {
-        valid: false,
-        reason: `host ${body.iss} has invalid url or invalid sub ${body.sub}`
-      }
-    }
-
-    return { valid: true }
-  }
-})()
+const tokenIsValid = createJWTValidator({
+  key: Meteor.settings.jwt.key,
+  positives: Object.values(Meteor.settings.hosts),
+  negatives: [],
+  debug: console.debug
+})
