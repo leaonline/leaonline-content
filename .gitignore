@@ -1,4 +1,4 @@
 node_modules/
-.deploy
+.deploy*
 .coverage
 packages/
