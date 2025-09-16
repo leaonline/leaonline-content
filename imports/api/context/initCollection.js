@@ -7,9 +7,6 @@ import { getCheckMime } from '../grid/checkMime'
 import { getUserCheck } from '../grid/checkuser'
 import { getAllowedOrigins } from '../origins/getAllowedOrigins'
 
-const validateUser = getUserCheck()
-const allowedOrigins = getAllowedOrigins()
-
 export const initCollection = context => {
   const collection = context.isFilesCollection
     ? initFilesCollection(context)
@@ -22,9 +19,17 @@ export const initCollection = context => {
 }
 
 const initFilesCollection = context => {
+  const debug = (...args) => console.debug(`[FilesCollection][${context.name}]:`, ...args)
+  const validateUser = getUserCheck({ debug })
+  const allowedOrigins = getAllowedOrigins()
+
   // mime validation is context-sensitive, because some file categories
   // have a very special way of dealing with their existions, mimes etc.
-  const validateMime = getCheckMime(x => x, context)
+  const validateMime = getCheckMime({
+    i18nFactory: x => x,
+    filesContext: context,
+    debug,
+  })
   // console.log('FS ALLOWED ORIGINS', allowedOrigins)
 
   return createFilesCollection({

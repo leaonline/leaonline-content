@@ -48,6 +48,10 @@ const settingsSchema = schema({
     status: schema({
       url: urlField,
       sub: String
+    }),
+    lab: schema({
+      url: urlField,
+      sub: String
     })
   }),
   files: schema({

@@ -39,7 +39,7 @@
   "babel": {
     "env": {
       "COVERAGE": {
-        "plugins": [
+        "plugins":[
           "istanbul"
         ]
       }

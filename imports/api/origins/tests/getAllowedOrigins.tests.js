@@ -6,7 +6,8 @@ const expectedOrigins = [
   'http://localhost:3000',
   'http://localhost:5050',
   'http://localhost:5555',
-  'http://localhost:8080'
+  'http://localhost:8080',
+  'http://localhost:7070',
 ]
 
 describe(getAllowedOrigins.name, function () {

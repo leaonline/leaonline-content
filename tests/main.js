@@ -1,5 +1,4 @@
 import 'meteor/aldeed:collection2/static'
-
 import '../imports/api/collection/tests/CollectionTimeStamps.tests'
 import '../imports/api/middleware/cors/tests/getCors.tests'
 import '../imports/api/context/tests'

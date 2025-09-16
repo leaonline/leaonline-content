@@ -16,12 +16,6 @@ ecmascript@0.16.9              # Enable ECMAScript2015+ syntax in app code
 # zodern:remove-client-js
 
 #========================================
-# testing
-#========================================
-meteortesting:mocha@3.2.0
-lmieulet:meteor-coverage@5.0.0
-
-#========================================
 # core
 #========================================
 leaonline:corelib
@@ -35,7 +29,7 @@ leaonline:collection-factory
 leaonline:ratelimit-factory
 leaonline:publication-factory
 leaonline:method-factory
-leaonline:grid-factory
+leaonline:grid-factory@1.4.0
 leaonline:http-factory
 leaonline:service-registry
 # leaonline:webapp
@@ -77,3 +71,9 @@ leaonline:jwt
 #========================================
 email
 leaonline:health
+
+#========================================
+# testing
+#========================================
+lmieulet:meteor-coverage@5.0.0
+meteortesting:mocha@3.2.0

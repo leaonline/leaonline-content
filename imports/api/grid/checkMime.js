@@ -1,12 +1,10 @@
 import { check } from 'meteor/check'
 import { detectMime } from '../../utils/mime'
 import mimeTypes from 'mime-types'
-import { createLog } from '../../utils/log'
 import { notifyAboutError } from '../errors/notifyAboutError'
 
-const debug = createLog('checkMime')
 
-export const getCheckMime = (i18nFactory = x => x, filesContext) => {
+export const getCheckMime = ({ i18nFactory = x => x, filesContext = {}, debug = () => {} } = {}) => {
   check(i18nFactory, Function)
 
   return async uploadedFile => {
@@ -40,12 +38,12 @@ export const getCheckMime = (i18nFactory = x => x, filesContext) => {
 
     // in this first approach we check if the detected mime matches the
     // expected, which occurs in many non-container-wrapped file formats
-    if (lookup === detectedMime) {
+    if (lookup && detectedMime && lookup === detectedMime) {
       return true
     }
 
     // and if that's not the case it might still be supported
-    if (filesContext.extensions === null || filesContext.extensions.includes(detectedExt)) {
+    if (filesContext.extensions === null || filesContext.extensions?.includes(detectedExt)) {
       return true
     }
 
@@ -53,7 +51,7 @@ export const getCheckMime = (i18nFactory = x => x, filesContext) => {
 
     // for containers, we need to reverse-check if the detected mime is
     // matching the ending we expect the container format to have
-    if (resolvedExtension === extension) {
+    if (resolvedExtension && extension && resolvedExtension === extension) {
       return true
     }
 
