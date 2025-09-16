@@ -9,7 +9,8 @@ const applyPathes = async (flag, fn) => {
   if (!flag) return
   try {
     await fn()
-  } catch (e) {
+  }
+  catch (e) {
     console.error(e)
   }
 }

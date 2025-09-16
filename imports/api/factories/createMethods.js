@@ -9,7 +9,7 @@ export const createMethod = createMethodFactory({
   mixins: [
     environmentExtensionMixin,
     checkPermissions,
-    createMixin({ type: 'method'}),
+    createMixin({ type: 'method' })
   ]
 })
 

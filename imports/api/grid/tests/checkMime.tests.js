@@ -1,6 +1,6 @@
 /* eslint-env mocha */
+import { Email } from 'meteor/email'
 import { expect } from 'chai'
-import { Random } from 'meteor/random'
 import FileType from 'file-type'
 import mimeTypes from 'mime-types'
 import { getCheckMime } from '../checkMime'

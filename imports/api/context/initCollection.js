@@ -28,7 +28,7 @@ const initFilesCollection = context => {
   const validateMime = getCheckMime({
     i18nFactory: x => x,
     filesContext: context,
-    debug,
+    debug
   })
   // console.log('FS ALLOWED ORIGINS', allowedOrigins)
 

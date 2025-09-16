@@ -58,7 +58,6 @@ export const checkPermissions = function (options) {
 //
 /// /////////////////////////////////////////////////////////////////////////////
 
-
 /**
  * Creates a module-internal function that checks a given JWT against
  * a given set of jwt-values from settings.

@@ -8,9 +8,9 @@ import { createLog } from '../../utils/log'
 export const createPublication = createPublicationFactory({
   schemaFactory: Schema.create,
   mixins: [
-    createMixin({ type: 'publication'}),
+    createMixin({ type: 'publication' }),
     environmentExtensionMixin,
-    checkPermissions,
+    checkPermissions
   ]
 })
 const log = createLog('createPublication')

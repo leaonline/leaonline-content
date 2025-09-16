@@ -9,8 +9,9 @@ export const removeImageOrigin = async () => {
   if (!enabled) return
   const debug = (...args) => console.debug('[removeImageOrigin]:', ...args)
 
-  const query = {  shortCode: { $regex: new RegExp(regex)  }}
-  let units = await Unit.collection().find(query).fetchAsync()
+  // eslint-disable-next-line  security/detect-non-literal-regexp
+  const query = { shortCode: { $regex: new RegExp(regex) } }
+  const units = await Unit.collection().find(query).fetchAsync()
   debug('query found units', units.length)
 
   for (const unitDoc of units) {
@@ -21,6 +22,7 @@ export const removeImageOrigin = async () => {
 
     const pages = toArray(unitDoc.pages)
     for (let i = 0; i < pages.length; i++) {
+      // eslint-disable-next-line security/detect-object-injection
       const page = pages[i]
       appendUpdate(updateDoc, `pages.${i}.instructions`, toArray(page.instructions))
       appendUpdate(updateDoc, `pages.${i}.content`, toArray(page.content))
@@ -33,7 +35,7 @@ export const removeImageOrigin = async () => {
     }
   }
 
-  let unitSets = await UnitSet.collection().find(query).fetchAsync()
+  const unitSets = await UnitSet.collection().find(query).fetchAsync()
   debug('query found unit sets', unitSets.length)
   for (const unitSetDoc of unitSets) {
     const updateDoc = { found: false, $set: {} }
@@ -60,6 +62,7 @@ const appendUpdate = (updateDoc, name, array) => {
 const checkForImages = (name, array) => {
   const updates = []
   for (let i = 0; i < array.length; i++) {
+    // eslint-disable-next-line security/detect-object-injection
     const entry = array[i]
     if (entry.subtype === 'image' && entry.value && entry.value.startsWith(search)) {
       const value = entry.value.replace(search, '')
@@ -68,6 +71,7 @@ const checkForImages = (name, array) => {
     }
     if (entry.subtype === 'choice' && entry.value?.choices?.length) {
       for (let j = 0; j < entry.value.choices.length; j++) {
+        // eslint-disable-next-line security/detect-object-injection
         const choice = entry.value.choices[j]
         if (choice.image && choice.image.startsWith(search)) {
           const value = choice.image.replace(search, '')

@@ -3,7 +3,6 @@ import { detectMime } from '../../utils/mime'
 import mimeTypes from 'mime-types'
 import { notifyAboutError } from '../errors/notifyAboutError'
 
-
 export const getCheckMime = ({ i18nFactory = x => x, filesContext = {}, debug = () => {} } = {}) => {
   check(i18nFactory, Function)
 
