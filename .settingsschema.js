@@ -45,14 +45,20 @@ const settingsSchema = schema({
       url: urlField,
       sub: String
     }),
+    appstaging: schema({
+      url: urlField,
+      sub: String
+    }),
     status: schema({
       url: urlField,
       sub: String
     }),
-    lab: schema({
-      url: urlField,
-      sub: String
-    })
+    lab: {
+      type: Object,
+      optional: true,
+    },
+    'lab.url': urlField,
+    'lab.sub': String
   }),
   files: schema({
     bucketName: String,
