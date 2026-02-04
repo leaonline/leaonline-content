@@ -35,7 +35,7 @@ const initFilesCollection = context => {
   return createFilesCollection({
     collectionName: context.collectionName,
     allowedOrigins: allowedOrigins.regExp,
-    debug: Meteor.isDevelopment,
+    debug: Meteor.isDevelopment ? debug : undefined,
     validateUser,
     validateMime,
     maxSize: context.maxSize,

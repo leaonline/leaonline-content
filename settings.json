@@ -37,6 +37,10 @@
       "url": "http://localhost:8080",
       "sub": "app-backend-01234567890"
     },
+    "appstaging": {
+      "url": "http://localhost:8080",
+      "sub": "app-staging-01234567890"
+    },
     "status": {
       "url": "http://localhost:7070",
       "sub": "app-status-01234567890"

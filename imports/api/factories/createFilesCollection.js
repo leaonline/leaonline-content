@@ -9,6 +9,5 @@ export const createFilesCollection = createGridFilesFactory({
   bucketFactory: createBucket,
   defaultBucket: Meteor.settings.files.bucketName,
   createObjectId: createObjectId,
-  fs: fs,
-  debug: true
+  fs: fs
 })
