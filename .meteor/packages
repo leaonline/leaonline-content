@@ -30,10 +30,9 @@ leaonline:collection-factory
 leaonline:ratelimit-factory
 leaonline:publication-factory
 leaonline:method-factory
-leaonline:grid-factory@1.5.0
+leaonline:grid-factory
 leaonline:http-factory
 leaonline:service-registry
-# leaonline:webapp
 
 jkuester:http
 # leaonline:status
@@ -42,7 +41,7 @@ jkuester:http
 # accounts / oauth
 #========================================
 # alanning:roles
-accounts-base@3.2.0
+accounts-base
 leaonline:accounts-lea
 leaonline:ddp-login-handler
 service-configuration@1.3.5
@@ -57,7 +56,6 @@ ostrio:files
 #========================================
 aldeed:collection2@4.0.3
 matb33:collection-hooks@2.0.0
-dburles:mongo-collection-instances
 aldeed:simple-schema@2.0.0
 
 #========================================
@@ -77,5 +75,4 @@ leaonline:health
 #========================================
 # testing
 #========================================
-lmieulet:meteor-coverage@5.0.0
 meteortesting:mocha@3.3.0

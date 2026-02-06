@@ -114,6 +114,7 @@ METEOR_PACKAGE_DIRS=${T_PACKAGE_DIRS}  \
     meteor test \
         ${T_RUN_ONCE} \
         --driver-package=meteortesting:mocha \
+        --extra-packages=lmieulet:meteor-coverage@5.0.0 \
         --settings=settings.json \
         --port=${PORT} \
         ${INSPECT_BRK}
