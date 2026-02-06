@@ -33,7 +33,8 @@ module.exports = function (SimpleSchema, settings) {
         url:  urlField,
         urlRegEx: schema({
           regex: String
-        })
+        }),
+        sub: String
       }),
       teacher: schema({
         url:  urlField,

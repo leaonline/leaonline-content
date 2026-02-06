@@ -1,4 +1,4 @@
-import Health from 'meteor/leaonline:health'
+import * as Health from 'meteor/leaonline:health'
 import { createMethod } from '../../api/factories/createMethods'
 
 createMethod({

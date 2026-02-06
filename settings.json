@@ -25,7 +25,8 @@
       "url": "http://localhost:5050",
       "urlRegEx": {
         "regex": "^http:\/\/.*$"
-      }
+      },
+      "sub": "backend-app-01234567890"
     },
     "teacher": {
       "url": "http://localhost:5555",
