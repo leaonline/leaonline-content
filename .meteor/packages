@@ -42,8 +42,8 @@ jkuester:http
 #========================================
 # alanning:roles
 accounts-base
-leaonline:accounts-lea
-leaonline:ddp-login-handler
+leaonline:accounts-lea@2.0.1
+leaonline:ddp-login-handler@3.0.1
 service-configuration@1.3.5
 
 #========================================
