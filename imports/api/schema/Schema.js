@@ -1,7 +1,7 @@
 import { Tracker } from 'meteor/tracker'
 import { ServiceRegistry } from '../config/ServiceRegistry'
 import { onClient } from '../../utils/arch'
-import SimpleSchema from 'simpl-schema'
+import SimpleSchema from 'meteor/aldeed:simple-schema'
 
 const schemaOptions = Object.keys(ServiceRegistry.schemaOptions)
 SimpleSchema.extendOptions(schemaOptions)

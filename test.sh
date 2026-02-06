@@ -95,6 +95,7 @@ then
 	echo "=> grep pattern: [${T_FILTER}]"
 	echo "=> coverage: [${T_COVERAGE}]"
 	echo "=> Arch: [server: ${T_SERVER}, client: ${T_CLIENT}]"
+	echo "=> COVERAGE_VERBOSE: [${T_VERBOSE}]"
 fi
 
 # create command:

@@ -13,10 +13,11 @@ describe(getAllowedOrigins.name, function () {
       'urls.$': { type: String, regEx: /^http:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[.\w]*)*$/ }
     })
     const { urls } = getAllowedOrigins()
-    const validationContext = urlSchema.newContext();
+    const validationContext = urlSchema.newContext()
     try {
       urlSchema.validate({ urls })
-    } catch (e) {
+    }
+    catch (e) {
       console.error(e)
     }
     const errors = validationContext.validationErrors()

@@ -54,12 +54,15 @@ const updateUnitSetProgress = async ({ unitSetDoc, debug }) => {
  * by -> unitSet { progress } changed
  * do -> update all linking TestCycles
  */
-export const unitSetProgressChanged = ({ unitSetId, debug = () => {} }) => {
+export const unitSetProgressChanged = async ({ unitSetId, debug = () => {} }) => {
   debug('(unitSetProgressChanged):', unitSetId)
-  TestCycle
+  const docs = await TestCycle
     .collection()
     .find({ unitSets: unitSetId })
-    .forEach(testCycleDoc => updateTestCycleDoc({ testCycleDoc, debug }))
+    .fetchAsync()
+  for (const testCycleDoc of docs) {
+    await updateTestCycleDoc({ testCycleDoc, debug })
+  }
 }
 
 /**

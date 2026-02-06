@@ -58,6 +58,7 @@ ostrio:files
 aldeed:collection2@4.0.3
 matb33:collection-hooks@2.0.0
 dburles:mongo-collection-instances
+aldeed:simple-schema@2.0.0
 
 #========================================
 # SECURITY
