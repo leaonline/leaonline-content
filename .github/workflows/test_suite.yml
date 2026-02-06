@@ -88,11 +88,21 @@ jobs:
           key: v1-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
           restore-key: |
             v1-meteor_build_cache-
+      # Read .meteor/release and expose release_number without "METEOR@" prefix
+      - name: Read Meteor release
+        id: meteor_release
+        run: |
+          release_raw=$(cat .meteor/release | tr -d '[:space:]')
+          # remove prefix "METEOR@" if present
+          release_number="${release_raw#METEOR@}"
+          echo "release_raw=$release_raw"
+          echo "release_number=$release_number"
+          echo "::set-output name=release_number::$release_number"
 
       - name: Setup meteor
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: '3.0.1'
+          meteor-release:  ${{ steps.meteor_release.outputs.release_number }}
 
       - name: Install NPM Dependencies
         run: meteor npm ci
