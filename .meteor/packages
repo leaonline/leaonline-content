@@ -34,7 +34,7 @@ leaonline:grid-factory
 leaonline:http-factory
 leaonline:service-registry
 
-jkuester:http
+# jkuester:http
 # leaonline:status
 
 #========================================
