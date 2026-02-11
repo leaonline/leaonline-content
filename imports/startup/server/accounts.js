@@ -38,7 +38,6 @@ Meteor.startup(async () => {
   Accounts.registerLoginHandler(defaultDDPLoginName, getOAuthDDPLoginHandler({
     identityUrl: oauth.identityUrl,
     httpGet: async (url, requestOptions) => {
-      console.debug('getOAuthDDPLoginHandler: httpGet', url, requestOptions)
       const response = await fetch(url, requestOptions)
       const data = await response.json()
       return { data, status: response.status }

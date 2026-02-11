@@ -6,6 +6,7 @@ import { metaSchema } from '../schema/metaSchema'
 import { getCheckMime } from '../grid/checkMime'
 import { getUserCheck } from '../grid/checkuser'
 import { getAllowedOrigins } from '../origins/getAllowedOrigins'
+import { noop } from '../../utils/noop'
 
 export const initCollection = context => {
   const collection = context.isFilesCollection
@@ -19,7 +20,9 @@ export const initCollection = context => {
 }
 
 const initFilesCollection = context => {
-  const debug = (...args) => console.debug(`[FilesCollection][${context.name}]:`, ...args)
+  const debug = Meteor.isTest
+    ? noop
+    : (...args) => console.debug(`[FilesCollection][${context.name}]:`, ...args)
   const validateUser = getUserCheck({ debug })
   const allowedOrigins = getAllowedOrigins()
 
@@ -30,7 +33,6 @@ const initFilesCollection = context => {
     filesContext: context,
     debug
   })
-  // console.log('FS ALLOWED ORIGINS', allowedOrigins)
 
   return createFilesCollection({
     collectionName: context.collectionName,
@@ -44,6 +46,9 @@ const initFilesCollection = context => {
 }
 
 const initDocumentsCollection = context => {
+  const info =  Meteor.isTest
+    ? noop
+    : (...args) => console.info(`[Collection][${context.name}]:`, ...args)
   const schema = Object.assign({}, context.schema, metaSchema)
   const collection = createCollection({
     name: context.name,
@@ -53,7 +58,7 @@ const initDocumentsCollection = context => {
 
   // we always want to track who created a document
   collection.before.insert(function (userId, doc) {
-    console.info(context.name, 'insert', { userId }, doc)
+    info(context.name, 'insert', { userId }, doc)
     doc.meta = {
       createdBy: userId,
       createdAt: new Date()
@@ -62,7 +67,7 @@ const initDocumentsCollection = context => {
 
   // we also want to know who updated a document
   collection.before.update(function (userId, doc, fieldNames, modifier /*, options */) {
-    console.info(context.name, 'update', { userId, docId: doc._id }, modifier)
+    info(context.name, 'update', { userId, docId: doc._id }, modifier)
 
     modifier.$set = modifier.$set || {}
     // last updates
@@ -87,7 +92,7 @@ const initDocumentsCollection = context => {
 
   collection.before.remove(function (userId, doc) {
     const docId = doc._id
-    console.info(context.name, 'remove', { docId, userId })
+    info(context.name, 'remove', { docId, userId })
   })
 
   return collection
