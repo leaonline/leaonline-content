@@ -46,7 +46,7 @@ const initFilesCollection = context => {
 }
 
 const initDocumentsCollection = context => {
-  const info =  Meteor.isTest
+  const info = Meteor.isTest
     ? noop
     : (...args) => console.info(`[Collection][${context.name}]:`, ...args)
   const schema = Object.assign({}, context.schema, metaSchema)
