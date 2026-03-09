@@ -10,13 +10,14 @@ set -e
 
 # defaults:
 
+T_BROWSER="puppeteer"   # uses headless browser for client tests
 T_COVERAGE=0            # has coverage disabled
 T_FILTER=""             # runs all defined tests
 T_RUN_ONCE=""           # runs in watch mode
 T_VERBOSE=0             # no extra verbosity
 T_SERVER=1              # runs server tests
 T_CLIENT=0              # runs client tests
-
+INSPECT_BRK=""          # no debugger by default
 # options:
 
 SCRIPT_USAGE="
@@ -25,6 +26,7 @@ Usage: $(basename $0) [OPTIONS]
 Options:
   -a <String>     Filter architecture, allowed values: 'server' or 'client'
   -b              Use a real browser for client tests (default is headless)
+  -d              run debugger
   -c              Activate code-coverage reports
   -g <RegExp>     Filter tests by a given RegExp (uses Mocha-grep)
   -h              Show help
@@ -33,7 +35,7 @@ Options:
 "
 
 
-while getopts "a:cg:hov" opt; do
+while getopts "a:cg:hovd" opt; do
   case $opt in
     a)
       if [ "$OPTARG" = "client" ]
@@ -61,6 +63,9 @@ while getopts "a:cg:hov" opt; do
       ;;
     o)
       T_RUN_ONCE="--once"
+      ;;
+    d)
+      INSPECT_BRK="--inspect-brk"
       ;;
     h)
       echo "$SCRIPT_USAGE"
@@ -90,11 +95,13 @@ then
 	echo "=> grep pattern: [${T_FILTER}]"
 	echo "=> coverage: [${T_COVERAGE}]"
 	echo "=> Arch: [server: ${T_SERVER}, client: ${T_CLIENT}]"
+	echo "=> COVERAGE_VERBOSE: [${T_VERBOSE}]"
 fi
 
 # create command:
 
 METEOR_PACKAGE_DIRS=${T_PACKAGE_DIRS}  \
+    TEST_BROWSER_DRIVER=${T_BROWSER} \
     TEST_SERVER=${T_SERVER} \
     TEST_CLIENT=${T_CLIENT} \
     MOCHA_GREP=${T_FILTER} \
@@ -102,10 +109,13 @@ METEOR_PACKAGE_DIRS=${T_PACKAGE_DIRS}  \
     COVERAGE=${T_COVERAGE} \
     COVERAGE_OUT_HTML=1 \
     COVERAGE_OUT_TEXT_SUMMARY=1 \
+    COVERAGE_OUT_LCOVONLY=1 \
     COVERAGE_APP_FOLDER=$PWD/ \
     COVERAGE_VERBOSE=${T_VERBOSE} \
     meteor test \
         ${T_RUN_ONCE} \
         --driver-package=meteortesting:mocha \
+        --extra-packages=lmieulet:meteor-coverage@5.0.0 \
         --settings=settings.json \
-        --port=${PORT}
+        --port=${PORT} \
+        ${INSPECT_BRK}

@@ -10,7 +10,8 @@
     "accessTokenUrl": "http://localhost:9090/oauth/token",
     "authorizeUrl": "http://localhost:9090/oauth/authorize",
     "identityUrl": "http://localhost:9090/oauth/ident",
-    "redirectUrl": "http://localhost:3030/_oauth/lea"
+    "redirectUrl": "http://localhost:3030/_oauth/lea",
+    "debug": false
   },
   "hashing": {
     "algorithm": "sha256",
@@ -25,7 +26,8 @@
       "url": "http://localhost:5050",
       "urlRegEx": {
         "regex": "^http:\/\/.*$"
-      }
+      },
+      "sub": "backend-app-01234567890"
     },
     "teacher": {
       "url": "http://localhost:5555",
@@ -36,6 +38,14 @@
     "appbackend": {
       "url": "http://localhost:8080",
       "sub": "app-backend-01234567890"
+    },
+    "appstaging": {
+      "url": "http://localhost:8080",
+      "sub": "app-staging-01234567890"
+    },
+    "status": {
+      "url": "http://localhost:7070",
+      "sub": "app-status-01234567890"
     }
   },
   "files": {
@@ -54,7 +64,12 @@
   "patches": {
     "clozeScoringSchema": false,
     "recomputeProgress": false,
-    "linkAlphaLevel": false
+    "linkAlphaLevel": false,
+    "removeImageOrigin": {
+      "enabled": true,
+      "search": "https://content.lealernen.de",
+      "regex": "^OL_.*$"
+    }
   },
   "status": {
     "active": false,

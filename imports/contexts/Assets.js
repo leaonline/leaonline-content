@@ -8,7 +8,6 @@ const log = createLog(Assets.name)
 Assets.routes.assetUrl.run = async function (req, res, next) {
   const { _id } = this.data()
   const filesDoc = await Assets.collection().findOneAsync(_id)
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
   return Assets.filesCollection().link(filesDoc)
 }
 

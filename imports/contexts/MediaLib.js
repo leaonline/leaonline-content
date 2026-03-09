@@ -11,7 +11,6 @@ const log = createLog(MediaLib.name)
 MediaLib.routes.mediaUrl.run = async function (req, res, next) {
   const { _id } = this.data()
   const filesDoc = await MediaLib.collection().findOneAsync(_id)
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
   return MediaLib.filesCollection().link(filesDoc)
 }
 

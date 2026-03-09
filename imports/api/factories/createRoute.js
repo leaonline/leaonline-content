@@ -11,7 +11,7 @@ export const createRoute = createHTTPFactory({
     console.error(error)
     notifyAboutError({ error, method, path })
   },
-  debug: function (req, res, next) {
+  debugMiddleWare: function (req, res, next) {
     console.debug('debug', req.method, req.url)
     next()
   },

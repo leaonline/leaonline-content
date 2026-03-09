@@ -8,6 +8,11 @@ import { createLog } from '../utils/log'
 
 const debug = createLog(UnitSet.name)
 
+/**
+ * HTTP GET ROUTE
+ * Get all unit sets matching the query parameters. At least one query parameter is required.
+ * @return {Promise<*|[{scores: *},{scores: *},{scores: *},{scores: *}]>}
+ */
 UnitSet.routes.all.run = async function () {
   const api = this
   const { field, job, isLegacy } = api.data()

@@ -1,12 +1,17 @@
+import { Schema } from '../schema/Schema'
 import { createPublicationFactory } from 'meteor/leaonline:publication-factory'
 import { checkPermissions } from '../mixins/checkPermissions'
 import { environmentExtensionMixin } from '../mixins/environmentExtensionMixin'
-import { Schema } from '../schema/Schema'
+import { createMixin } from 'meteor/leaonline:health'
 import { createLog } from '../../utils/log'
 
 export const createPublication = createPublicationFactory({
   schemaFactory: Schema.create,
-  mixins: [environmentExtensionMixin, checkPermissions]
+  mixins: [
+    createMixin({ type: 'publication' }),
+    environmentExtensionMixin,
+    checkPermissions
+  ]
 })
 const log = createLog('createPublication')
 

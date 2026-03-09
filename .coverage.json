@@ -1,0 +1,9 @@
+{
+  "exclude": {
+    "general": [
+      "**/tests/",
+      "**/*.tests.js",
+      "**/*.test.js"
+    ]
+  }
+}

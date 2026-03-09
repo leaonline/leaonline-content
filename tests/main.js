@@ -1,4 +1,6 @@
+// setup app environment
 import 'meteor/aldeed:collection2/static'
+import '../server/main'
 
 import '../imports/api/collection/tests/CollectionTimeStamps.tests'
 import '../imports/api/middleware/cors/tests/getCors.tests'
@@ -17,4 +19,5 @@ import '../imports/api/patches/tests/linkAlphaLevel.tests'
 import '../imports/api/progress/tests/listsAreEqual.tests'
 // import '../imports/api/progress/tests/calculateProgress.tests'
 import '../imports/contexts/tests'
+import '../imports/utils/tests/isArray.tests'
 import '../imports/utils/tests/detectMime.tests'

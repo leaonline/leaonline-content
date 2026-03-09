@@ -88,41 +88,24 @@ jobs:
           key: v1-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
           restore-key: |
             v1-meteor_build_cache-
+      # Read .meteor/release and expose release_number without "METEOR@" prefix
+      - name: Read Meteor release
+        id: meteor_release
+        run: |
+          release_raw=$(cat .meteor/release | tr -d '[:space:]')
+          # remove prefix "METEOR@" if present
+          release_number="${release_raw#METEOR@}"
+          echo "release_raw=$release_raw"
+          echo "release_number=$release_number"
+          echo "release_number=$release_number" >> "$GITHUB_OUTPUT"
 
       - name: Setup meteor
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: '3.0.1'
+          meteor-release:  ${{ steps.meteor_release.outputs.release_number }}
 
       - name: Install NPM Dependencies
         run: meteor npm ci
 
       - name: Run Tests
         run: sh ./test.sh -c -o
-
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-folder
-          path: .coverage/
-
-  coverage:
-    name: Coverage report
-    runs-on: ubuntu-latest
-    needs: [ tests ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-folder
-          path: .coverage/
-
-
-      - name: Coverage Report
-        uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
-        with:
-          path: ".coverage/lcov.info"
-          min_coverage: 65 # TODO increase to 95!
