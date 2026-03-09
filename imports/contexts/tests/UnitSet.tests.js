@@ -18,7 +18,6 @@ describe(UnitSet.name, function () {
     UnitSetCollection = UnitSet.collection()
     UnitCollection = Unit.collection()
     TestCylceCollection = TestCycle.collection()
-    console.debug(UnitSet.methods.update)
     attachSchema(UnitSetCollection, UnitSet.schema)
   })
 
@@ -28,6 +27,8 @@ describe(UnitSet.name, function () {
 
   after(() => {
     restoreCollection(UnitSet)
+    restoreCollection(Unit)
+    restoreCollection(TestCycle)
   })
 
   describe('UnitSet.routes.all', () => {

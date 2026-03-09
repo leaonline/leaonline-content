@@ -61,6 +61,9 @@ const checkForImages = (name, array) => {
   const updates = []
   for (let i = 0; i < array.length; i++) {
     const entry = array[i]
+    if (!entry || typeof entry !== 'object') {
+      continue
+    }
     if (entry.subtype === 'image' && entry.value && entry.value.startsWith(search)) {
       const value = entry.value.replace(search, '')
       const key = `${name}.${i}.value`

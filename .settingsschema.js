@@ -18,7 +18,11 @@ module.exports = function (SimpleSchema, settings) {
       accessTokenUrl:  urlField,
       authorizeUrl:  urlField,
       identityUrl:  urlField,
-      redirectUrl:  urlField
+      redirectUrl:  urlField,
+      debug: {
+        type: Boolean,
+        optional: true,
+      }
     }),
     hashing: schema({
       algorithm: String,

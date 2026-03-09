@@ -10,7 +10,8 @@
     "accessTokenUrl": "http://localhost:9090/oauth/token",
     "authorizeUrl": "http://localhost:9090/oauth/authorize",
     "identityUrl": "http://localhost:9090/oauth/ident",
-    "redirectUrl": "http://localhost:3030/_oauth/lea"
+    "redirectUrl": "http://localhost:3030/_oauth/lea",
+    "debug": false
   },
   "hashing": {
     "algorithm": "sha256",

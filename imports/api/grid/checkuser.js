@@ -19,7 +19,7 @@ export const getUserCheck = function getUserCheck ({ debug = () => {} } = {}) {
     const exists = await userExists(userId)
     debug('userExists?', { userId, exists })
     if (!exists) {
-      debug('users', await Meteor.users.find().fetchAsync())
+      debug('user does not exist', userOrId)
     }
     return !!exists
   }
