@@ -1,6 +1,7 @@
 import { jsonFormatter } from './formatters/jsonFormatter'
 import { nullWriter } from './writers/nullWriter'
 import { fileWriter } from './writers/fileWriter'
+import {csvFormatter} from "./formatters/csvFormatter";
 
 export const output = async ({ data, format, type, path, title }) => {
   const writer = writers[type]
@@ -16,7 +17,8 @@ export const output = async ({ data, format, type, path, title }) => {
 }
 
 const formatters = {
-  json: jsonFormatter
+  json: jsonFormatter,
+  csv: csvFormatter,
 }
 
 const writers = {

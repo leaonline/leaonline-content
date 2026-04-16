@@ -37,12 +37,18 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
   await asyncTimeout(interval)
 
   return output({
-    data: Array.from(allTexts),
+    data: Array.from(allTexts).sort(byLength),
     format,
     type,
     path,
     title: `content_corpus_${Date.now()}`
   })
+}
+
+const byLength = (a, b) => {
+  const diff = b.length - a.length
+  if (diff === 0) return 0
+  return diff > 0 ? 1 : -1
 }
 
 const fromUnitSets = async (query, options, settings) => {
