@@ -6,7 +6,11 @@ createMethod({
   schema: {
     format: String,
     type: String,
-    path: String
+    path: String,
+    isLegacy: {
+      type: Boolean,
+      optional: true
+    }
   },
   isPublic: true,
   run: createCorpusQuery

@@ -1,8 +1,9 @@
 import { jsonFormatter } from './formatters/jsonFormatter'
 import { nullWriter } from './writers/nullWriter'
 import { fileWriter } from './writers/fileWriter'
+import { textFormatter } from './formatters/textFormatter'
 
-export const output = async ({ data, format, type, path, title }) => {
+export const output = async ({ data, format, type, path, title, ext }) => {
   const writer = writers[type]
   if (!writer) {
     throw new Error(`Unsupported output type: ${type}`)
@@ -12,11 +13,12 @@ export const output = async ({ data, format, type, path, title }) => {
     throw new Error(`Unsupported output format: ${format}`)
   }
 
-  return writer({ data: await formatter({ data }), format, title, path })
+  return writer({ data: await formatter({ data }), format, title, path, ext })
 }
 
 const formatters = {
-  json: jsonFormatter
+  json: jsonFormatter,
+  text: textFormatter
 }
 
 const writers = {
