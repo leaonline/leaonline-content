@@ -5,7 +5,9 @@ import { CompetencyCategory } from '../../contexts/CompetencyCategory'
 import { Dimension } from '../../contexts/Dimension'
 import { Field } from '../../contexts/Field'
 import { Level } from '../../contexts/Level'
+import { AudioLib } from '../../contexts/AudioLib'
 import { MediaLib } from '../../contexts/MediaLib'
+import { Speech } from '../../contexts/Speech'
 import { TestCycle } from '../../contexts/TestCycle'
 import { Thresholds } from '../../contexts/Thresholds'
 import { Unit } from '../../contexts/Unit'
@@ -30,6 +32,7 @@ const initContext = createInitContext([
 // and then added to the ServiceRegistry
 ;[
   AlphaLevel,
+  AudioLib,
   Assets,
   Competency,
   CompetencyCategory,
@@ -37,6 +40,7 @@ const initContext = createInitContext([
   Field,
   Level,
   MediaLib,
+  Speech,
   TestCycle,
   Thresholds,
   Unit,
