@@ -1,15 +1,16 @@
-import { getCollection } from '../imports/utils/collection'
+import { SHA256 } from 'meteor/sha'
+import { Competency } from '../imports/contexts/Competency'
 import { Dimension } from '../imports/contexts/Dimension'
-import { UnitSet } from '../imports/contexts/UnitSet'
-import { Unit } from '../imports/contexts/Unit'
 import { Field } from '../imports/contexts/Field'
-import { TestCycle } from '../imports/contexts/TestCycle'
 import { Level } from '../imports/contexts/Level'
+import { TestCycle } from '../imports/contexts/TestCycle'
+import { Unit } from '../imports/contexts/Unit'
+import { UnitSet } from '../imports/contexts/UnitSet'
+import { getCollection } from '../imports/utils/collection'
 import { toTransform } from './shared/toTransform'
 import { asyncTimeout } from '../imports/utils/asyncTimeout'
 import { output } from './shared/output'
 import uiLang from '../resources/i18n/i18n_de.json'
-import { Competency } from '../imports/contexts/Competency'
 
 const whitespace = /^\s*$/
 const isLegacyQuery = ({ isLegacy }) => {
@@ -66,6 +67,10 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
   const data = Array.from(allTexts)
     .filter(t => typeof t === 'string' && t.length && !whitespace.test(t))
     .toSorted((a, b) => a.length - b.length)
+    .map(txt => {
+      const hash = SHA256(txt)
+      return `${hash}%%%${txt}`
+    })
   const title = `content_corpus_${Date.now()}`
 
   await output({
