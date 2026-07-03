@@ -67,5 +67,5 @@ const tokenIsValid = createJWTValidator({
   key: Meteor.settings.jwt.key,
   positives: Object.values(Meteor.settings.hosts),
   negatives: [],
-  debug: console.debug
+  debug: Meteor.isDevelopment ? console.debug : undefined
 })
