@@ -1,4 +1,6 @@
-import { AudioLib } from './AudioLib'
+import { Meteor } from 'meteor/meteor'
+import { createLog } from '../utils/log'
+import path from 'node:path'
 
 export const Speech = {
   name: 'speech',
@@ -24,13 +26,34 @@ Speech.routes.get = {
       allowedValues: ['m', 'f', '*']
     }
   },
-  run: async function (/* req, res, next */) {
+  run: async function (req, res, next) {
     const { hash } = this.data()
-
-    const query = { 'meta.hash': hash }
-    const AudioFilesCollection = AudioLib.collection()
-    const filesDoc = await AudioFilesCollection.findOneAsync(query)
-    return filesDoc?.link()
+    if (!/^[a-zA-Z0-9]+$/.test(hash)) {
+      throw new Meteor.Error(400, 'invalid hash', { hash })
+    }
+    const fileName = `${hash}.mp3`
+    debug(`[SPEECH]: serving request for ${hash}`)
+    const filePath = path.join(process.cwd(), 'assets/app/ttsfiles/')
+    const options = {
+      root: filePath,
+      dotfiles: 'deny',
+      acceptRanges: false,
+      headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true,
+        'Content-Type': 'audio/mpeg'
+      }
+    }
+    return new Promise((resolve, reject) => {
+      res.sendFile(fileName, options, (err, buffer) => {
+        if (err) {
+          return reject(err)
+        }
+        else {
+          resolve(buffer)
+        }
+      })
+    })
   }
 }
 
@@ -40,7 +63,8 @@ Speech.routes.check = {
   schema: {},
   run: async function (/* req, res, next */) {
     return {
-      available: true, schema: {
+      available: true,
+      schema: {
         hash: 'string',
         speed: {
           type: 'number',
@@ -57,3 +81,5 @@ Speech.routes.check = {
     }
   }
 }
+
+const debug = createLog(Speech.name, console.debug)
