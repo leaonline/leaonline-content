@@ -34,6 +34,7 @@ Speech.routes.get = {
     const fileName = `${hash}.mp3`
     debug(`[SPEECH]: serving request for ${hash}`)
     const filePath = path.join(process.cwd(), 'assets/app/ttsfiles/')
+
     const options = {
       root: filePath,
       dotfiles: 'deny',
@@ -44,6 +45,12 @@ Speech.routes.get = {
         'Content-Type': 'audio/mpeg'
       }
     }
+    const allowedOrigins = new Set(Meteor.settings.tts.allowedOrigins)
+    const origin = req.get('Origin');
+    if (origin && allowedOrigins.has(origin)) {
+      options.headers['Access-Control-Allow-Origin'] = origin
+    }
+
     return new Promise((resolve, reject) => {
       res.sendFile(fileName, options, (err, buffer) => {
         if (err) {
