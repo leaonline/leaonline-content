@@ -22,6 +22,7 @@ shell-server
 leaonline:corelib
 mdg:validated-method
 ostrio:i18n
+leaonline:speech-corpus
 
 #========================================
 # factories and startup pipeline

@@ -1,4 +1,4 @@
-import { SHA256 } from 'meteor/sha'
+import {SpeechCorpus} from 'meteor/leaonline:speech-corpus'
 import { Competency } from '../imports/contexts/Competency'
 import { Dimension } from '../imports/contexts/Dimension'
 import { Field } from '../imports/contexts/Field'
@@ -7,12 +7,10 @@ import { TestCycle } from '../imports/contexts/TestCycle'
 import { Unit } from '../imports/contexts/Unit'
 import { UnitSet } from '../imports/contexts/UnitSet'
 import { getCollection } from '../imports/utils/collection'
-import { toTransform } from './shared/toTransform'
 import { asyncTimeout } from '../imports/utils/asyncTimeout'
-import { output } from './shared/output'
+import { toTransform } from "./shared/toTransform";
 import uiLang from '../resources/i18n/i18n_de.json'
 
-const whitespace = /^\s*$/
 const isLegacyQuery = ({ isLegacy }) => {
   // include only otulea
   if (isLegacy === true) {
@@ -57,23 +55,17 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
   const units = await fromUnits(unitQuery, {}, { log, ...settings })
   await asyncTimeout(interval)
 
-  const lang = fromI18n(uiLang)
+  const lang = SpeechCorpus.extract.fromI18n(uiLang)
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
   alphabet.forEach(letter => lang.add(letter))
 
   const allTexts = new Set([...dimension, ...field, ...level, ...testCycle, ...competency, ...unitSet, ...units, ...lang])
   await asyncTimeout(interval)
 
-  const data = Array.from(allTexts)
-    .filter(t => typeof t === 'string' && t.length && !whitespace.test(t))
-    .toSorted((a, b) => a.length - b.length)
-    .map(txt => {
-      const hash = SHA256(txt)
-      return `${hash}%%%${txt}`
-    })
+  const data = SpeechCorpus.transformers.hashTuple({data: allTexts})
   const title = `content_corpus_${Date.now()}`
 
-  await output({
+  await  SpeechCorpus.build({
     data: logOut.join('\n'),
     format: 'text',
     type: 'file',
@@ -82,7 +74,7 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
     ext: 'log'
   })
 
-  return output({
+  return  SpeechCorpus.build({
     data,
     format,
     type,
@@ -91,17 +83,7 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
   })
 }
 
-const fromI18n = (i18n, texts = new Set()) => {
-  Object.values(i18n).forEach(value => {
-    if (typeof value === 'string') {
-      texts.add(value)
-    }
-    else if (typeof value === 'object' && value !== null) {
-      fromI18n(value, texts)
-    }
-  })
-  return texts
-}
+
 
 const fromUnitSets = async (query, options, settings) => {
   const { log } = settings
@@ -145,6 +127,11 @@ const fromUnits = async (query, options, settings) => {
 }
 
 const fromContent = ({ source = [], destination = new Set() }) => {
+    if (!source) return destination
+    if (!Array.isArray(source)) {
+        throw new Error(`source should be an array, got ${JSON.stringify(source)}`)
+    }
+
   for (const entry of source) {
     const { type, subtype, value } = entry
 
