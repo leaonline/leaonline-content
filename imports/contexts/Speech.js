@@ -47,7 +47,10 @@ Speech.routes.get = {
     }
     const allowedOrigins = new Set(Meteor.settings.tts.allowedOrigins)
     const origin = req.get('Origin');
-    if (origin && allowedOrigins.has(origin)) {
+    const originIsEligible = allowedOrigins.has(origin)
+    debug(`[SPEECH]: origin ${origin} allowed? ${originIsEligible}`)
+
+    if (originIsEligible) {
       options.headers['Access-Control-Allow-Origin'] = origin
     }
 

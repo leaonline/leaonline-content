@@ -9,6 +9,7 @@ const allowedOrigins = getAllowedOrigins()
 const corsImpl = cors({
   origin: function (origin, callback) {
     if (!origin) {
+      debug('skip no origin')
       callback(null, true)
       return
     }
@@ -16,8 +17,10 @@ const corsImpl = cors({
     const parsedOrigin = origin.charAt(origin.length - 1) === '/'
       ? origin.substring(0, origin.length - 1)
       : origin
+    const isAllowed = allowedOrigins.urls.includes(parsedOrigin)
+    debug(`origin ${origin} → parsed ${parsedOrigin}; is allowed → ${isAllowed}`)
 
-    if (allowedOrigins.urls.includes(parsedOrigin)) {
+    if (isAllowed) {
       callback(null, true)
       return
     }
