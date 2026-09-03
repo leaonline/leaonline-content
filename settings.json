@@ -54,6 +54,7 @@
   },
   "tts": {
     "maxChars": 15000,
+    "ignoreErrors": true,
     "allowedOrigins": [
       "http://localhost:3000"
     ]

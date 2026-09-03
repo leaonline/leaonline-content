@@ -46,6 +46,7 @@ Speech.routes.get = {
       }
     }
     const allowedOrigins = new Set(Meteor.settings.tts.allowedOrigins)
+    const ignoreErrors = Meteor.settings.tts.ignoreErrors
     const origin = req.get('Origin');
     const originIsEligible = allowedOrigins.has(origin)
     debug(`[SPEECH]: origin ${origin} allowed? ${originIsEligible}`)
@@ -57,7 +58,12 @@ Speech.routes.get = {
     return new Promise((resolve, reject) => {
       res.sendFile(fileName, options, (err, buffer) => {
         if (err) {
-          return reject(err)
+          if (ignoreErrors) {
+              console.error(err)
+              return resolve(null)
+          } else {
+              return reject(err)
+          }
         }
         else {
           resolve(buffer)
