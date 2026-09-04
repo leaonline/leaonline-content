@@ -1,4 +1,4 @@
-import {SpeechCorpus} from 'meteor/leaonline:speech-corpus'
+import { SpeechCorpus } from 'meteor/leaonline:speech-corpus'
 import { Competency } from '../imports/contexts/Competency'
 import { Dimension } from '../imports/contexts/Dimension'
 import { Field } from '../imports/contexts/Field'
@@ -8,7 +8,7 @@ import { Unit } from '../imports/contexts/Unit'
 import { UnitSet } from '../imports/contexts/UnitSet'
 import { getCollection } from '../imports/utils/collection'
 import { asyncTimeout } from '../imports/utils/asyncTimeout'
-import { toTransform } from "./shared/toTransform";
+import { toTransform } from './shared/toTransform'
 import uiLang from '../resources/i18n/i18n_de.json'
 
 const isLegacyQuery = ({ isLegacy }) => {
@@ -62,10 +62,10 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
   const allTexts = new Set([...dimension, ...field, ...level, ...testCycle, ...competency, ...unitSet, ...units, ...lang])
   await asyncTimeout(interval)
 
-  const data = SpeechCorpus.transformers.hashTuple({data: allTexts})
+  const data = SpeechCorpus.transformers.hashTuple({ data: allTexts })
   const title = `content_corpus_${Date.now()}`
 
-  await  SpeechCorpus.build({
+  await SpeechCorpus.build({
     data: logOut.join('\n'),
     format: 'text',
     type: 'file',
@@ -74,7 +74,7 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
     ext: 'log'
   })
 
-  return  SpeechCorpus.build({
+  return SpeechCorpus.build({
     data,
     format,
     type,
@@ -82,8 +82,6 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
     title
   })
 }
-
-
 
 const fromUnitSets = async (query, options, settings) => {
   const { log } = settings
@@ -127,10 +125,10 @@ const fromUnits = async (query, options, settings) => {
 }
 
 const fromContent = ({ source = [], destination = new Set() }) => {
-    if (!source) return destination
-    if (!Array.isArray(source)) {
-        throw new Error(`source should be an array, got ${JSON.stringify(source)}`)
-    }
+  if (!source) return destination
+  if (!Array.isArray(source)) {
+    throw new Error(`source should be an array, got ${JSON.stringify(source)}`)
+  }
 
   for (const entry of source) {
     const { type, subtype, value } = entry
@@ -168,10 +166,11 @@ const fromFields = async ({ ctx, query = {}, options = {}, fields, mapping, log 
   const collection = getCollection(ctx.name)
   const transform = toTransform(options)
   const docs = await collection.find(query, transform).fetchAsync()
-  log(`[${ctx.name}]: Fetched documents: ${docs.length}, query=${JSON.stringify(query)}`)
+  log(`[${ctx.name}]: Fetched documents: ${docs.length}, query=${JSON.stringify(query)}, fields=${JSON.stringify(fields)}`)
   const texts = new Set()
 
   for (const doc of docs) {
+    log(`get fields from ${doc.title ?? doc.shortCode ?? doc._id}`)
     for (const fieldName of fields) {
       const value = doc[fieldName]
 
