@@ -62,7 +62,20 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
   const allTexts = new Set([...dimension, ...field, ...level, ...testCycle, ...competency, ...unitSet, ...units, ...lang])
   await asyncTimeout(interval)
 
-  const data = SpeechCorpus.transformers.hashTuple({ data: allTexts })
+  SpeechCorpus.clean.register(text => {
+    return text.trim()
+      // multiple newlines to single space
+      .replaceAll(/[\r\n]+/ig, ' ')
+      // remove markdown bold
+      .replaceAll(/\*\*.+\*\*/ig, '')
+      // remove three dots
+      .replaceAll(/\.{3}/ig, '')
+      // multiple white space to single white space
+      .replaceAll(/\s+/g, ' ')
+  })
+
+  const cleaned = SpeechCorpus.clean.run(allTexts)
+  const data = SpeechCorpus.transformers.hashTuple({ data: cleaned })
   const title = `content_corpus_${Date.now()}`
 
   await SpeechCorpus.build({
@@ -131,10 +144,15 @@ const fromContent = ({ source = [], destination = new Set() }) => {
   }
 
   for (const entry of source) {
-    const { type, subtype, value } = entry
+    const { type, subtype, value, useTTS } = entry
 
-    if (type === 'text' && value) {
-      destination.add(value)
+
+    if (type === 'text' && typeof value === 'string' && value.length > 0) {
+      const addMarkdown = subtype === 'markdown' && useTTS === true
+      const addPlain = subtype === 'text'
+      if (addPlain || addMarkdown) {
+        destination.add(value)
+      }
     }
 
     if (type === 'item' && subtype === 'choice') {
@@ -147,15 +165,14 @@ const fromContent = ({ source = [], destination = new Set() }) => {
     }
 
     if (type === 'item' && subtype === 'cloze') {
-      const { text } = value
-      const replaced = text.replace(/{{(.*?)}}/g, (match, p1) => {
-        const parts = p1.split('$')
-        if (parts.length === 3) {
-          return parts[2]?.trim() || ''
+      value.text.replace(/{{(.*?)}}/g, (match, p1) => {
+        const [_type, _val, _tts] = p1.split('$')
+
+        if (typeof _tts === 'string' && _tts.length > 0) {
+          const clozeTTS = _tts?.trim() || ''
+          if (clozeTTS) destination.add(clozeTTS)
         }
-        return ''
       })
-      destination.add(replaced)
     }
   }
 

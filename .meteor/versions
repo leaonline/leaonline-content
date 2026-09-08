@@ -44,7 +44,7 @@ leaonline:grid-factory@1.6.0
 leaonline:health@1.0.0
 leaonline:http-factory@2.0.0
 leaonline:jwt@0.0.1
-leaonline:method-factory@2.0.2
+leaonline:method-factory@2.0.0
 leaonline:oauth-lea@3.0.1
 leaonline:publication-factory@2.0.0
 leaonline:ratelimit-factory@2.0.0
