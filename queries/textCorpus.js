@@ -146,12 +146,18 @@ const fromContent = ({ source = [], destination = new Set() }) => {
   for (const entry of source) {
     const { type, subtype, value, useTTS } = entry
 
-
     if (type === 'text' && typeof value === 'string' && value.length > 0) {
-      const addMarkdown = subtype === 'markdown' && useTTS === true
-      const addPlain = subtype === 'text'
-      if (addPlain || addMarkdown) {
+      if (subtype === 'text') {
         destination.add(value)
+      }
+
+      // while plain text can directly be added, for
+      // markdown tts we need to parse the markdown using the exact
+      // parser the client will use in order to validly tokenize
+      // the md source.
+      // the tokens will then be added to the tts corpus
+      if (subtype === 'markdown' && useTTS === true) {
+        const token = MarkdownRenderer.tokenize(entry)
       }
     }
 
