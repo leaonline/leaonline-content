@@ -1,12 +1,12 @@
 import { Unit } from '../../contexts/Unit'
 import { setProperty } from '../../utils/setProperty'
 
-export const updateClozeScoringSchema = () => {
+export const updateClozeScoringSchema = async () => {
   console.debug('[patch]: updateClozeScoringSchema')
   const collection = Unit.collection()
-  collection.find().forEach(unitDoc => {
-    (unitDoc.pages || []).forEach((page, pageIndex) => {
-      (page.content || []).forEach((entry, contentIndex) => {
+  await collection.find().forEachAsync(async unitDoc => {
+    for (const [pageIndex, page] of (unitDoc.pages || []).entries()) {
+      for (const [contentIndex, entry] of (page.content || []).entries()) {
         if (entry.subtype === 'cloze') {
           let updateRequired = false
           const updatedScoring = {}
@@ -26,10 +26,10 @@ export const updateClozeScoringSchema = () => {
           if (updateRequired) {
             console.debug('[patch]:', unitDoc._id, 'found cloze with deprecated scoring schema =>')
             console.debug('[patch]:', updatedScoring)
-            collection.update(unitDoc._id, { $set: updatedScoring })
+            await collection.updateAsync(unitDoc._id, { $set: updatedScoring })
           }
         }
-      })
-    })
+      }
+    }
   })
 }

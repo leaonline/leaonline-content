@@ -10,8 +10,9 @@ const log = createLog(MediaLib.name)
 
 MediaLib.routes.mediaUrl.run = async function (req, res, next) {
   const { _id } = this.data()
-  const filesDoc = await MediaLib.collection().findOneAsync(_id)
-  return MediaLib.filesCollection().link(filesDoc)
+  const filesCollection = MediaLib.collection()
+  const filesDoc = await filesCollection.findOneAsync(_id)
+  return filesCollection.link(filesDoc)
 }
 
 MediaLib.methods.remove.run = async function ({ _id }) {

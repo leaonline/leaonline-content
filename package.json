@@ -6,6 +6,7 @@
     "start": "meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "coverage:check": "node scripts/checkCoverage.js",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
     "lint:code": "standardx --verbose | snazzy",
     "lint:code-fix": "standardx --fix --verbose | snazzy"

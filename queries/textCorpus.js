@@ -11,6 +11,20 @@ import { asyncTimeout } from '../imports/utils/asyncTimeout'
 import { toTransform } from './shared/toTransform'
 import uiLang from '../resources/i18n/i18n_de.json'
 
+/* global MarkdownRenderer */
+
+const cleanCorpusText = text => {
+  return text.trim()
+    // multiple newlines to single space
+    .replaceAll(/[\r\n]+/ig, ' ')
+    // remove markdown bold
+    .replaceAll(/\*\*.+\*\*/ig, '')
+    // remove three dots
+    .replaceAll(/\.{3}/ig, '')
+    // multiple white space to single white space
+    .replaceAll(/\s+/g, ' ')
+}
+
 const isLegacyQuery = ({ isLegacy }) => {
   // include only otulea
   if (isLegacy === true) {
@@ -62,17 +76,9 @@ export const createCorpusQuery = async ({ format = 'json', type = 'file', path, 
   const allTexts = new Set([...dimension, ...field, ...level, ...testCycle, ...competency, ...unitSet, ...units, ...lang])
   await asyncTimeout(interval)
 
-  SpeechCorpus.clean.register(text => {
-    return text.trim()
-      // multiple newlines to single space
-      .replaceAll(/[\r\n]+/ig, ' ')
-      // remove markdown bold
-      .replaceAll(/\*\*.+\*\*/ig, '')
-      // remove three dots
-      .replaceAll(/\.{3}/ig, '')
-      // multiple white space to single white space
-      .replaceAll(/\s+/g, ' ')
-  })
+  // SpeechCorpus stores cleaners globally. Registering one stable function
+  // keeps repeated query calls idempotent because the package uses a Set.
+  SpeechCorpus.clean.register(cleanCorpusText)
 
   const cleaned = SpeechCorpus.clean.run(allTexts)
   const data = SpeechCorpus.transformers.hashTuple({ data: cleaned })
@@ -157,7 +163,10 @@ const fromContent = ({ source = [], destination = new Set() }) => {
       // the md source.
       // the tokens will then be added to the tts corpus
       if (subtype === 'markdown' && useTTS === true) {
-        const token = MarkdownRenderer.tokenize(entry)
+        const tokens = MarkdownRenderer.tokenize(entry)
+        for (const token of tokens) {
+          destination.add(token)
+        }
       }
     }
 
@@ -172,10 +181,10 @@ const fromContent = ({ source = [], destination = new Set() }) => {
 
     if (type === 'item' && subtype === 'cloze') {
       value.text.replace(/{{(.*?)}}/g, (match, p1) => {
-        const [_type, _val, _tts] = p1.split('$')
+        const tts = p1.split('$')[2]
 
-        if (typeof _tts === 'string' && _tts.length > 0) {
-          const clozeTTS = _tts?.trim() || ''
+        if (typeof tts === 'string' && tts.length > 0) {
+          const clozeTTS = tts.trim()
           if (clozeTTS) destination.add(clozeTTS)
         }
       })

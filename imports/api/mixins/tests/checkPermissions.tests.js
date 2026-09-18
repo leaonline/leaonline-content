@@ -1,165 +1,186 @@
 /* eslint-env mocha */
 import { Meteor } from 'meteor/meteor'
+import { Email } from 'meteor/email'
 import { expect } from 'chai'
 import { Random } from 'meteor/random'
-import { checkPermissions } from '../checkPermissions'
-import { restoreAll, stub } from '../../../../tests/helpers/testHelpers'
-import { Email } from 'meteor/email'
-import { PermissionDeniedError } from '../../errors/PermissionDeniedError'
 import nJwt from 'njwt'
+import { checkPermissions } from '../checkPermissions'
+import { PermissionDeniedError } from '../../errors/PermissionDeniedError'
+import { restoreAll, stub } from '../../../../tests/helpers/testHelpers'
 
-const createOptions = () => {
-  const options = {}
-  options.name = Random.id(8)
-  options.run = function () {
-    return options.name
-  }
-  return options
-}
+const createOptions = (run = function () {
+  return this
+}) => ({
+  name: Random.id(8),
+  run
+})
 
 const createToken = (name, host) => {
-  const signingKey = Meteor.settings.jwt.key
-  const claims = {
+  const jwt = nJwt.create({
+    scope: name,
     iss: host.url,
-    sub: host.sub // The UID of the user in your system
-  }
-  const jwt = nJwt.create({ scope: name, ...claims }, signingKey)
-  jwt.setExpiration(new Date().getTime() + (60 * 1000)) // One minute from now
+    sub: host.sub
+  }, Meteor.settings.jwt.key)
+  jwt.setExpiration(Date.now() + (60 * 1000))
   return jwt.compact()
 }
 
+const expectDenied = ({ fn, name, reason, token }) => {
+  try {
+    fn()
+    expect.fail('Expected permission check to throw')
+  }
+  catch (error) {
+    expect(error.error).to.equal(PermissionDeniedError.name)
+    expect(error.reason).to.equal(reason === 'notLoggedIn' ? reason : 'tokenInvalid')
+    expect(error.details).to.deep.equal(reason === 'notLoggedIn'
+      ? { name }
+      : { name, reason, token })
+    return error
+  }
+}
+
+const captureNotification = () => {
+  let resolveNotification
+  const notification = new Promise(resolve => {
+    resolveNotification = resolve
+  })
+  const sendAsync = stub(Email, 'sendAsync', async data => {
+    resolveNotification(data)
+  })
+  return { notification, sendAsync }
+}
+
 describe(checkPermissions.name, function () {
-  afterEach(() => {
+  afterEach(function () {
     restoreAll()
   })
-  it('grants access to public flagged definitions', function () {
-    const options = createOptions()
+
+  it('leaves public definitions untouched', function () {
+    const options = createOptions(() => 'public result')
     options.isPublic = true
-    const wrapped = checkPermissions(options)
-    expect(wrapped).to.deep.equal(options)
-    expect(wrapped.run()).to.equal(options.name)
-  })
-  it('prevents access if no user is authenticated and no token exchange is defined', function (done) {
-    const options = createOptions()
 
-    stub(Email, 'sendAsync', doc => {
-      const error = JSON.parse(doc.text)
-      expect(error.message).to.equal('notLoggedIn [errors.permissionDenied]')
-      done()
+    const wrapped = checkPermissions(options)
+
+    expect(wrapped).to.equal(options)
+    expect(wrapped.run()).to.equal('public result')
+  })
+
+  it('forwards arguments, return values, and the authenticated context', function () {
+    const expected = { result: Random.id() }
+    const args = [{ value: 1 }, 'two']
+    const environment = { userId: Random.id(), marker: Random.id() }
+    const options = createOptions(function (...received) {
+      expect(this).to.equal(environment)
+      expect(received).to.deep.equal(args)
+      return expected
     })
 
     const wrapped = checkPermissions(options)
 
-    // grant access to authenticated user
-    expect(wrapped.run.call({ userId: Random.id() })).to.equal(options.name)
-
-    const thrown = expect(() => wrapped.run()).to.throw(PermissionDeniedError.name)
-    thrown.with.property('reason', 'notLoggedIn')
-    thrown.with.deep.property('details', { name: options.name })
+    expect(wrapped).to.equal(options)
+    expect(wrapped.run.call(environment, ...args)).to.equal(expected)
   })
-  it('allows access with correct token', function () {
-    const options = createOptions()
-    options.token = true
 
+  it('denies anonymous access and notifies about the error', async function () {
+    const options = createOptions()
+    const { notification, sendAsync } = captureNotification()
     const wrapped = checkPermissions(options)
 
-    Object.values(Meteor.settings.hosts).forEach(host => {
-      const token = createToken(options.name, host)
-      expect(wrapped.run({ token })).to.equal(options.name)
-    })
-  })
-  it('prevents access if wrong token when token required', function (done) {
-    const options = createOptions()
-    options.token = true
-
-    stub(Email, 'sendAsync', doc => {
-      const error = JSON.parse(doc.text)
-      expect(error.message).to.equal('tokenInvalid [errors.permissionDenied]')
-      done()
-    })
-
-    const wrapped = checkPermissions(options)
-
-    const thrown = expect(() => wrapped.run()).to.throw(PermissionDeniedError.name)
-    thrown.with.property('reason', 'tokenInvalid')
-    thrown.with.deep.property('details', {
+    expectDenied({
+      fn: () => wrapped.run.call({ userId: null }),
       name: options.name,
-      reason: 'no token',
-      token: undefined
+      reason: 'notLoggedIn'
     })
+
+    const message = JSON.parse((await notification).text)
+    expect(message.message).to.equal('notLoggedIn [errors.permissionDenied]')
+    expect(sendAsync.calledOnce).to.equal(true)
   })
-  it('prevents access without token if token is wrong', function () {
-    const options = createOptions()
-    options.token = true
 
-    stub(Email, 'sendAsync', doc => {
-      const error = JSON.parse(doc.text)
-      expect(error.message).to.equal('tokenInvalid [errors.permissionDenied]')
+  it('accepts a valid JWT, removes it, and forwards the remaining arguments', function () {
+    const host = Object.values(Meteor.settings.hosts)[0]
+    const environment = { userId: null, marker: Random.id() }
+    const secondArg = Random.id()
+    const options = createOptions(function (...args) {
+      expect(this).to.equal(environment)
+      expect(args).to.deep.equal([{ keep: true }, secondArg])
+      return this.marker
     })
-
+    options.token = true
     const wrapped = checkPermissions(options)
-
-    const expectThrown = ({ fn, token, reason }) => {
-      try {
-        fn()
-      }
-      catch (err) {
-        console.debug(err.name)
-        console.debug(err.error)
-        console.debug(err.reason)
-        console.debug(err.details)
-        console.debug(reason)
-        expect(err.error).to.equal(PermissionDeniedError.name)
-        expect(err.reason).to.equal('tokenInvalid')
-        expect(err.details.name).to.equal(options.name)
-        expect(err.details.token).to.equal(token)
-        expect(err.details.reason).to.equal(reason)
-      }
+    const firstArg = {
+      token: createToken(options.name, host),
+      keep: true
     }
 
-    const hosts = Object.values(Meteor.settings.hosts)
+    expect(wrapped.run.call(environment, firstArg, secondArg)).to.equal(environment.marker)
+    expect(firstArg).to.deep.equal({ keep: true })
+  })
 
-    // case 0 parsing error
-    hosts.forEach(() => {
-      const token = Random.id()
-      expectThrown({
-        fn: () => wrapped.run({ token }),
-        token,
-        reason: 'Jwt cannot be parsed'
-      })
-    })
+  ;[
+    {
+      title: 'a missing token',
+      token: undefined,
+      reason: 'no token'
+    },
+    {
+      title: 'a malformed token',
+      token: Random.id(),
+      reason: 'Jwt cannot be parsed'
+    },
+    {
+      title: 'the wrong scope',
+      token: options => createToken(Random.id(), Object.values(Meteor.settings.hosts)[0]),
+      reason: (options, token) => {
+        const scope = nJwt.verify(token, Meteor.settings.jwt.key).body.scope
+        return `invalid scope for ${options.name}: ${scope}`
+      }
+    },
+    {
+      title: 'the wrong issuer',
+      token: options => {
+        const host = Object.values(Meteor.settings.hosts)[0]
+        return createToken(options.name, { ...host, url: `${host.url}/wrong` })
+      },
+      reason: (options, token) => {
+        const body = nJwt.verify(token, Meteor.settings.jwt.key).body
+        return `host ${body.iss} has invalid url or invalid sub ${body.sub}`
+      }
+    },
+    {
+      title: 'the wrong subject',
+      token: options => {
+        const host = Object.values(Meteor.settings.hosts)[0]
+        return createToken(options.name, { ...host, sub: Random.id() })
+      },
+      reason: (options, token) => {
+        const body = nJwt.verify(token, Meteor.settings.jwt.key).body
+        return `host ${body.iss} has invalid url or invalid sub ${body.sub}`
+      }
+    }
+  ].forEach(testCase => {
+    it(`rejects ${testCase.title}`, async function () {
+      const options = createOptions()
+      options.token = true
+      const token = typeof testCase.token === 'function'
+        ? testCase.token(options)
+        : testCase.token
+      const reason = typeof testCase.reason === 'function'
+        ? testCase.reason(options, token)
+        : testCase.reason
+      const { notification } = captureNotification()
+      const wrapped = checkPermissions(options)
 
-    // case 1: wrong scope
-    hosts.forEach(host => {
-      const scope = Random.id()
-      const token = createToken(scope, host)
-      expectThrown({
-        fn: () => wrapped.run({ token }),
-        token,
-        reason: `invalid scope: ${options.name} !== ${scope}`
+      expectDenied({
+        fn: () => wrapped.run.call({ userId: null }, { token }),
+        name: options.name,
+        reason,
+        token
       })
-    })
 
-    // case 2: wrong url
-    hosts.forEach(host => {
-      const url = host.url + '0'
-      const token = createToken(options.name, { url, sub: host.sub })
-      expectThrown({
-        fn: () => wrapped.run({ token }),
-        token,
-        reason: `host ${url} has invalid url or invalid sub ${host.sub}`
-      })
-    })
-
-    // case 3: wrong sub
-    hosts.forEach(host => {
-      const sub = Random.id()
-      const token = createToken(options.name, { url: host.url, sub })
-      expectThrown({
-        fn: () => wrapped.run({ token }),
-        token,
-        reason: `host ${host.url} has invalid url or invalid sub ${sub}`
-      })
+      const message = JSON.parse((await notification).text)
+      expect(message.message).to.equal('tokenInvalid [errors.permissionDenied]')
     })
   })
 })
