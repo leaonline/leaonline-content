@@ -9,6 +9,7 @@ import { UnitSet } from '../imports/contexts/UnitSet'
 import { getCollection } from '../imports/utils/collection'
 import { asyncTimeout } from '../imports/utils/asyncTimeout'
 import { toTransform } from './shared/toTransform'
+import { Markdown } from 'meteor/leaonline:corelib/markdown/Markdown'
 import uiLang from '../resources/i18n/i18n_de.json'
 
 /* global MarkdownRenderer */
@@ -114,7 +115,7 @@ const fromUnitSets = async (query, options, settings) => {
 
     if (title) texts.add(title)
     if (description) texts.add(description)
-    fromContent({ source: story, destination: texts, settings })
+    fromContent({ source: story, destination: texts, settings, id: unitSet.shortCode, log })
   }
 
   return texts
@@ -132,21 +133,21 @@ const fromUnits = async (query, options, settings) => {
   for (const unit of units) {
     const { title, instructions, stimuli, pages } = unit
     if (title) texts.add(title)
-    fromContent({ source: instructions, destination: texts, settings })
-    fromContent({ source: stimuli, destination: texts, settings })
+    fromContent({ source: instructions, destination: texts, settings, id: unit.shortCode, log })
+    fromContent({ source: stimuli, destination: texts, settings, id: unit.shortCode, log })
     for (const page of pages) {
       const { content } = page
-      fromContent({ source: content, destination: texts, settings })
+      fromContent({ source: content, destination: texts, settings, id: unit.shortCode, log })
     }
   }
 
   return texts
 }
 
-const fromContent = ({ source = [], destination = new Set() }) => {
+const fromContent = ({ id, source = [], destination = new Set(), log = () => {} }) => {
   if (!source) return destination
   if (!Array.isArray(source)) {
-    throw new Error(`source should be an array, got ${JSON.stringify(source)}`)
+    throw new Error(`${id}: source should be an array, got ${JSON.stringify(source)}`)
   }
 
   for (const entry of source) {
@@ -163,9 +164,15 @@ const fromContent = ({ source = [], destination = new Set() }) => {
       // the md source.
       // the tokens will then be added to the tts corpus
       if (subtype === 'markdown' && useTTS === true) {
-        const tokens = MarkdownRenderer.tokenize(entry)
-        for (const token of tokens) {
-          destination.add(token)
+        log(id, 'adding markdown, size=', destination.size)
+        const tokenized = Markdown.tokenize(entry)
+        for (const entry of tokenized) {
+          for (const token of entry.tokens) {
+            if (token.text) {
+              log('add', token.text)
+              destination.add(token.text.trim())
+            }
+          }
         }
       }
     }
