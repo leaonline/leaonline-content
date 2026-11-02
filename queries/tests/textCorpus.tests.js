@@ -193,17 +193,50 @@ describe(createCorpusQuery.name, function () {
     await insertRaw(Unit, [])
     const { calls } = stubBuild()
 
+    let error
     try {
       await createCorpusQuery({ settings: { interval: 0 } })
-      expect.fail('Expected invalid content to reject')
     }
-    catch (error) {
-      expect(error.message).to.equal('source should be an array, got "not-an-array"')
+    catch (e) {
+      error = e
     }
+    expect(error?.message).to.equal('invalid-set: source should be an array, got "not-an-array"')
     expect(calls).to.deep.equal([])
   })
 
-  it('characterizes the unresolved Markdown renderer dependency', async function () {
+  it('tolerates documents with missing optional fields', async function () {
+    await insertRaw(Dimension, [{ _id: 'dimension' }])
+    await insertRaw(UnitSet, [{
+      _id: 'untitled-set',
+      description: 'Untitled set description',
+      story: [{ type: 'item', subtype: 'cloze', value: { text: 'No {{text$value}} speech' } }]
+    }])
+    await insertRaw(Unit, [{ _id: 'untitled-unit', pages: [] }])
+    const { calls } = stubBuild()
+
+    await createCorpusQuery({ settings: { interval: 0 } })
+
+    expect(calls).to.have.length(2)
+    expect(corpusTexts(calls[1].data)).to.include('Untitled set description')
+  })
+
+  it('uses the document id in errors when no shortCode exists', async function () {
+    await insertRaw(UnitSet, [])
+    await insertRaw(Unit, [{ _id: 'invalid-unit', instructions: 'not-an-array', pages: [] }])
+    const { calls } = stubBuild()
+
+    let error
+    try {
+      await createCorpusQuery({ settings: { interval: 0 } })
+    }
+    catch (e) {
+      error = e
+    }
+    expect(error?.message).to.equal('invalid-unit: source should be an array, got "not-an-array"')
+    expect(calls).to.deep.equal([])
+  })
+
+  it('adds tokenized TTS markdown to the corpus', async function () {
     await insertRaw(UnitSet, [])
     await insertRaw(Unit, [{
       _id: 'markdown-unit',
@@ -213,20 +246,17 @@ describe(createCorpusQuery.name, function () {
         type: 'text',
         subtype: 'markdown',
         useTTS: true,
-        value: '**spoken markdown**'
+        value: 'Hello **world** foo'
       }],
       pages: []
     }])
     const { calls } = stubBuild()
 
-    try {
-      await createCorpusQuery({ settings: { interval: 0 } })
-      expect.fail('Expected the missing Markdown renderer to reject')
-    }
-    catch (error) {
-      expect(error).to.be.instanceOf(ReferenceError)
-      expect(error.message).to.include('MarkdownRenderer')
-    }
-    expect(calls).to.deep.equal([])
+    await createCorpusQuery({ settings: { interval: 0 } })
+
+    expect(calls).to.have.length(2)
+    const texts = corpusTexts(calls[1].data)
+    expect(texts).to.include('Hello world foo')
+    expect(texts).not.to.include.members(['Hello', 'world', 'foo'])
   })
 })

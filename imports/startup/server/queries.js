@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { createMethod } from '../../api/factories/createMethods'
 import { createCorpusQuery } from '../../../queries/textCorpus'
 

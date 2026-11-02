@@ -12,8 +12,6 @@ import { toTransform } from './shared/toTransform'
 import { Markdown } from 'meteor/leaonline:corelib/markdown/Markdown'
 import uiLang from '../resources/i18n/i18n_de.json'
 
-/* global MarkdownRenderer */
-
 const cleanCorpusText = text => {
   return text.trim()
     // multiple newlines to single space
@@ -115,7 +113,7 @@ const fromUnitSets = async (query, options, settings) => {
 
     if (title) texts.add(title)
     if (description) texts.add(description)
-    fromContent({ source: story, destination: texts, settings, id: unitSet.shortCode, log })
+    fromContent({ source: story, destination: texts, settings, id: unitSet.shortCode ?? unitSet._id, log })
   }
 
   return texts
@@ -132,19 +130,20 @@ const fromUnits = async (query, options, settings) => {
 
   for (const unit of units) {
     const { title, instructions, stimuli, pages } = unit
+    const id = unit.shortCode ?? unit._id
     if (title) texts.add(title)
-    fromContent({ source: instructions, destination: texts, settings, id: unit.shortCode, log })
-    fromContent({ source: stimuli, destination: texts, settings, id: unit.shortCode, log })
+    fromContent({ source: instructions, destination: texts, settings, id, log })
+    fromContent({ source: stimuli, destination: texts, settings, id, log })
     for (const page of pages) {
       const { content } = page
-      fromContent({ source: content, destination: texts, settings, id: unit.shortCode, log })
+      fromContent({ source: content, destination: texts, settings, id, log })
     }
   }
 
   return texts
 }
 
-const fromContent = ({ id, source = [], destination = new Set(), log = () => {} }) => {
+const fromContent = ({ id, source = [], destination = new Set(), log }) => {
   if (!source) return destination
   if (!Array.isArray(source)) {
     throw new Error(`${id}: source should be an array, got ${JSON.stringify(source)}`)
@@ -165,14 +164,10 @@ const fromContent = ({ id, source = [], destination = new Set(), log = () => {} 
       // the tokens will then be added to the tts corpus
       if (subtype === 'markdown' && useTTS === true) {
         log(id, 'adding markdown, size=', destination.size)
-        const tokenized = Markdown.tokenize(entry)
-        for (const entry of tokenized) {
-          for (const token of entry.tokens) {
-            if (token.text) {
-              log('add', token.text)
-              destination.add(token.text.trim())
-            }
-          }
+        // tokenize only returns entries with non-empty text
+        for (const { text } of Markdown.tokenize(entry)) {
+          log('add', text)
+          destination.add(text.trim())
         }
       }
     }
