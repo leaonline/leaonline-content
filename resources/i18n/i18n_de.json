@@ -32,5 +32,8 @@
   },
   "actions": {
     "download": "Download"
+  },
+  "audioLib": {
+    "title": "Audio-Bibliothek"
   }
 }

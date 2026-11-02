@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import sinon from 'sinon'
 import { getProperty } from '../../imports/utils/getProperty'
 
@@ -42,5 +43,13 @@ export const restoreAll = () => {
   stubs.forEach((name, target) => {
     target.restore()
     stubs.delete(target)
+  })
+}
+
+export const stubUser = (doc) => {
+  if (!doc?._id) throw new Error('Doc id is missing to stub user doc')
+  stub(Meteor.users, 'findOneAsync', async (userId) => {
+    const _id = typeof userId === 'object' ? userId._id : userId
+    if (_id === doc._id) return doc
   })
 }

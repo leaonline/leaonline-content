@@ -9,7 +9,7 @@ mongo@2.3.1                   # The database Meteor supports right now
 
 #standard-minifier-js@2.6.0    # JS minifier run for production mode
 ecmascript@0.18.0              # Enable ECMAScript2015+ syntax in app code
-
+shell-server
 
 #========================================
 # Performance
@@ -22,6 +22,7 @@ ecmascript@0.18.0              # Enable ECMAScript2015+ syntax in app code
 leaonline:corelib
 mdg:validated-method
 ostrio:i18n
+leaonline:speech-corpus
 
 #========================================
 # factories and startup pipeline

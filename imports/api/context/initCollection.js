@@ -40,6 +40,7 @@ const initFilesCollection = context => {
     debug: Meteor.isDevelopment ? debug : undefined,
     validateUser,
     validateMime,
+    transformVersions: context.transformVersions,
     maxSize: context.maxSize,
     extensions: context.extensions
   })

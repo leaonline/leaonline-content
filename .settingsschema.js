@@ -71,6 +71,7 @@ module.exports = function (SimpleSchema, settings) {
     }),
     tts: schema({
       maxChars: SimpleSchema.Integer,
+      ignoreErrors: Boolean,
       allowedOrigins: Array,
       'allowedOrigins.$': urlField
     }),

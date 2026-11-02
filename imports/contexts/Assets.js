@@ -7,8 +7,9 @@ const log = createLog(Assets.name)
 
 Assets.routes.assetUrl.run = async function (req, res, next) {
   const { _id } = this.data()
-  const filesDoc = await Assets.collection().findOneAsync(_id)
-  return Assets.filesCollection().link(filesDoc)
+  const filesCollection = Assets.collection()
+  const filesDoc = await filesCollection.findOneAsync(_id)
+  return filesCollection.link(filesDoc)
 }
 
 Assets.methods.remove.run = async function ({ _id }) {

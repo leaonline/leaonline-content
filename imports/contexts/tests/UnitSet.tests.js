@@ -3,7 +3,6 @@ import { expect } from 'chai'
 import { Random } from 'meteor/random'
 import { UnitSet } from '../UnitSet'
 import { Unit } from '../Unit'
-import { attachSchema, mockCollection, restoreCollection } from '../../../tests/helpers/mockCollection'
 import { TestCycle } from '../TestCycle'
 
 describe(UnitSet.name, function () {
@@ -11,25 +10,23 @@ describe(UnitSet.name, function () {
   let UnitCollection
   let TestCylceCollection
 
-  before(async () => {
-    mockCollection(UnitSet)
-    mockCollection(Unit)
-    mockCollection(TestCycle)
+  const cleanCollections = () => Promise.all([
+    UnitSetCollection.removeAsync({}),
+    UnitCollection.removeAsync({}),
+    TestCylceCollection.removeAsync({})
+  ])
+
+  before(() => {
+    // These integration tests deliberately use the app-test collections so
+    // the hooks installed during context initialization are exercised.
     UnitSetCollection = UnitSet.collection()
     UnitCollection = Unit.collection()
     TestCylceCollection = TestCycle.collection()
-    attachSchema(UnitSetCollection, UnitSet.schema)
   })
 
-  afterEach(async () => {
-    await UnitSetCollection.removeAsync({})
-  })
+  beforeEach(cleanCollections)
 
-  after(() => {
-    restoreCollection(UnitSet)
-    restoreCollection(Unit)
-    restoreCollection(TestCycle)
-  })
+  afterEach(cleanCollections)
 
   describe('UnitSet.routes.all', () => {
     const handler = UnitSet.routes.all.run

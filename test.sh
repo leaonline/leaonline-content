@@ -119,3 +119,7 @@ METEOR_PACKAGE_DIRS=${T_PACKAGE_DIRS}  \
         --settings=settings.json \
         --port=${PORT} \
         ${INSPECT_BRK}
+
+if [ "$T_COVERAGE" -eq "1" ] && [ "$T_SERVER" -eq "1" ] && [ "$T_CLIENT" -eq "0" ]; then
+	npm run coverage:check
+fi
